@@ -1,0 +1,4 @@
+# Binary document formats
+*.docx binary
+*.doc binary
+*.pdf binary

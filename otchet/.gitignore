@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.tmp
+*.pdf
+.venv/
+.idea/
+.vscode/
+# generated reports (keep assets/templates/*.docx)
+*_отчет.docx
+ПР-*_отчет.docx
+Отчет_*.docx
