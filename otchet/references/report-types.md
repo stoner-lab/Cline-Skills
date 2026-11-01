@@ -1,0 +1,152 @@
+# Cấu trúc báo cáo theo loại
+
+Áp dụng cho **mọi môn học**. Cấu trúc dưới đây là mặc định; nếu đề bài hoặc
+giảng viên yêu cầu khác, ưu tiên đề bài.
+
+## 1. Практическая работа (ПР) / Лабораторная работа
+
+Thường dùng cho các môn kỹ thuật, hệ thống, kinh tế. Không cần mục lục nếu
+báo cáo ngắn (dưới ~10 trang).
+
+Cấu trúc:
+
+1. **Титульный лист**
+2. **Цель работы** – 1–3 câu, lấy từ đề bài.
+3. **Постановка задачи и исходные данные**
+   - mô tả bài toán;
+   - variant;
+   - bảng số liệu gốc;
+   - đơn vị, giới hạn, điều kiện.
+4. **Решение**
+   - chia thành các mục nhỏ theo đề bài (`1.`, `2.`, ...);
+   - công thức;
+   - bảng tính;
+   - kiểm tra trường hợp biên (nếu có).
+5. **Результаты**
+   - bảng tổng hợp;
+   - so sánh phương án;
+   - nhận xét ngắn.
+6. **Выводы**
+   - trả lời đúng câu hỏi của đề;
+   - nêu phương án tốt nhất;
+   - nêu hạn chế (nếu có).
+
+Lưu ý:
+
+- Nếu là bài ra quyết định có tình huống xấu, thêm phương án
+  `Ничего не делать` / `Не инвестировать` = 0 và so sánh.
+- Không viết lý thuyết dài; mỗi mục tập trung vào việc đã làm.
+- Bảng số liệu gốc nên đặt ngay sau phần постановка задачи.
+- Kết quả cuối cùng phải khớp với bảng tổng hợp.
+
+## 2. Реферат
+
+Cấu trúc theo mẫu LETI:
+
+1. **Титульный лист**
+2. **Задание на реферат**
+3. **Аннотация** (8–10 dòng)
+4. **Содержание**
+5. **Введение**
+   - актуальность;
+   - цель;
+   - задачи.
+6. **Основные разделы** (2–5 chương)
+7. **Заключение**
+8. **Список использованных источников**
+9. **Приложения** (nếu có)
+
+Yêu cầu:
+
+- Có mục lục tự động.
+- Trích dẫn nguồn trong text.
+- Không copy định nghĩa từ giáo trình.
+- Mỗi chương có mở đầu và kết luận ngắn.
+- Nếu có bảng/hình, đánh số liên tục toàn tài liệu.
+
+## 3. Курсовая работа
+
+Cấu trúc:
+
+1. **Титульный лист**
+2. **Задание**
+3. **Содержание**
+4. **Введение**
+   - актуальность;
+   - объект и предмет;
+   - цель и задачи;
+   - методы.
+5. **Глава 1. Теоретическая часть**
+6. **Глава 2. Практическая часть / расчёт**
+7. **Глава 3. Анализ результатов / рекомендации**
+8. **Заключение**
+9. **Список использованных источников**
+10. **Приложения**
+
+Yêu cầu:
+
+- Có mục lục.
+- Mỗi chương có kết luận ngắn.
+- Kết quả tính toán phải có bảng/biểu đồ.
+- Không copy lý thuyết; nếu có, phải diễn giải và có nguồn.
+- Đánh số bảng/hình liên tục toàn tài liệu.
+
+## 4. Отчёт по практике
+
+Cấu trúc:
+
+1. **Титульный лист**
+2. **Задание на практику**
+3. **Аннотация**
+4. **Содержание**
+5. **Введение**
+   - mục tiêu;
+   - nhiệm vụ;
+   - địa điểm/thời gian.
+6. **Основная часть**
+   - mô tả công việc;
+   - phương pháp;
+   - kết quả.
+7. **Заключение**
+8. **Список использованных источников**
+9. **Приложения** (дневник, таблицы, схемы)
+
+Yêu cầu:
+
+- Viết theo trình tự thời gian/công việc.
+- Nêu rõ đã làm gì, dùng công cụ gì, kết quả ra sao.
+- Không copy báo cáo mẫu.
+- Nếu có số liệu, đưa vào bảng và nhận xét.
+
+## 5. НИР / МДП / ИП магистранта
+
+Cấu trúc gần giống курсовая:
+
+1. **Титульный лист**
+2. **Задание**
+3. **Содержание**
+4. **Введение**
+5. **Обзор / теоретическая часть**
+6. **Методика**
+7. **Результаты**
+8. **Заключение**
+9. **Список источников**
+10. **Приложения**
+
+Yêu cầu:
+
+- Nhấn mạnh phương pháp và kết quả.
+- Số liệu phải có nguồn hoặc cách tính.
+- Hình/bảng phải được nhắc trong text.
+- Kết luận phải bám mục tiêu ban đầu.
+
+## 6. Quy tắc chung cho mọi loại
+
+- Đúng variant và đúng đề.
+- Không bịa số liệu.
+- Không dùng `я/мы`.
+- Không copy mẫu word-by-word.
+- Đánh số bảng/hình liên tục.
+- Tên bảng trên, tên hình dưới.
+- Kiểm tra trường hợp biên.
+- Kết quả cuối cùng phải trả lời đúng câu hỏi của đề.
