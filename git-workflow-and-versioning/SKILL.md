@@ -22,7 +22,6 @@ metadata:
 - **Repository identity:** commits here use `stoner-lab <stonerduy@gmail.com>`; the GitHub account is `stoner-lab` and remotes are HTTPS with Git Credential Manager, so `git push` works without extra setup.
 - **Before committing:** run `git status` and `git --no-pager diff --stat` and show the user what will be committed.
 
-
 ## Overview
 
 Git is your safety net. Treat commits as save points, branches as sandboxes, and history as documentation. With AI agents generating code at high speed, disciplined version control is the mechanism that keeps changes manageable, reviewable, and reversible.

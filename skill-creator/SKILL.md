@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create, edit, improve, and evaluate Cline skills (SKILL.md folders under .cline/skills). Use whenever the user wants to turn a workflow into a reusable skill, write a new skill, fix a skill that does not trigger or triggers too often, rewrite or tighten an existing SKILL.md, design test prompts and iterate on a skill from the results, or package and share a skill folder. Trigger it also on Vietnamese phrasing — "tạo skill", "viết skill", "sửa skill", "skill không hoạt động", "skill không tự kích hoạt", "làm skill cho việc này", "đóng gói skill" — and on Russian «создать навык», «улучшить skill», «скилл не срабатывает». Trigger even when the user only says "make this repeatable", "save this as a skill", or mentions SKILL.md, .cline/skills, or a slash command.
+description: Create, edit, improve, and evaluate Cline skills (SKILL.md folders under .cline/skills). Use whenever the user wants to turn a workflow into a reusable skill, write a new skill, fix a skill that does not trigger or triggers too often, rewrite or tighten an existing SKILL.md, design test prompts and iterate on a skill from the results, or package and share a skill folder. Trigger it also on Vietnamese phrasing – "tạo skill", "viết skill", "sửa skill", "skill không hoạt động", "skill không tự kích hoạt", "làm skill cho việc này", "đóng gói skill" – and on Russian «создать навык», «улучшить skill», «скилл не срабатывает». Trigger even when the user only says "make this repeatable", "save this as a skill", or mentions SKILL.md, .cline/skills, or a slash command.
 ---
 
 # Skill Creator (Cline edition)
@@ -25,7 +25,7 @@ The loop:
 Your job is to find out where the user stands in this loop and move them forward.
 If they say "I want a skill for X", narrow it down, draft it, write test prompts,
 run them, collect feedback. If a draft already exists, jump straight to testing.
-If they say "I don't need evals, just help me write it", respect that — the loop is
+If they say "I don't need evals, just help me write it", respect that – the loop is
 a tool, not a ritual.
 
 ## 0. Start here: how skills work in Cline
@@ -36,7 +36,7 @@ Read this before writing anything, because the mechanics differ from Claude.
 
 - Global: `C:\Users\duy\.cline\skills\<skill-name>\SKILL.md` (verified working).
 - Workspace-level: some Cline builds also read `<workspace>\.cline\skills\<skill-name>\`.
-  If unsure, create the global one — it always works.
+  If unsure, create the global one – it always works.
 - A skill is just a folder: `SKILL.md` plus optional `scripts/`, `references/`,
   `assets/`. No build step, no manifest.
 
@@ -57,7 +57,7 @@ Read this before writing anything, because the mechanics differ from Claude.
 - You invoke it through the `skills` tool with `skill: "skill-name"`. That call is
   a blocking step: call the tool, then follow what it returned.
 
-**Tool mapping — upstream name → your tool**
+**Tool mapping – upstream name → your tool**
 
 | In upstream Anthropic skills | In Cline |
 |---|---|
@@ -66,7 +66,7 @@ Read this before writing anything, because the mechanics differ from Claude.
 | `bash_tool` | `run_commands` (PowerShell on Windows) |
 | `grep`, `glob` | `search_codebase`, `run_commands` |
 | web fetch | `fetch_web_content` |
-| `Task`, subagents | not available — run steps inline, one at a time |
+| `Task`, subagents | not available – run steps inline, one at a time |
 
 **What is missing here**
 
@@ -91,13 +91,13 @@ Read this before writing anything, because the mechanics differ from Claude.
   `Path.read_text(encoding="utf-8")`, `json.dump(..., ensure_ascii=False)`. The
   Windows default (ANSI code page) silently corrupts Vietnamese diacritics.
 - Set `$env:PYTHONIOENCODING='utf-8'` (or `chcp 65001`) when a script prints user
-  text, and still prefer verifying content in a UTF-8 file via `read_files` — the
+  text, and still prefer verifying content in a UTF-8 file via `read_files` – the
   terminal rendering is not evidence.
 - A skill `name` stays kebab-case ASCII (`bao-cao-pr`); the `description` and the
   body may be Vietnamese, Russian, or mixed. Frontmatter must be saved as UTF-8
   without BOM.
 - `scripts/scaffold_evals.py` transliterates Vietnamese prompts into folder slugs
-  (`Làm báo cáo … → lam-bao-cao-…`) so paths stay portable; normalise strings with
+  (`Làm báo cáo ... → lam-bao-cao-...`) so paths stay portable; normalise strings with
   `unicodedata.normalize("NFC", s)` before comparing them.
 
 ## 1. Capture intent
@@ -143,9 +143,9 @@ skill-name/
 Three levels, and they matter more in Cline than in Claude because context is
 shared with the whole coding session:
 
-1. **Metadata** — `name` + `description`, always in context (~100 words).
-2. **Body** — `SKILL.md`, loaded when the skill triggers. Keep it under ~500 lines.
-3. **Bundled files** — read or executed on demand, unlimited size.
+1. **Metadata** – `name` + `description`, always in context (~100 words).
+2. **Body** – `SKILL.md`, loaded when the skill triggers. Keep it under ~500 lines.
+3. **Bundled files** – read or executed on demand, unlimited size.
 
 Practical consequences:
 
@@ -192,7 +192,7 @@ they do not say the word "skill".
 - Reserve all-caps `ALWAYS` / `NEVER` for the two or three rules that genuinely must
   not bend. If everything is shouting, nothing is.
 - Generalize: write for millions of future prompts, not for the two examples you
-  are testing. Overfitted rules ("if the file is named Q4.xlsx, then…") age badly.
+  are testing. Overfitted rules ("if the file is named Q4.xlsx, then...") age badly.
 - Include concrete examples of input → output, and templates for outputs whose shape
   matters (report structure, commit format, JSON schema).
 - Duplicate the critical bit rather than rely on the model scrolling: if a rule
@@ -209,8 +209,8 @@ simulation skills are fine.
 
 ## 4. Test prompts
 
-Write 2–3 prompts a real user would type — messy, concrete, with a file name or a
-constraint — not abstract requests like "format data". Show them to the user and
+Write 2–3 prompts a real user would type – messy, concrete, with a file name or a
+constraint – not abstract requests like "format data". Show them to the user and
 ask whether they match reality before running anything.
 
 Save them to `evals/evals.json` inside the skill folder:
@@ -243,7 +243,7 @@ Put results in `<skill-name>-workspace/` **next to** the skill folder, organised
 iteration: `iteration-1/<eval-name>/with_skill/outputs/`,
 `iteration-1/<eval-name>/without_skill/outputs/`.
 
-### Mode A — inline (default, no API keys, works everywhere)
+### Mode A – inline (default, no API keys, works everywhere)
 
 For each eval, one at a time:
 
@@ -256,16 +256,16 @@ For each eval, one at a time:
 
 Baseline depends on the situation:
 
-- New skill: the baseline is no skill at all — solve the task with your normal tools.
+- New skill: the baseline is no skill at all – solve the task with your normal tools.
 - Existing skill being improved: snapshot the old version first
   (`Copy-Item -Recurse <skill> <workspace>\skill-snapshot`), then run the baseline
   from the snapshot. That shows whether the edit helped.
 
 Honest caveat: in Mode A you wrote the skill and you run it, so the comparison is
 weaker than independent runs. Say so to the user; the human review step compensates.
-Token and time metrics are not available — do not invent them, just skip that table.
+Token and time metrics are not available – do not invent them, just skip that table.
 
-### Mode B — scripted (only if the user has the Claude Code CLI or their own harness)
+### Mode B – scripted (only if the user has the Claude Code CLI or their own harness)
 
 - `scripts/run_eval.py`, `scripts/improve_description.py` call `claude -p` under the
   hood and need the Claude Code CLI plus a `.claude/` project root. If
@@ -290,10 +290,10 @@ Grade against explicit assertions, not vibes. For each eval write assertions lik
 
 Two ways to check them, in order of preference:
 
-1. **Programmatic** — write a tiny script (or reuse `scripts/quick_validate.py`,
+1. **Programmatic** – write a tiny script (or reuse `scripts/quick_validate.py`,
    `python-docx`, `pypdf`) and let it print pass/fail per assertion. Reusable across
    iterations and immune to your own optimism.
-2. **Inline review** — read the output and judge, using `agents/grader.md` as the
+2. **Inline review** – read the output and judge, using `agents/grader.md` as the
    checklist. There are no subagents here, so this is you reading the file, not a
    separate agent.
 
@@ -313,7 +313,7 @@ After the user has looked at outputs:
   patch sentence.
 - **Move repeated work into `scripts/`.** If every run wrote the same helper, ship it
   once in the skill and tell the skill to call it.
-- **Re-check the description** if the problem was "it never triggered" — that is a
+- **Re-check the description** if the problem was "it never triggered" – that is a
   metadata problem, not a body problem (§9).
 
 ## 8. Iterate
@@ -331,14 +331,14 @@ user which they prefer without telling them which version it is.
 
 ## 9. Optimize the description (manual, Cline-friendly)
 
-Offer this once the skill body is stable — a perfect body with a bad description is
+Offer this once the skill body is stable – a perfect body with a bad description is
 dead weight.
 
 1. **Write 20 trigger queries**: ~10 that should fire the skill, ~10 that should not.
    Make them realistic: file paths, mixed case, typos, casual phrasing, near-miss
    tasks that belong to a different skill. Clear-cut examples ("read this PDF") are
    useless because almost nothing triggers on them.
-2. **Review with the user** — which ones are unrealistic, which cases are missing.
+2. **Review with the user** – which ones are unrealistic, which cases are missing.
 3. **Score by reading only `name` + `description`**: for each query decide
    "triggers / does not trigger". Do this before looking at the body, otherwise you
    are grading your knowledge instead of the metadata.
@@ -369,48 +369,48 @@ improvement you did not measure.
 
 ## 11. Reference files
 
-- `references/schemas.md` — JSON shapes for `evals.json`, `eval_metadata.json`,
+- `references/schemas.md` – JSON shapes for `evals.json`, `eval_metadata.json`,
   `grading.json`, `benchmark.json`, `feedback.json`. Read it before hand-writing
   any of them.
-- `references/cline-adaptation.md` — exactly what was changed from the Anthropic
+- `references/cline-adaptation.md` – exactly what was changed from the Anthropic
   original and why.
-- `references/upstream-SKILL.md` — the original Claude-oriented text, kept for
+- `references/upstream-SKILL.md` – the original Claude-oriented text, kept for
   comparison (contains the subagent and `claude -p` workflows).
-- `agents/grader.md` — how to grade assertions. In Cline, use it as your own
+- `agents/grader.md` – how to grade assertions. In Cline, use it as your own
   checklist, not as a subagent prompt.
-- `agents/comparator.md` — blind A/B comparison protocol.
-- `agents/analyzer.md` — what to look for in benchmark data (non-discriminating
+- `agents/comparator.md` – blind A/B comparison protocol.
+- `agents/analyzer.md` – what to look for in benchmark data (non-discriminating
   assertions, flaky evals, time/token tradeoffs).
-- `scripts/quick_validate.py` — frontmatter validator (needs PyYAML; falls back to a
+- `scripts/quick_validate.py` – frontmatter validator (needs PyYAML; falls back to a
   minimal parser if PyYAML is missing).
-- `scripts/scaffold_evals.py` — creates `evals/evals.json` and the
+- `scripts/scaffold_evals.py` – creates `evals/evals.json` and the
   `<skill>-workspace/iteration-N/<eval>/` tree from prompts.
-- `scripts/aggregate_benchmark.py` — turns `grading.json` files into
+- `scripts/aggregate_benchmark.py` – turns `grading.json` files into
   `benchmark.json` / `benchmark.md`.
-- `scripts/package_skill.py` — packs a skill folder into a `.skill` zip.
-- `scripts/run_eval.py`, `scripts/improve_description.py` — Claude Code CLI only
+- `scripts/package_skill.py` – packs a skill folder into a `.skill` zip.
+- `scripts/run_eval.py`, `scripts/improve_description.py` – Claude Code CLI only
   (`claude -p`); they will refuse to run when the CLI is absent.
-- `eval-viewer/generate_review.py` — builds the HTML review page (use `--static`
+- `eval-viewer/generate_review.py` – builds the HTML review page (use `--static`
   for a file you can just double-click).
 
 ## 12. Pitfalls in Cline, in order of frequency
 
-1. **Skill created but not listed** — Cline read the skills at session start.
+1. **Skill created but not listed** – Cline read the skills at session start.
    Restart or open a new task.
-2. **YAML broken** — a colon or quote inside an unquoted `description`, or two
+2. **YAML broken** – a colon or quote inside an unquoted `description`, or two
    frontmatter blocks. Wrap the value in quotes when in doubt.
-3. **Never triggers** — description too abstract or too narrow. Fix the metadata,
+3. **Never triggers** – description too abstract or too narrow. Fix the metadata,
    not the body.
-4. **Triggers too often** — description claims a whole domain. Narrow it and add an
+4. **Triggers too often** – description claims a whole domain. Narrow it and add an
    explicit boundary ("do not use for X, use skill Y instead").
-5. **Body too long** — move detail into `references/`; the body should be the map,
+5. **Body too long** – move detail into `references/`; the body should be the map,
    not the territory.
-6. **Script paths** — quote paths with spaces; Cyrillic paths work but keep them
+6. **Script paths** – quote paths with spaces; Cyrillic paths work but keep them
    quoted. Prefer relative paths inside the skill folder.
-7. **Bash-isms** — `cp -r`, `nohup`, `$!` do not exist in PowerShell.
-8. **Fake metrics** — without subagents there are no reliable token/time numbers.
+7. **Bash-isms** – `cp -r`, `nohup`, `$!` do not exist in PowerShell.
+8. **Fake metrics** – without subagents there are no reliable token/time numbers.
    Report what you measured, skip the rest.
-9. **Mojibake in Vietnamese or Cyrillic text** — a file was written with the ANSI
+9. **Mojibake in Vietnamese or Cyrillic text** – a file was written with the ANSI
    code page. Rewrite it with `encoding="utf-8"`, set `PYTHONIOENCODING`, and verify
    by opening the file with `read_files`, never by looking at the console.
 

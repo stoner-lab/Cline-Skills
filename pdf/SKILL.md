@@ -22,7 +22,6 @@ metadata:
 
 - **PDF stack:** `pypdf`, `pdfplumber`, `reportlab`, `pypdfium2` are installed; OCR needs Tesseract, which is not installed - say so instead of producing garbage text.
 
-
 ## Overview
 
 This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see REFERENCE.md. If you need to fill out a PDF form, read FORMS.md and follow its instructions.

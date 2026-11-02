@@ -64,6 +64,53 @@ Text that a person reads uses the en dash `–` with spaces, never the em dash `
 `-` as a sentence dash, no `≻`, `→`, `•`, `…`, no curly quotes. Math symbols
 (`≤`, `≥`, `±`, `×`, `≈`, `√`, `σ`, `χ²`, `α`) stay, because the course needs them.
 
+## Keeping up with upstream
+
+Eleven of the twelve skills are forks; only `otchet` is native to this repository.
+Their `SKILL.md` is **generated**, so an upstream update is re-applied mechanically
+instead of merged by hand.
+
+| Strategy | Meaning | Skills |
+|---|---|---|
+| `adapt` | `SKILL.md` is rebuilt from upstream plus `tools/notes/<skill>.md`; other files are never overwritten or deleted | pdf, docx, pptx, xlsx, frontend-design, mcp-builder, git-workflow-and-versioning, documentation-and-adrs, code-review-and-quality |
+| `manual` | `SKILL.md` is hand-written; sync only reports that upstream moved, you merge yourself | skill-creator, impeccable |
+| `own` | this repository is the source of truth; sync skips it | otchet |
+
+**Schedule.** GitHub Actions runs `tools/sync_upstream.py check` every day at
+06:00 UTC (13:00 Vietnam, 09:00 Moscow). When an upstream commit changed, the job runs
+`apply --all`, `quick_validate.py` and opens **one** pull request on the
+`sync/upstream` branch. The branch is reused, so a week of updates still means one PR
+to review. Nothing merges automatically.
+
+**Token cost.** `check` and `apply` are plain Python: no model tokens. Tokens are spent
+only when a human or an agent reads the diff, which happens once per pull request, not
+once per cron run.
+
+Local use:
+
+```powershell
+$env:GH_TOKEN = # a GitHub token with public read access
+python tools\sync_upstream.py check              # 0 = up to date, 1 = something changed
+python tools\sync_upstream.py apply pdf --diff   # regenerate one skill and show the diff
+python tools\sync_upstream.py status             # last synced commit per skill
+```
+
+Adding a skill from another repository:
+
+```powershell
+python tools\sync_upstream.py add my-skill --repo owner/repo --path skills/my-skill
+# write tools/notes/my-skill.md, set description (with Vietnamese triggers) and license
+python tools\sync_upstream.py apply my-skill
+```
+
+Rules: never edit a generated `SKILL.md` by hand. Change `tools/notes/<skill>.md` or
+`tools/adapt_config.json` and regenerate. `apply` preserves `LICENSE*`, `CLINE-*.md` and
+`references/cline-adaptation.md`; everything else in an `adapt` skill comes from upstream.
+
+Bản Việt: 9 skill `adapt` tự cập nhật từ upstream mỗi ngày và gộp vào một PR trên nhánh
+`sync/upstream`; `skill-creator` và `impeccable` sửa tay nên chỉ được báo; `otchet` là
+nguồn gốc nên bỏ qua. Bước check/apply không tốn token.
+
 ## Licensing
 
 Every skill keeps the license of its origin: `otchet` and `skill-creator` are this
