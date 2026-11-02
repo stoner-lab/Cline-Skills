@@ -2,7 +2,8 @@
 
 A collection of [Cline](https://cline.bot) skills, adapted from Anthropic's
 [anthropics/skills](https://github.com/anthropics/skills) and from
-[pbakaus/impeccable](https://github.com/pbakaus/impeccable), plus two project-specific
+[pbakaus/impeccable](https://github.com/pbakaus/impeccable) and
+[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), plus two project-specific
 skills (`otchet`, `skill-creator`).
 
 Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and
@@ -24,6 +25,9 @@ skills list is reloaded. Invoke with `/skill-name`, or just describe the job: th
 | `pptx` | Create, read and edit presentations | adapted from anthropics/skills |
 | `pdf` | Read, extract, merge, split, fill and create PDFs | adapted from anthropics/skills |
 | `mcp-builder` | Build MCP servers in Python or Node | adapted from anthropics/skills |
+| `git-workflow-and-versioning` | Branching, atomic commits, commit messages, PRs, semantic versioning and changelogs | adapted from addyosmani/agent-skills |
+| `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase understandable | adapted from addyosmani/agent-skills |
+| `code-review-and-quality` | Multi-axis code review before merging: correctness, design, errors, tests, security | adapted from addyosmani/agent-skills |
 
 ## What "adapted to Cline" means
 
