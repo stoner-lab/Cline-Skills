@@ -22,7 +22,6 @@ metadata:
 - **Review inline:** read the diff with `run_commands` (`git --no-pager diff`), the surrounding files with `read_files`, cross-references with `search_codebase`, and report findings ordered by severity (blocker, should fix, nit) with file:line.
 - **Scope:** review what changed plus its immediate blast radius; do not rewrite unrelated code, and say explicitly when something is out of scope.
 
-
 ## Overview
 
 Multi-dimensional code review with quality gates. Every change gets reviewed before merge – no exceptions. Review covers five axes: correctness, readability, architecture, security, and performance.

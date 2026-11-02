@@ -4,3 +4,4 @@ __pycache__/
 *-workspace/
 *.skill
 Thumbs.db
+tools/__pycache__/

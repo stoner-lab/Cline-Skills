@@ -1,0 +1,56 @@
+name: sync-upstream
+
+on:
+  schedule:
+    - cron: "0 6 * * *"      # daily 06:00 UTC = 13:00 Vietnam, 09:00 Moscow
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check upstream repositories
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          python tools/sync_upstream.py check
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate changed skills
+        if: steps.check.outputs.status == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/sync_upstream.py apply --all
+
+      - name: Open or update the sync pull request
+        if: steps.check.outputs.status == '1'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: sync/upstream
+          base: main
+          title: "sync: upstream updates"
+          commit-message: "sync: upstream updates"
+          labels: upstream-sync
+          body: |
+            Automatic upstream sync.
+
+            - `check` found new commits in anthropics/skills, addyosmani/agent-skills
+              or pbakaus/impeccable.
+            - `apply --all` regenerated the `adapt` skills and ran `quick_validate.py`.
+            - `manual` skills (skill-creator, impeccable) and `own` (otchet) are not touched.
+
+            Review the diff, especially docx / pptx / xlsx / pdf: upstream changes there
+            often add shell steps (`pandoc`, `soffice`, `pdftoppm`) that do not exist on Windows.
+            Merge when it looks right; the branch is reused next time, so there is only one PR.

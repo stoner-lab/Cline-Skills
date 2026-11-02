@@ -22,7 +22,6 @@ metadata:
 - **Where ADRs live:** follow the repository convention (`docs/adr/`, `docs/decisions/`, or `adr/`); if there is none, propose `docs/adr/NNNN-short-title.md` and confirm with the user before creating the folder.
 - **Language of documents:** the repository decides (English by default, Russian for course reports); keep one language per document.
 
-
 ## Overview
 
 Document decisions, not just code. The most valuable documentation captures the *why* – the context, constraints, and trade-offs that led to a decision. Code shows *what* was built; documentation explains *why it was built this way* and *what alternatives were considered*. This context is essential for future humans and agents working in the codebase.
