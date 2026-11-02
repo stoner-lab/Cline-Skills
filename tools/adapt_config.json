@@ -136,6 +136,15 @@
     ],
     "compatibility": "Cline on Windows. Shell steps use run_commands/PowerShell; the design-detector launcher is optional (degraded mode documented below); subagent workflows are replaced by reference/degraded/*.md."
   },
+  "manim": {
+    "repo": "iart-ai/manim-skills",
+    "ref": "main",
+    "path": "skills/manim",
+    "strategy": "manual",
+    "description": "Build math/physics/CS animations with Manim Community Edition in Python: Scenes and Mobjects, timed animations, LaTeX/MathTex equation morphs, graphs and ValueTracker updaters, 3D scenes and moving camera, then render to MP4/GIF from the CLI with a render-a-frame-first verify loop. Trigger when the user asks to make a math animation, animate an equation or formula, morph one formula into another, plot or animate a graph/function, trace a dot along a curve, animate a geometric proof, build a 3Blue1Brown-style explainer, or visualize a math/physics/CS concept as a video. Vietnamese triggers: 'lam video minh hoa toan', 'animate cong thuc', 've do thi dong', 'dung canh 3D', 'xuat MP4/GIF tu Python'. Russian triggers: 'анимация формулы', 'анимировать график', 'ролик в стиле 3Blue1Brown', 'визуализировать теорему'. Not for UI motion, Remotion/social video, or CSV business charts.",
+    "license": "MIT, Copyright (c) 2026 iart.ai (see LICENSE)",
+    "compatibility": "Cline on Windows: PowerShell shell, python -m manim (Manim CE 0.22.1), ffmpeg/ffprobe and MiKTeX installed; the upstream bash helpers are ported to PowerShell in scripts/; no subagents."
+  },
   "otchet": {
     "repo": "stoner-lab/Otchet",
     "ref": "main",

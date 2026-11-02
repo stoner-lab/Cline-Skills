@@ -1,0 +1,19 @@
+# Manim render artifacts (created next to any scene.py)
+media/
+partial_movie_files/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Verification stills and contact sheets produced by the scripts
+f-*.png
+sheet.png
+out.txt
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.vscode/
