@@ -273,6 +273,26 @@ def _drop_paragraph(paragraph):
     el.getparent().remove(el)
 
 
+
+def _page_break_tight(doc):
+    """Разрыв страницы, который не создаёт пустую страницу.
+
+    ``doc.add_page_break()`` вставляет абзац с разрывом. Если титульный лист
+    занимает страницу почти целиком, этот абзац уезжает на следующую страницу,
+    и Word показывает пустой лист перед текстом. Поэтому абзац с разрывом
+    делается высотой 1 pt: он остаётся на странице титула, а разрыв работает.
+    """
+    doc.add_page_break()
+    p = doc.paragraphs[-1]
+    pf = p.paragraph_format
+    pf.space_before = Pt(0)
+    pf.space_after = Pt(0)
+    pf.line_spacing = Pt(1)
+    for run in p.runs:
+        run.font.size = Pt(1)
+    return p
+
+
 def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
     """Clone the cover page XML from the .docx template and fill placeholders.
 
@@ -459,7 +479,7 @@ def add_title_page(doc, meta: ReportMeta, cfg: StyleConfig | None = None, templa
         except Exception:
             _add_title_page_manual(doc, meta, cfg)
             return
-        doc.add_page_break()
+        _page_break_tight(doc)
         return
     _add_title_page_manual(doc, meta, cfg)
 
@@ -540,7 +560,7 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
          size=cfg.font_size, spacing=cfg.line_spacing)
     para(doc, meta.year, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
          size=cfg.font_size, spacing=cfg.line_spacing)
-    doc.add_page_break()
+    _page_break_tight(doc)
 
 
 
