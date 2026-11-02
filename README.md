@@ -1,9 +1,10 @@
 # Cline Skills
 
 A collection of [Cline](https://cline.bot) skills, adapted from Anthropic's
-[anthropics/skills](https://github.com/anthropics/skills) and from
-[pbakaus/impeccable](https://github.com/pbakaus/impeccable) and
-[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), plus two project-specific
+[anthropics/skills](https://github.com/anthropics/skills), from
+[pbakaus/impeccable](https://github.com/pbakaus/impeccable),
+[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) and
+[iart-ai/manim-skills](https://github.com/iart-ai/manim-skills), plus two project-specific
 skills (`otchet`, `skill-creator`).
 
 Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and
@@ -24,6 +25,7 @@ skills list is reloaded. Invoke with `/skill-name`, or just describe the job: th
 | `xlsx` | Create, read, edit and clean spreadsheets | adapted from anthropics/skills |
 | `pptx` | Create, read and edit presentations | adapted from anthropics/skills |
 | `pdf` | Read, extract, merge, split, fill and create PDFs | adapted from anthropics/skills |
+| `manim` | Math and physics animations in Python with Manim CE: animated equations, plotted functions, geometric proofs, 3D scenes, rendered to MP4/GIF | adapted from iart-ai/manim-skills |
 | `mcp-builder` | Build MCP servers in Python or Node | adapted from anthropics/skills |
 | `git-workflow-and-versioning` | Branching, atomic commits, commit messages, PRs, semantic versioning and changelogs | adapted from addyosmani/agent-skills |
 | `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase understandable | adapted from addyosmani/agent-skills |
@@ -57,6 +59,9 @@ Details per skill: `references/cline-adaptation.md` in `skill-creator` and
   `pip install python-docx python-pptx openpyxl pypdf pdfplumber reportlab lxml pypdfium2 pyyaml`
 - Optional: Node 20+ (`docx` npm package for the docx skill, MCP SDK for mcp-builder),
   Microsoft Word for DOCX to PDF export, Playwright MCP for visual checks.
+- For `manim`: Manim CE (`python -m pip install manim`), `ffmpeg` and `ffprobe` on PATH,
+  and MiKTeX (only for `Tex`/`MathTex`). Run `manim\scripts\manim-env-check.ps1` to see
+  what is missing before blaming the scene code.
 
 ## Typography rules baked into the skills
 
@@ -66,14 +71,14 @@ Text that a person reads uses the en dash `–` with spaces, never the em dash `
 
 ## Keeping up with upstream
 
-Eleven of the twelve skills are forks; only `otchet` is native to this repository.
+Twelve of the thirteen skills are forks; only `otchet` is native to this repository.
 Their `SKILL.md` is **generated**, so an upstream update is re-applied mechanically
 instead of merged by hand.
 
 | Strategy | Meaning | Skills |
 |---|---|---|
 | `adapt` | `SKILL.md` is rebuilt from upstream plus `tools/notes/<skill>.md`; other files are never overwritten or deleted | pdf, docx, pptx, xlsx, frontend-design, mcp-builder, git-workflow-and-versioning, documentation-and-adrs, code-review-and-quality |
-| `manual` | `SKILL.md` is hand-written; sync only reports that upstream moved, you merge yourself | skill-creator, impeccable |
+| `manual` | `SKILL.md` is hand-written; sync only reports that upstream moved, you merge yourself | skill-creator, impeccable, manim |
 | `own` | this repository is the source of truth; sync skips it | otchet |
 
 **Schedule.** GitHub Actions runs `tools/sync_upstream.py check` every day at
@@ -108,8 +113,8 @@ Rules: never edit a generated `SKILL.md` by hand. Change `tools/notes/<skill>.md
 `references/cline-adaptation.md`; everything else in an `adapt` skill comes from upstream.
 
 Bản Việt: 9 skill `adapt` tự cập nhật từ upstream mỗi ngày và gộp vào một PR trên nhánh
-`sync/upstream`; `skill-creator` và `impeccable` sửa tay nên chỉ được báo; `otchet` là
-nguồn gốc nên bỏ qua. Bước check/apply không tốn token.
+`sync/upstream`; `skill-creator`, `impeccable` và `manim` sửa tay nên chỉ được báo; `otchet`
+là nguồn gốc nên bỏ qua. Bước check/apply không tốn token.
 
 ## Licensing
 
