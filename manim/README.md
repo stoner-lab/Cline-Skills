@@ -11,10 +11,12 @@ is unchanged; the mechanics were ported to this runtime.
 
 ## Install
 
-Cline reads skills from `C:\Users\<user>\.cline\skills\<skill-name>\`.
+Cline reads skills from `C:\Users\<user>\.cline\skills\<skill-name>\`. This skill ships in the
+[Cline-Skills](https://github.com/stoner-lab/Cline-Skills) collection, folder `manim/`.
 
 ```powershell
-git clone https://github.com/stoner-lab/manim.git "$env:USERPROFILE\.cline\skills\manim"
+git clone --depth 1 https://github.com/stoner-lab/Cline-Skills.git "$env:TEMP\cline-skills"
+Copy-Item -Recurse "$env:TEMP\cline-skills\manim" "$env:USERPROFILE\.cline\skills\manim"
 ```
 
 Then start a new task (or restart VS Code) so Cline picks up the new `SKILL.md`.
