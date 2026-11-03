@@ -141,6 +141,12 @@ Rules: clean **before** delivering, never after a human edited the file; run `--
 in the same breath as the deliverable check; if an author is required, pass the real
 name (`--author`) or leave the field empty, never a tool or model name.
 
+The same rule covers source files and the commit trail: no "generated with ..." or
+"made by ..." lines in a document, a code comment or a commit trailer, and no
+`Co-Authored-By` trailer naming an assistant. Attribution to the upstream project a
+skill is derived from (licence header, README credit) stays, because the MIT licence
+requires it - that names the project, not the generator.
+
 Bản Việt: mọi file giao cho người khác không được để lại dấu vết công cụ trong
 metadata. Chạy `python scripts\strip_metadata.py <file>` trước khi giao và xác nhận
 bằng `--check`; tên tác giả chỉ ghi bằng tên thật qua `--author`, không ghi tên tool
