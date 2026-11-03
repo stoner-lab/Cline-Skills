@@ -169,20 +169,23 @@ def clean_ooxml(path: Path, author: str | None, title: str | None) -> None:
 
 def clean_pdf(path: Path, author: str | None, title: str | None) -> None:
     import pypdf
+    from pypdf.generic import DictionaryObject, NameObject, TextStringObject
 
     writer = pypdf.PdfWriter(clone_from=str(path))
 
     info = writer._info
-    if info is not None:
-        keep = {"/CreationDate", "/ModDate"}
-        for key in list(info.keys()):
-            if key in keep and not looks_like_fingerprint(str(info[key])):
-                continue
-            del info[key]
-        if author:
-            info["/Author"] = author
-        if title:
-            info["/Title"] = title
+    if info is None:
+        info = writer._info = DictionaryObject()
+    # pypdf only accepts PdfObject keys here, so plain strings raise ValueError
+    keep = {"/CreationDate", "/ModDate"}
+    for key in list(info.keys()):
+        if key in keep and not looks_like_fingerprint(str(info[key])):
+            continue
+        del info[key]
+    if author:
+        info[NameObject("/Author")] = TextStringObject(author)
+    if title:
+        info[NameObject("/Title")] = TextStringObject(title)
 
     root = writer._root_object
     if "/Metadata" in root:
