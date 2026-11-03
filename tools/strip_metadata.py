@@ -61,9 +61,11 @@ CORE_TMPL = (
     "{body}</cp:coreProperties>"
 )
 
-# Fields in docProps/app.xml that name the tool that produced the file.
+# Fields in docProps/app.xml that name the tool that produced the file. They are
+# removed outright: blanking them breaks Word for the typed ones (DocSecurity is an
+# int, AppVersion is version-typed), and an empty string is still a tell.
 APP_FIELDS = ("Application", "AppVersion", "Manager", "Company", "Template",
-              "HyperlinkBase", "DocSecurity")
+              "HyperlinkBase")
 
 
 def stamps(modified: float | None = None):
@@ -114,8 +116,7 @@ def ooxml_findings(parts: dict[str, bytes]) -> list[str]:
     app = parts.get("docProps/app.xml", b"").decode("utf-8", "replace")
     for field in APP_FIELDS:
         for match in re.findall(rf"<{field}>(.*?)</{field}>", app, re.S):
-            if match.strip() and (field in ("Application", "AppVersion")
-                                  or looks_like_fingerprint(match)):
+            if match.strip():
                 found.append(f"{field}={match.strip()}")
     for name in parts:
         if name.startswith("docProps/thumbnail."):
@@ -142,7 +143,8 @@ def clean_ooxml(path: Path, author: str | None, title: str | None) -> None:
     if "docProps/app.xml" in parts:
         app = parts["docProps/app.xml"].decode("utf-8", "replace")
         for field in APP_FIELDS:
-            app = re.sub(rf"(<{field}>)(.*?)(</{field}>)", r"\1\3", app, flags=re.S)
+            app = re.sub(rf"<{field}\s*/>", "", app)
+            app = re.sub(rf"<{field}>.*?</{field}>", "", app, flags=re.S)
         parts["docProps/app.xml"] = app.encode("utf-8")
 
     # packaged previews and custom property bags can both name the tool
