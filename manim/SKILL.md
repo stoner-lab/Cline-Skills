@@ -26,6 +26,11 @@ Manim (Mathematical Animation Engine, Community Edition) renders explanatory mat
 - **Inspect stills with `read_files`** on the PNG path – it renders images to you. Do not judge a frame from the log text alone.
 - **Answer the user in Vietnamese** (their standing preference); keep Manim API names and code in English.
 - There are no subagents or hooks: run the verify loop inline, yourself.
+- **Deliver clean media.** A Manim MP4 carries `comment: Rendered with Manim Community
+  v0.22.1` and `encoder=Lavf...` in its container tags, which names the tool that made
+  it. Before handing a clip or a still over, run
+  `python scripts\strip_metadata.py <file>` from the skill folder and confirm with
+  `--check` (handles .mp4/.mov and .png/.jpg; Manim PNGs are usually already clean).
 
 ## Setup & render (verified on this machine)
 

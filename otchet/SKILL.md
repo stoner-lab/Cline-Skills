@@ -308,6 +308,9 @@ Chi tiết: `references/report-types.md`.
   - `fmt_num()`, `save_report()`, `export_pdf_via_word()`;
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
 - `scripts/validate_docx.py` – kiểm tra file DOCX/PDF.
+- `scripts/strip_metadata.py` – bỏ dấu vết công cụ khỏi file giao bài (`creator:
+  python-docx`, `Application`, `docProps/custom.xml`, thumbnail; `Producer: ReportLab`,
+  XMP trong PDF; `encoder=Lavf` trong MP4). `--check` chỉ báo cáo, không sửa.
 
 Cách dùng nhanh:
 
@@ -353,6 +356,9 @@ Trước khi giao bài, chạy checklist trong `references/checklist.md`:
 - không có bảng bị tách header;
 - trang bìa đúng;
 - на титуле ФИО записано как **«Фамилия И.О.»**, а в имени файла – **«Фамилия Имя группа»**;
+- metadata sạch: chạy `python scripts/strip_metadata.py <file.docx> <file.pdf>` rồi
+  `--check`; không còn `creator: python-docx`, `lastModifiedBy`, `Application`,
+  `Producer: ReportLab`, `docProps/custom.xml`;
 - PDF mở được, không có trang trắng;
 - шрифты в PDF встроены (Word: PDF/A-1b), иначе Times New Roman подменится у проверяющего.
 
