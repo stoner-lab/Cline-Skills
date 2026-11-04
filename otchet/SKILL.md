@@ -218,6 +218,24 @@ của bài hiện tại.
 - Trước khi giao file: không còn `–`, `≻`, `->`, `–`, `...`; nếu còn thì thay bằng `–`
   hoặc bỏ hẳn.
 
+### 2.12. Nguồn đề bài: file local trước, Moodle chỉ khi được nhờ
+
+Đề bài, variant và số liệu **luôn tìm trong file local trước khi hỏi hoặc mở web**:
+
+1. thư mục môn (например `E:\Private\Documents\Cognitio\<курс>\<семестр>\<предмет>\`):
+   `01_Задания`, `00_Лекции`, методичка, файл đề bài, ảnh chụp đề;
+2. презентации лекций `.pptx`: задание часто стоит на **последнем слайде** (заголовок
+   «Задание», «Задачи», «Цель»); текст выписывается дословно в
+   `01_Задания\Задание-ЛР-NN_<тема>.md`;
+3. архивные и рабочие папки (`99_Архив`, `_Junk`, `_Duplicates`, `%TEMP%`);
+4. вопрос пользователю: «где взять материалы по этой дисциплине?».
+
+**Запрещено** открывать СДО/Moodle (`vec.etu.ru`) по своей инициативе: ни чтобы найти
+задание, ни чтобы проверить, есть ли курс, ни чтобы скачать лекции. Не у всех дисциплин
+есть курс в Moodle (например, «Основы программирования встроенных систем», папка
+`3.1\встраиваемые системы`, — только локальные файлы). Moodle используется
+исключительно по прямой просьбе пользователя.
+
 ## 3. Thông tin phải thu thập trước khi viết
 
 Hỏi người dùng nếu thiếu bất kỳ mục nào:
@@ -298,16 +316,26 @@ Chi tiết: `references/report-types.md`.
     `<дата>`, `<группа>`, `<Фамилия И.О.>`; muốn đổi mẫu – sửa file docx, không
     sửa code. Nếu mẫu vắng mặt hoặc chứa ảnh/hyperlink thì tự lùi về bản dựng tay
     `_add_title_page_manual()`;
-  - `heading()`, `para()`, `formula()`, `caption()`;
+  - `heading()`, `para()`, `formula()`, `caption()` – `para()` và `caption()` tự
+    biến URL/DOI trong câu thành hyperlink thật (`links=True`, tắt bằng
+    `links=False` khi cần chữ thường);
+  - `add_hyperlink()`, `add_text_with_links()` – chèn link vào đoạn văn hoặc ô
+    bảng tự dựng;
   - `add_references()` – раздел «Список источников»: заголовок **по центру, с новой страницы**
     (`page_break_before`), пункты – обычным абзацем с отступом первой строки,
     выравниванием по ширине и интервалом 1,5; нумерация добавляется автоматически,
-    если её нет в строке;
+    если её нет в строке; адреса (`https://`, `www.`, `doi:`) внутри пункта
+    становятся **кликабельными гиперссылками**, шрифт остаётся Times New Roman;
   - `add_table()`, `add_picture_with_caption()`;
-  - `add_page_number()`, `add_toc()`;
+  - `add_page_number()`, `add_toc()` – mục lục dùng field `TOC \o "1-3" \h \z \u`
+    (`\h` nên từng dòng mục lục là link nội bộ); `export_pdf_via_word()` gọi
+    `Fields.Update()` trước khi xuất nên PDF cũng có mục lục và link, không còn
+    dòng «Обновите поле»;
   - `fmt_num()`, `save_report()`, `export_pdf_via_word()`;
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
-- `scripts/validate_docx.py` – kiểm tra file DOCX/PDF.
+- `scripts/validate_docx.py` – kiểm tra file DOCX/PDF: bố cục, font, dấu gạch
+  ngang, metadata, **tính clickable của link** (URL để dạng chữ thường là FAIL,
+  không phải cảnh báo) và số annotation `/Link` trong PDF.
 - `scripts/strip_metadata.py` – bỏ dấu vết công cụ khỏi file giao bài (`creator:
   python-docx`, `Application`, `docProps/custom.xml`, thumbnail; `Producer: ReportLab`,
   XMP trong PDF; `encoder=Lavf` trong MP4). `--check` chỉ báo cáo, không sửa.
@@ -359,6 +387,8 @@ Trước khi giao bài, chạy checklist trong `references/checklist.md`:
 - metadata sạch: chạy `python scripts/strip_metadata.py <file.docx> <file.pdf>` rồi
   `--check`; không còn `creator: python-docx`, `lastModifiedBy`, `Application`,
   `Producer: ReportLab`, `docProps/custom.xml`;
+- все ссылки кликабельны: в DOCX это `w:hyperlink` с внешней связью, в PDF –
+  аннотации `/Link`, а не голый текст `https://…`;
 - PDF mở được, không có trang trắng;
 - шрифты в PDF встроены (Word: PDF/A-1b), иначе Times New Roman подменится у проверяющего.
 

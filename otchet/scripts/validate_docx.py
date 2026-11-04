@@ -22,6 +22,7 @@ PRONOUNS = re.compile(
 TABLE_CAP = re.compile(r"^\s*Таблица\s+(\d+)\b", re.IGNORECASE)
 FIG_CAP = re.compile(r"^\s*Рис\.\s*(\d+)\b", re.IGNORECASE)
 DECIMAL_DOT = re.compile(r"(?<![\d.])\d+\.\d+(?![\d.])")
+DATE_LIKE = re.compile(r"\b(?:0?[1-9]|[12]\d|3[01])\.(?:0?[1-9]|1[0-2])(?:\.\d{2,4})?\b")
 PLACEHOLDERS = (
     "0000", "Название кафедры", "Наименование темы",
     "Наименование дисциплины", "Фамилия И.О.",
@@ -81,8 +82,10 @@ def check_page_setup(doc, rep):
     for i, sec in enumerate(doc.sections, 1):
         w = sec.page_width.cm if sec.page_width else 0
         h = sec.page_height.cm if sec.page_height else 0
-        if not (20.8 <= w <= 21.1 and 29.5 <= h <= 29.9):
-            rep.warn(f"Section {i}: page size {w:.2f} x {h:.2f} cm (expected A4 21 x 29.7)")
+        portrait = 20.8 <= w <= 21.1 and 29.5 <= h <= 29.9
+        landscape = 29.5 <= w <= 29.9 and 20.8 <= h <= 21.1
+        if not (portrait or landscape):
+            rep.warn(f"Section {i}: page size {w:.2f} x {h:.2f} cm (expected A4 21 x 29.7 or 29.7 x 21)")
         margins = (sec.left_margin.cm, sec.right_margin.cm, sec.top_margin.cm, sec.bottom_margin.cm)
         expected = (3.0, 1.5, 2.0, 2.0)
         if any(abs(a - b) > 0.15 for a, b in zip(margins, expected)):
@@ -121,6 +124,7 @@ def check_headings(doc, rep):
                 "цель работы", "постановка задачи и исходные данные",
                 "выводы", "заключение", "содержание",
                 "список использованных источников",
+                "список источников",
             ):
                 rep.info(f"Heading 1 without number: {p.text[:60]!r}")
 
@@ -209,9 +213,70 @@ def check_placeholders_and_numbers(doc, rep):
                 rep.warn(f"Placeholder still present: {ph!r}")
         elif ph in all_text:
             rep.warn(f"Placeholder still present: {ph!r}")
-    dots = DECIMAL_DOT.findall(all_text)
+    dots = DECIMAL_DOT.findall(DATE_LIKE.sub(" ", all_text))
     if dots:
         rep.warn(f"Decimal dots found (use comma): {dots[:10]}")
+
+
+def check_dashes(doc, rep):
+    """Em dash запрещён: в тексте только en dash с пробелами (format.md §3.1)."""
+    hits = []
+    for p in doc.paragraphs:
+        if "—" in p.text:
+            hits.append(p.text.strip()[:60])
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                if "—" in cell.text:
+                    hits.append(cell.text.strip()[:60])
+    if hits:
+        rep.warn(f"Em dash «—» found {len(hits)} time(s), use « – »: {hits[:3]}")
+    else:
+        rep.info("No em dashes")
+
+
+LINK_TEXT_RE = re.compile(r"(?:https?://|www\.)[^\s<>\"«»]+|doi:\s*10\.\d{4,9}/\S+",
+                          re.IGNORECASE)
+
+
+def _unlinked_runs_text(p_el):
+    """Текст абзаца, который лежит вне элементов w:hyperlink."""
+    chunks = []
+    for child in p_el.iterchildren():
+        if child.tag == qn("w:hyperlink"):
+            continue
+        if child.tag == qn("w:r"):
+            chunks.append("".join(t.text or "" for t in child.iter(qn("w:t"))))
+    return "".join(chunks)
+
+
+def check_links(doc, rep):
+    """Адреса в отчёте должны быть настоящими гиперссылками, а не текстом.
+
+    Ссылка, набранная обычным run'ом, не кликается ни в Word, ни в PDF, поэтому
+    это ошибка, а не предупреждение.
+    """
+    total = 0
+    dead = []
+    for p in doc.paragraphs:
+        total += len(p._p.findall(qn("w:hyperlink")))
+        for match in LINK_TEXT_RE.finditer(_unlinked_runs_text(p._p)):
+            dead.append(match.group(0)[:70])
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    total += len(p._p.findall(qn("w:hyperlink")))
+                    for match in LINK_TEXT_RE.finditer(_unlinked_runs_text(p._p)):
+                        dead.append(match.group(0)[:70])
+    if dead:
+        for url in dead[:10]:
+            rep.fail(f"URL is plain text, not a hyperlink: {url!r}")
+    if total:
+        rep.info(f"Hyperlinks: {total}")
+    else:
+        rep.info("Hyperlinks: none")
+    return total
 
 
 def check_footer_page_numbers(doc, rep):
@@ -221,19 +286,45 @@ def check_footer_page_numbers(doc, rep):
             rep.fail(f"Section {i}: footer has no PAGE field")
 
 
-def check_pdf(pdf_path, rep):
+def check_pdf(pdf_path, rep, docx_links=0):
     try:
         import pypdfium2 as pdfium
     except ImportError:
         rep.info("pypdfium2 not installed; PDF page check skipped")
+    else:
+        pdf = pdfium.PdfDocument(str(pdf_path))
+        rep.info(f"PDF pages: {len(pdf)}")
+        for i in range(len(pdf)):
+            text = pdf[i].get_textpage().get_text_range().strip()
+            if len(re.sub(r"\s", "", text)) < 5:
+                rep.fail(f"PDF page {i + 1} looks blank")
+        check_pdf_fonts(pdf_path, rep)
+    check_pdf_links(pdf_path, rep, docx_links)
+
+
+def check_pdf_links(pdf_path, rep, docx_links=0):
+    """Ссылки в PDF должны остаться кликабельными (/Link аннотации)."""
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        rep.info("pypdf not installed; PDF link check skipped")
         return
-    pdf = pdfium.PdfDocument(str(pdf_path))
-    rep.info(f"PDF pages: {len(pdf)}")
-    for i in range(len(pdf)):
-        text = pdf[i].get_textpage().get_text_range().strip()
-        if len(re.sub(r"\s", "", text)) < 5:
-            rep.fail(f"PDF page {i + 1} looks blank")
-    check_pdf_fonts(pdf_path, rep)
+    reader = PdfReader(str(pdf_path))
+    total = 0
+    for page in reader.pages:
+        for ref in page.get("/Annots") or []:
+            try:
+                obj = ref.get_object()
+            except Exception:                      # noqa: BLE001
+                continue
+            if obj.get("/Subtype") == "/Link":
+                total += 1
+    if total:
+        rep.info(f"PDF links: {total}")
+    elif docx_links:
+        rep.fail(f"DOCX has {docx_links} hyperlink(s), but the PDF has none")
+    else:
+        rep.info("PDF links: none")
 
 
 def check_pdf_fonts(pdf_path, rep):
@@ -290,9 +381,11 @@ def main():
     check_captions_and_tables(doc, rep)
     check_personal_style(doc, rep)
     check_placeholders_and_numbers(doc, rep)
+    check_dashes(doc, rep)
     check_footer_page_numbers(doc, rep)
+    links = check_links(doc, rep)
     if args.pdf:
-        check_pdf(args.pdf, rep)
+        check_pdf(args.pdf, rep, links)
     return rep.show()
 
 
