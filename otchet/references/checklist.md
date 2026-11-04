@@ -65,6 +65,8 @@
 - [ ] Không có `≻`, `->`, `–`, `...`, ngoặc kép kiểu `" "`: chỉ dùng ký tự sinh viên hay dùng.
 - [ ] Dấu `-` chỉ xuất hiện trong từ ghép, tên riêng, mã bài và code.
 - [ ] Заголовок `Список источников` по центру, сам список с новой страницы.
+- [ ] Все `URL` и `DOI` в списке источников – кликабельные гиперссылки в DOCX и в
+  PDF; голого текста `https://…` в документе нет (`validate_docx.py`).
 
 
 ## 5. Trang bìa

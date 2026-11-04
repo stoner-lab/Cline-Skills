@@ -12,13 +12,15 @@ from __future__ import annotations
 import argparse
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from docx import Document
+from docx.oxml.ns import qn
 
-from docx_helpers import (ReportMeta, add_title_page, heading, para, save_report,
+from docx_helpers import (ReportMeta, add_references, add_title_page, heading, para, save_report,
                           setup_document, title_template_path)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
@@ -28,6 +30,12 @@ PLACEHOLDERS = ("<кафедра>", "<номер>", "<дисциплина>", "<
 
 AUTHOR = "Иванов И.И."
 TITLE = "ПР-1"
+
+SOURCES = [
+    "Proceset – платформа процессной аналитики [Электронный ресурс]. – URL: "
+    "https://infomaximum.ru/product/ (дата обращения: 01.11.2026).",
+    "Документация Python [Электронный ресурс]. – URL: https://docs.python.org/3/.",
+]
 
 
 def build(path: Path, pdf: bool):
@@ -44,7 +52,8 @@ def build(path: Path, pdf: bool):
     )
     add_title_page(doc, meta)
     heading(doc, "1. Проверка")
-    para(doc, "Текст проверки.")
+    para(doc, "Текст проверки, подробнее: https://example.org/method.")
+    add_references(doc, SOURCES)
     save_report(doc, path, pdf_path=path.with_suffix(".pdf") if pdf else None)
 
     # the delivery pipeline ends with clean metadata, so the test must prove it
@@ -102,12 +111,33 @@ def check(path: Path):
             problems.append(f"в метаданных {target.suffix} следы генератора: "
                             + "; ".join(found))
 
+    # links must be real hyperlinks, and must survive the PDF export
+    docx_links = len(list(new.element.body.iter(qn("w:hyperlink"))))
+    if docx_links < len(SOURCES):
+        problems.append(f"ссылок в DOCX {docx_links}, ожидалось минимум {len(SOURCES)}")
+    with zipfile.ZipFile(path) as archive:
+        rels = archive.read("word/_rels/document.xml.rels").decode("utf-8")
+    if 'TargetMode="External"' not in rels:
+        problems.append("в DOCX нет внешних связей: адреса не кликаются")
+    if "infomaximum.ru" not in rels:
+        problems.append("адрес источника не попал в связи DOCX")
+
     if pdf_path.exists():
         try:
             import pypdf
             reader = pypdf.PdfReader(str(pdf_path))
             if len(reader.pages) < 2:
                 problems.append(f"в PDF {len(reader.pages)} страниц, ожидалось минимум 2")
+            pdf_links = 0
+            for page in reader.pages:
+                for ref in page.get("/Annots") or []:
+                    try:
+                        if ref.get_object().get("/Subtype") == "/Link":
+                            pdf_links += 1
+                    except Exception:                  # noqa: BLE001
+                        continue
+            if docx_links and not pdf_links:
+                problems.append(f"в DOCX {docx_links} гиперссылок, а в PDF нет ни одной аннотации /Link")
             text = "".join((page.extract_text() or "") for page in reader.pages)
             if not text.strip():
                 problems.append("из PDF не извлекается текст (шрифты/кодировка)")
@@ -144,7 +174,8 @@ def main():
         return 1
 
     print(f"OK: {tpl.name} – титул собран, плейсхолдеры заменены, "
-          f"метаданные чистые" + (", PDF собран" if args.pdf else ""))
+          f"метаданные чистые, ссылки кликабельные"
+          + (", PDF собран" if args.pdf else ""))
     return 0
 
 

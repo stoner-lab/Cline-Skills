@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import copy
 import os
+import re
 import subprocess
 import tempfile
 from dataclasses import dataclass, field
@@ -23,6 +24,7 @@ from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.table import WD_ALIGN_VERTICAL, WD_TABLE_ALIGNMENT, WD_ROW_HEIGHT_RULE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
@@ -178,7 +180,8 @@ def setup_document(cfg: StyleConfig | None = None, title: str = "", author: str 
 
 
 def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=1.25, size=14,
-         bold=False, italic=False, before=0, after=0, spacing=1.5, keep=False):
+         bold=False, italic=False, before=0, after=0, spacing=1.5, keep=False,
+         links=True):
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = align
@@ -188,8 +191,11 @@ def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=1.25, size=14
     pf.line_spacing = spacing
     pf.keep_with_next = keep
     if text:
-        r = p.add_run(text)
-        set_run_font(r, size=size, bold=bold, italic=italic)
+        if links and LINK_RE.search(text):
+            add_text_with_links(p, text, size=size, bold=bold, italic=italic)
+        else:
+            r = p.add_run(text)
+            set_run_font(r, size=size, bold=bold, italic=italic)
     return p
 
 
@@ -200,6 +206,72 @@ def heading(doc, text, level=1, size=14):
     set_run_font(r, size=size, bold=True)
     r.font.color.rgb = RGBColor(0, 0, 0)
     return h
+
+
+# Ссылки в отчёте должны быть настоящими гиперссылками (w:hyperlink + внешняя
+# связь), иначе в DOCX и в PDF они остаются мёртвым текстом.
+LINK_RE = re.compile(r"(?:https?://|www\.)[^\s<>\"«»]+|doi:\s*10\.\d{4,9}/\S+",
+                     re.IGNORECASE)
+LINK_TRAILING = ".,;:!?)]}»\"'"
+
+
+def _link_target(raw: str) -> str:
+    """«www.x.ru» -> «http://www.x.ru», «doi: 10.1/x» -> «https://doi.org/10.1/x»."""
+    value = raw.strip()
+    if value.lower().startswith("doi:"):
+        return "https://doi.org/" + value[4:].strip()
+    if not value.lower().startswith(("http://", "https://")):
+        return "http://" + value
+    return value
+
+
+def add_hyperlink(paragraph, url, text=None, size=14, bold=False, italic=False,
+                  color=None, underline=None):
+    """Добавить в абзац настоящую гиперссылку.
+
+    Создаётся элемент ``w:hyperlink`` со ссылкой на внешний адрес через
+    relationship; run переносится внутрь него, поэтому шрифт и оформление
+    остаются такими же, как у обычного текста отчёта.
+    """
+    r_id = paragraph.part.relate_to(_link_target(url), RT.HYPERLINK, is_external=True)
+    run = paragraph.add_run(text if text is not None else url)
+    set_run_font(run, size=size, bold=bold, italic=italic)
+    if color is not None:
+        run.font.color.rgb = color
+    if underline is not None:
+        run.font.underline = underline
+    hyperlink = OxmlElement("w:hyperlink")
+    hyperlink.set(qn("r:id"), r_id)
+    hyperlink.append(run._r)
+    paragraph._p.append(hyperlink)
+    return run
+
+
+def add_text_with_links(paragraph, text, size=14, bold=False, italic=False,
+                        color=None, underline=None):
+    """Записать текст, превращая URL и DOI в кликабельные гиперссылки.
+
+    Обычный текст остаётся обычными run'ами; точка или запятая после адреса
+    не попадает внутрь ссылки.
+    """
+    position = 0
+    for match in LINK_RE.finditer(text):
+        start, end = match.span()
+        url = match.group(0)
+        while url and url[-1] in LINK_TRAILING:
+            url = url[:-1]
+        if not url:
+            continue
+        if start > position:
+            run = paragraph.add_run(text[position:start])
+            set_run_font(run, size=size, bold=bold, italic=italic)
+        add_hyperlink(paragraph, url, text=url, size=size, bold=bold, italic=italic,
+                      color=color, underline=underline)
+        position = start + len(url)
+    if position < len(text):
+        run = paragraph.add_run(text[position:])
+        set_run_font(run, size=size, bold=bold, italic=italic)
+    return paragraph
 
 
 def formula(doc, parts: Sequence[tuple[str, str | None]], size=14):
@@ -220,7 +292,7 @@ def formula(doc, parts: Sequence[tuple[str, str | None]], size=14):
     return p
 
 
-def caption(doc, text, size=12):
+def caption(doc, text, size=12, links=True):
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -229,8 +301,11 @@ def caption(doc, text, size=12):
     pf.space_after = Pt(3)
     pf.line_spacing = 1.5
     pf.keep_with_next = True
-    r = p.add_run(text)
-    set_run_font(r, size=size)
+    if links and LINK_RE.search(text):
+        add_text_with_links(p, text, size=size)
+    else:
+        r = p.add_run(text)
+        set_run_font(r, size=size)
     return p
 
 
@@ -412,6 +487,32 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
     return True
 
 
+def normalize_dashes(doc):
+    """Заменяет длинное тире «—» на короткое «–» с пробелами.
+
+    Правило `references/format.md` §3.1: в тексте используется только en dash
+    с пробелами по сторонам, em dash запрещён. Функция проходит по всем абзацам
+    и ячейкам таблиц, поэтому её достаточно вызвать один раз перед сохранением.
+    """
+    import re
+
+    pattern = re.compile(r"\s*—\s*")
+
+    def fix(paragraph):
+        for run in paragraph.runs:
+            if "—" in run.text:
+                run.text = pattern.sub(" – ", run.text)
+
+    for paragraph in doc.paragraphs:
+        fix(paragraph)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    fix(paragraph)
+    return doc
+
+
 def short_name(full_name: str) -> str:
     """«Нгуен Тхе» -> «Нгуен Т.», «Нгуен Тхе Зуй» -> «Нгуен Т.З.».
 
@@ -436,6 +537,10 @@ def add_references(doc, items, title="Список источников", cfg: S
     Заголовок ставится с новой страницы (``page_break_before``) и выравнивается
     по центру, чтобы не создавать пустой абзац. Пункты оформляются как обычный текст: отступ первой
     строки, выравнивание по ширине, интервал 1,5.
+
+    Адреса (URL, ``www.``, DOI) внутри пункта становятся настоящими гиперссылками,
+    чтобы в DOCX и в PDF по ним можно было щёлкнуть. Текст остаётся Times New Roman
+    того же кегля, поэтому оформление не отличается от остального списка.
     """
     cfg = cfg or StyleConfig()
 
@@ -458,9 +563,10 @@ def add_references(doc, items, title="Список источников", cfg: S
             rendered = text
         else:
             rendered = f"{index}. {text}"
-        para(doc, rendered, align=WD_ALIGN_PARAGRAPH.JUSTIFY,
-             indent_cm=cfg.first_line_indent_cm, size=cfg.font_size,
-             spacing=cfg.line_spacing)
+        p = para(doc, "", align=WD_ALIGN_PARAGRAPH.JUSTIFY,
+                 indent_cm=cfg.first_line_indent_cm, size=cfg.font_size,
+                 spacing=cfg.line_spacing)
+        add_text_with_links(p, rendered, size=cfg.font_size)
     return doc
 
 
@@ -716,6 +822,10 @@ $word.DisplayAlerts = 0
 try {{
     $doc = $word.Documents.Open({_ps_quote(docx_path)}, $false, $true)
     try {{
+        # TOC and PAGE are fields: build them once so the export carries real
+        # entries (and clickable /Link annotations) instead of the placeholder.
+        try {{ $doc.Fields.Update() | Out-Null }} catch {{}}
+        foreach ($toc in $doc.TablesOfContents) {{ try {{ $toc.Update() }} catch {{}} }}
         # PDF/A-1b: BitmapMissingFonts must be False, UseISO19005_1 = True
         $doc.ExportAsFixedFormat({_ps_quote(pdf_path)}, 17, $false, 0, 0, 0, 0, 0, $true, $false, 0, $true, $false, $true)
     }} catch {{

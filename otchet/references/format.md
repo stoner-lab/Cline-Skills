@@ -80,6 +80,8 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 - Không dùng `≻`, `→`, `⇒`, `•`, `✓`, `★`, emoji. Danh sách: `–` hoặc `1)`, `2)`.
 - Dấu ba chấm: `...`, không dùng ký tự `…`.
 - Ngoặc kép: `«...»` (tiếng Nga), `"..."` (tiếng Việt); không dùng `“ ”`, `‘ ’`.
+- Автоматическая замена: `normalize_dashes(doc)` из `docx_helpers` меняет `—`
+  на ` – ` во всех абзацах и ячейках таблиц; вызывать перед `save_report()`.
 
 ## 4. Tiêu đề
 
@@ -249,6 +251,10 @@ Nếu không thể không hành động:
   không đánh số tự động của Word – số `1.`, `2.` nằm trong text.
 - Mỗi nguồn đủ: tác giả, tên tài liệu, nhà xuất bản, năm; tài liệu điện tử có
   `URL` và `(дата обращения: ...)`.
+- Địa chỉ phải là **hyperlink thật** (`w:hyperlink` + liên kết ngoài), không phải
+  chữ thường: `add_references()` tự chuyển `https://`, `www.` và `doi:` thành link,
+  text vẫn giữ Times New Roman 14. Link còn nguyên khi xuất PDF (Word sinh annotation
+  `/Link`), nên `validate_docx.py` báo FAIL nếu gặp URL dạng chữ.
 - Không đưa nguồn không sử dụng vào danh sách.
 - Trong text có thể ghi `[1]`, `[2]` nếu giảng viên yêu cầu.
 - Không copy danh sách nguồn từ mẫu nếu không đọc.
