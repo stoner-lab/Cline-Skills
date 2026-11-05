@@ -99,14 +99,14 @@ def check_files() -> None:
 
 
 def _word_tools():
-    """word_processes/close_word_processes/wait_for_word_exit из docx_helpers."""
+    """Функции работы с процессами Word из docx_helpers, если пакеты на месте."""
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
-        from docx_helpers import (close_word_processes, wait_for_word_exit,
-                                  word_processes)
-        return word_processes, close_word_processes, wait_for_word_exit
+        from docx_helpers import (close_word_processes, ensure_no_word_left,
+                                  wait_for_word_exit, word_processes)
+        return word_processes, close_word_processes, wait_for_word_exit, ensure_no_word_left
     except Exception:                                  # noqa: BLE001
-        return None, None, None
+        return None, None, None, None
 
 
 def normal_template() -> Path:
@@ -124,7 +124,7 @@ def normal_template_locked() -> bool:
         return True
 
 
-def check_word_processes(clean: bool = False) -> None:
+def check_word_processes(clean: bool = False, before=None) -> None:
     """Фоновые WINWORD.EXE держат Normal.dotm и вызывают диалог Word.
 
     Диалог «This file is in use by another application or user
@@ -133,14 +133,14 @@ def check_word_processes(clean: bool = False) -> None:
     Здесь они только перечисляются: убивает их ``--clean-word`` по согласию
     пользователя, а ``export_pdf_via_word()`` убирает свои сам.
     """
-    word_processes, close_word_processes, wait_for_word_exit = _word_tools()
+    word_processes, close_word_processes, wait_for_word_exit, ensure_no_word_left = _word_tools()
     if word_processes is None:
         report("warn", "word procs", "нет python-docx – список процессов не проверить")
         return
-    procs = word_processes()
-    # Quit у Word асинхронный: даём только что закрытому экземпляру уйти самому
-    keep = {p["id"] for p in procs if p["title"]}
-    wait_for_word_exit(10.0, keep=keep)
+    before = [p["id"] for p in word_processes()] if before is None else list(before)
+    # Word закрывается асинхронно и иногда не закрывается вовсе: снимаем остатки
+    if ensure_no_word_left is not None:
+        ensure_no_word_left(before, timeout=6.0)
     procs = word_processes()
     zombies = [p for p in procs if not p["title"]]
     if zombies and clean and close_word_processes is not None:
@@ -230,8 +230,12 @@ def main() -> int:
     check_modules()
     check_fonts()
     check_files()
+    word_before = []
+    tools = _word_tools()
+    if tools[0] is not None:
+        word_before = [p["id"] for p in tools[0]()]
     check_word()
-    check_word_processes(clean=clean_word)
+    check_word_processes(clean=clean_word, before=word_before)
     print()
 
     if hints:
