@@ -1373,7 +1373,7 @@ def word_processes() -> list[dict]:
     another application or user».
     """
     ps = ("Get-Process WINWORD -ErrorAction SilentlyContinue | "
-          "Select-Object Id,MainWindowTitle,@{n='start';e={$_.StartTime}} | "
+          "Select-Object Id,MainWindowTitle,MainWindowHandle,@{n='start';e={$_.StartTime}} | "
           "ConvertTo-Json -Compress")
     try:
         res = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
@@ -1391,14 +1391,19 @@ def word_processes() -> list[dict]:
         data = [data]
     return [{"id": int(item.get("Id", 0)),
              "title": (item.get("MainWindowTitle") or "").strip(),
+             "handle": int(item.get("MainWindowHandle") or 0),
              "start": str((item.get("start") or {}).get("DateTime", "")
                           if isinstance(item.get("start"), dict) else (item.get("start") or ""))}
             for item in data if item.get("Id")]
 
 
 def word_zombies() -> list[dict]:
-    """Экземпляры Word без окна – остатки прошлых COM-экспортов."""
-    return [p for p in word_processes() if not p["title"]]
+    """Экземпляры Word без окна – остатки прошлых COM-экспортов.
+
+    Признак: нет заголовка окна или ``MainWindowHandle == 0`` – так выглядит
+    ``WINWORD.EXE /Automation -Embedding``, который не закрылся после экспорта.
+    """
+    return [p for p in word_processes() if not p["title"] or not p.get("handle")]
 
 
 def close_word_processes(pids) -> int:
@@ -1428,6 +1433,26 @@ def wait_for_word_exit(timeout: float = 15.0, keep=()) -> list[dict]:
         if not zombies or time.time() >= deadline:
             return zombies
         time.sleep(0.5)
+
+
+def ensure_no_word_left(before=(), timeout: float = 10.0) -> list[int]:
+    """Гарантировать, что фоновых WINWORD.EXE не осталось.
+
+    ``Quit`` у Word асинхронный и иногда молча не срабатывает (процесс с
+    ``/Automation -Embedding`` остаётся жить и держит ``Normal.dotm`` – именно
+    из-за него Word показывает «This file is in use by another application or
+    user»). Поэтому: подождать, затем закрыть оставшиеся процессы, появившиеся
+    за время работы (``before`` – id, которые были до неё; Word пользователя
+    туда попадает и не трогается).
+
+    Возвращает id процессов, которые закрыть не удалось.
+    """
+    keep = {int(p) for p in before}
+    leaked = [p["id"] for p in wait_for_word_exit(timeout, keep=keep)]
+    if leaked:
+        close_word_processes(leaked)
+        leaked = [p["id"] for p in wait_for_word_exit(5.0, keep=keep)]
+    return leaked
 
 
 def export_pdf_via_word(docx_path, pdf_path, timeout=180):
@@ -1506,9 +1531,7 @@ try {{
     finally:
         Path(ps1).unlink(missing_ok=True)
         # страховка: всё, что появилось за время экспорта и осталось без окна, – наше
-        leaked = [p["id"] for p in wait_for_word_exit(8.0, keep=before)]
-        if leaked:
-            close_word_processes(leaked)
+        ensure_no_word_left(before, timeout=8.0)
     return pdf_path
 
 
