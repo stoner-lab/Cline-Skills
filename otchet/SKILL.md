@@ -312,9 +312,10 @@ Chi tiết: `references/report-types.md`.
   - `setup_document()`;
   - `add_title_page()` – **trang bìa clone nguyên XML từ
     `assets/templates/title_page_leti.docx`** (không vẽ lại bằng code), rồi thay
-    các chỗ giữ chỗ `<кафедра>`, `<номер>`, `<дисциплина>`, `<тема>`, `<пункты>`,
-    `<дата>`, `<группа>`, `<Фамилия И.О.>`; muốn đổi mẫu – sửa file docx, không
-    sửa code. Nếu mẫu vắng mặt hoặc chứa ảnh/hyperlink thì tự lùi về bản dựng tay
+    các chỗ giữ chỗ `<кафедра>`, `<номер>`, `<дисциплина>`, `<тема>`, `<вариант>`,
+    `<пункты>`, `<дата>`, `<группа>`, `<Фамилия И.О. студента>`,
+    `<Фамилия И.О. руководителя>`, `<город>`, `<год>`; muốn đổi mẫu – sửa file docx,
+    không sửa code. Nếu mẫu vắng mặt hoặc chứa ảnh/hyperlink thì tự lùi về bản dựng tay
     `_add_title_page_manual()`;
   - `heading()`, `para()`, `formula()`, `caption()` – `para()` và `caption()` tự
     biến URL/DOI trong câu thành hyperlink thật (`links=True`, tắt bằng

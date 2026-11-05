@@ -26,8 +26,10 @@ from docx_helpers import (ReportMeta, add_references, add_table, add_title_page,
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
 
-PLACEHOLDERS = ("<кафедра>", "<номер>", "<дисциплина>", "<тема>", "<пункты>",
-                "<дата>", "<группа>", "<Фамилия И.О.>")
+PLACEHOLDERS = ("<кафедра>", "<номер>", "<дисциплина>", "<тема>", "<вариант>",
+                "<пункты>", "<дата>", "<группа>", "<Фамилия И.О.>",
+                "<Фамилия И.О. студента>", "<Фамилия И.О. руководителя>",
+                "<город>", "<год>")
 
 AUTHOR = "Иванов И.И."
 TITLE = "ПР-1"
@@ -47,9 +49,12 @@ def build(path: Path, pdf: bool):
         work_line="по заданию № 1",
         discipline="Тестовая дисциплина",
         topic="Проверка шаблона титульного листа",
+        variant="2",
         group="4395",
         student=AUTHOR,
         teacher="Петров П.П.",
+        completed_items="1, 2",
+        submission_date="05.11.2026",
     )
     add_title_page(doc, meta)
     heading(doc, "1. Проверка")
@@ -114,6 +119,14 @@ def check(path: Path):
         problems.append("нет номера формулы «(1)» (formula(..., number=1))")
     if not any(line.startswith("Таблица 1") for line in new_lines):
         problems.append("нет наименования таблицы «Таблица 1 …»")
+
+    # строки шаблона, которых раньше не было в .docx
+    if "Вариант 2" not in new_lines:
+        problems.append("нет строки «Вариант 2» на титуле")
+    if not any(line.startswith("Выполненные пункты: 1, 2") for line in new_lines):
+        problems.append("нет строки «Выполненные пункты» на титуле")
+    if not any(line.startswith("Дата сдачи работы на проверку") for line in new_lines):
+        problems.append("нет строки «Дата сдачи работы на проверку» на титуле")
 
     # metadata must not name the generator (python-docx, ReportLab, LibreOffice...)
     pdf_path = path.with_suffix(".pdf")

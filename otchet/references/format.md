@@ -37,11 +37,11 @@ Chỗ giữ chỗ trong mẫu và giá trị thay thế:
 | `по практической работе №<номер>` | `work_line` (`по заданию № 1`...) |
 | `по дисциплине «<дисциплина>»` | `discipline` (bỏ dòng nếu rỗng) |
 | `Тема: <тема>` | `topic` (bỏ dòng nếu rỗng) |
-| `Вариант <номер>` | `variant` (bỏ dòng nếu rỗng) |
-| bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О.>` / `Руководитель` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
+| `Вариант <вариант>` | `variant` (bỏ dòng nếu rỗng) |
+| bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О. студента>` / `Руководитель` / `<Фамилия И.О. руководителя>` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
 | `Выполненные пункты: <пункты>` | `completed_items` (bỏ dòng nếu rỗng) |
 | `Дата сдачи работы на проверку – <дата>` | `submission_date` (bỏ dòng nếu rỗng) |
-| `Санкт-Петербург`, `2026` | `city`, `year` |
+| `<город>`, `<год>` | `city`, `year` |
 
 Quy tắc cố định của mẫu (không đổi khi điền):
 
