@@ -139,9 +139,9 @@ class ReportMeta:
     second_student: str = ""
     second_student_label: str = "Студентка гр. "
     teacher: str = "<Фамилия И.О.>"
-    # Подпись роли в таблице на титуле. Если в шаблоне строка уже подписана
-    # («Преподаватель/Руководитель» и т.п.), код её сохраняет и это поле не нужно.
-    teacher_label: str = "Руководитель"
+    # Подпись роли в таблице на титуле. По умолчанию «Преподаватель» (задано
+    # методичкой ЛЭТИ); «Руководитель» – для курсовой, НИР, практики.
+    teacher_label: str = "Преподаватель"
     submission_date: str = ""
     city: str = "Санкт-Петербург"
     year: str = "2026"
@@ -536,7 +536,7 @@ def _set_cell_text(cell, text):
 PLACEHOLDER_RE = re.compile(r"<[^<>]{2,60}>")
 
 
-TEACHER_LABELS = ("Руководитель", "Преподаватель")
+TEACHER_LABELS = ("Преподаватель", "Руководитель")
 
 
 def teacher_label_options(text: str) -> list[str]:
@@ -550,8 +550,8 @@ def pick_teacher_label(template_text: str, meta) -> str:
     Печатать «Преподаватель/Руководитель» нельзя – в отчёте нужна одна роль:
     её берут из методички/образца или спрашивают у пользователя. Приоритет:
     ``meta.teacher_label``, если он входит в варианты бланка, иначе первое
-    значение по умолчанию из ``TEACHER_LABELS``, которое есть в бланке, иначе
-    ``meta.teacher_label`` (или последний вариант бланка).
+    значение по умолчанию из ``TEACHER_LABELS`` («Преподаватель»), которое есть
+    в бланке, иначе ``meta.teacher_label`` (или последний вариант бланка).
     """
     options = teacher_label_options(template_text)
     wanted = (getattr(meta, "teacher_label", "") or "").strip()
@@ -560,7 +560,7 @@ def pick_teacher_label(template_text: str, meta) -> str:
     for default in TEACHER_LABELS:
         if default in options:
             return default
-    return wanted or (options[-1] if options else "Руководитель")
+    return wanted or (options[-1] if options else "Преподаватель")
 
 
 def _fill_label_cell(cell, fallback: str, replace=None):

@@ -397,7 +397,8 @@ Ba lớp chặn đi kèm: `goal_section(doc, "")` -> `ValueError`;
     chỉ thay `<группа>` và giữ nguyên chữ của mẫu (ô trống mới dùng
     `student_label`). Nếu бланк ghi **hai vai trò qua dấu «/»**
     (`Преподаватель/Руководитель`) thì in **đúng một** vai trò: `pick_teacher_label()`
-    lấy `ReportMeta.teacher_label` (mặc định `Руководитель`); phương án chọn theo
+    lấy `ReportMeta.teacher_label` (**mặc định `Преподаватель`**, đổi sang
+    `Руководитель` cho курсовая/НИР/практика); phương án chọn theo
     методичка/образец, không rõ thì **hỏi user**, tuyệt đối không in cả cặp có «/».
     **Font và cỡ chữ của bìa
     lấy từ бланк** (`COVER_DEFAULT_SIZE = 14`, Times New Roman), không theo
