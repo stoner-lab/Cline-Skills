@@ -24,8 +24,8 @@ from docx.oxml.ns import qn
 
 from docx_helpers import (PLACEHOLDER_RE, ReportMeta, add_references, add_table,
                           add_title_page, annotation, appendix, formula, goal_section,
-                          has_goal, heading, para, save_report, setup_document,
-                          short_name, task_page, title_template_path,
+                          has_goal, heading, para, pick_teacher_label, save_report,
+                          setup_document, short_name, task_page, title_template_path,
                           validate_meta_names)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
@@ -117,13 +117,18 @@ def check(path: Path):
             problems.append("в таблице нет фамилии студента")
         if "Петров П.П." not in second:
             problems.append("в таблице нет фамилии руководителя")
-        # бланк – источник подписи роли: код не должен её переписывать
+        # бланк – источник подписи роли: код не должен её переписывать; если в
+        # бланке варианты через «/» («Преподаватель/Руководитель»), печатается
+        # ровно один из них (по умолчанию «Руководитель»)
         if tpl.tables:
             tpl_label = tpl.tables[0].rows[1].cells[0].text.strip()
-            expected = tpl_label.replace("<группа>", "4395").replace("\n", "")
+            expected = pick_teacher_label(tpl_label, ReportMeta()).replace("\n", "")
             if second[0].replace("\n", "") != expected:
                 problems.append(f"подпись роли на титуле {second[0]!r}, "
-                                f"а в бланке {tpl_label!r}")
+                                f"а в бланке {tpl_label!r} (берём один вариант: {expected!r})")
+            if "/" in second[0]:
+                problems.append(f"подпись роли печатается с «/»: {second[0]!r} – "
+                                f"нужна одна роль")
             tpl_student = tpl.tables[0].rows[0].cells[0].text.strip()
             want_student = tpl_student.replace("<группа>", "4395").replace("\n", "")
             if first[0].replace("\n", "") != want_student:
@@ -300,6 +305,20 @@ def check_cover_and_goal(tmp: Path):
     extra = cover_actual_format(bare) - tpl_fmt
     if extra:
         problems.append(f"титул (без setup_document) не по бланку: {sorted(extra, key=str)}")
+
+    # подпись роли: в бланке варианты «Преподаватель/Руководитель», печатается один
+    for wanted in ("Руководитель", "Преподаватель"):
+        variant = ReportMeta(department="ИС", report_label="ОТЧЕТ", work_line="по заданию № 1",
+                             discipline="Дисциплина", topic="Тема", group="4395",
+                             student="Иванов И.И.", teacher="Петров П.П.",
+                             teacher_label=wanted)
+        doc = setup_document()
+        add_title_page(doc, variant)
+        label = doc.tables[0].rows[1].cells[0].text.strip()
+        if label != wanted:
+            problems.append(f"teacher_label={wanted!r} напечатан как {label!r}")
+        if "/" in label:
+            problems.append(f"подпись роли с «/»: {label!r}")
 
     # пустая цель – ошибка, раздел нельзя «потерять»
     try:

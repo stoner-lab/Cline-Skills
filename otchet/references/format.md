@@ -65,8 +65,12 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 - **Nhãn cột 1 lấy từ бланк, code không viết lại**: mẫu hiện tại là
   `Студент гр. <группа>` và `Преподаватель/Руководитель`; `_fill_label_cell()`
   chỉ thay `<группа>` và để nguyên chữ của mẫu (ô trống mới dùng
-  `student_label` / `teacher_label`). Nhãn dài hơn 22 ký tự được ngắt dòng mềm
-  sau dấu `/` (`Преподаватель/` + `Руководитель`), để Word không bẻ giữa từ.
+  `student_label`).
+- **Подпись роли печатается одна.** Nếu бланк ghi hai vai trò qua «/»
+  (`Преподаватель/Руководитель`), `_fill_teacher_label()` +
+  `pick_teacher_label()` in **đúng một** từ: `ReportMeta.teacher_label`
+  (`Руководитель` mặc định, hoặc `Преподаватель`) – chọn theo методичка/образец,
+  không rõ thì hỏi user. Cặp có «/» в готовом файле không được xuất hiện.
 - Kết thúc trang bìa bằng dấu ngắt trang; số trang bắt đầu hiển thị từ trang nội dung
   (`different_first_page_header_footer = True`), trang bìa không đánh số.
 - **ФИО trên trang bìa – chỉ `Фамилия И.О.`** (họ + chữ cái đầu của tên/đệm), ví dụ
