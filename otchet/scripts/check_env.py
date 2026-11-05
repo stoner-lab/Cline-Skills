@@ -2,10 +2,16 @@
 """Проверка окружения для скилла `otchet`.
 
 Что проверяется: python, пакеты (python-docx, pypdf, pypdfium2, lxml), шрифт
-Times New Roman, файлы скилла (шаблон титула, скрипты) и MS Word через COM
-(нужен для экспорта PDF и обновления поля TOC).
+Times New Roman, файлы скилла (шаблон титула, скрипты), MS Word через COM
+(нужен для экспорта PDF и обновления поля TOC) и фоновые WINWORD.EXE, которые
+держат Normal.dotm и вызывают окно Word «This file is in use by another
+application or user».
 
-    python scripts/check_env.py
+    python scripts/check_env.py                 # только отчёт
+    python scripts/check_env.py --clean-word    # закрыть фоновые WINWORD.EXE
+
+``--clean-word`` убивает процессы, поэтому запускать его можно только после
+согласия пользователя.
 
 Код возврата: 0 – можно работать, 1 – нет обязательного компонента.
 """
@@ -92,18 +98,103 @@ def check_files() -> None:
                hint="" if exists else CLONE_HINT)
 
 
+def _word_tools():
+    """word_processes/close_word_processes/wait_for_word_exit из docx_helpers."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from docx_helpers import (close_word_processes, wait_for_word_exit,
+                                  word_processes)
+        return word_processes, close_word_processes, wait_for_word_exit
+    except Exception:                                  # noqa: BLE001
+        return None, None, None
+
+
+def normal_template() -> Path:
+    return Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Templates" / "Normal.dotm"
+
+
+def normal_template_locked() -> bool:
+    path = normal_template()
+    if not path.exists():
+        return False
+    try:
+        with open(path, "r+b"):
+            return False
+    except OSError:
+        return True
+
+
+def check_word_processes(clean: bool = False) -> None:
+    """Фоновые WINWORD.EXE держат Normal.dotm и вызывают диалог Word.
+
+    Диалог «This file is in use by another application or user
+    (…\\Normal.dotm)» появляется, когда второй экземпляр Word пытается открыть
+    Normal.dotm, занятый предыдущим. Обычно это «зомби» от COM-экспорта PDF.
+    Здесь они только перечисляются: убивает их ``--clean-word`` по согласию
+    пользователя, а ``export_pdf_via_word()`` убирает свои сам.
+    """
+    word_processes, close_word_processes, wait_for_word_exit = _word_tools()
+    if word_processes is None:
+        report("warn", "word procs", "нет python-docx – список процессов не проверить")
+        return
+    procs = word_processes()
+    # Quit у Word асинхронный: даём только что закрытому экземпляру уйти самому
+    keep = {p["id"] for p in procs if p["title"]}
+    wait_for_word_exit(10.0, keep=keep)
+    procs = word_processes()
+    zombies = [p for p in procs if not p["title"]]
+    if zombies and clean and close_word_processes is not None:
+        removed = close_word_processes([p["id"] for p in zombies])
+        report("ok", "word procs", f"закрыто фоновых WINWORD.EXE: {removed}")
+        procs = word_processes()
+        zombies = [p for p in procs if not p["title"]]
+    if zombies:
+        ids = ", ".join(str(p["id"]) for p in zombies)
+        report("warn", "word procs", f"фоновых WINWORD.EXE: {len(zombies)} ({ids})",
+               hint="они держат Normal.dotm и вызывают окно «This file is in use by another "
+                    "application or user». Спросите пользователя и закройте их: "
+                    "`python scripts\\check_env.py --clean-word` (или Диспетчер задач)")
+    elif procs:
+        report("ok", "word procs", f"открыт Word пользователя: {len(procs)} – экспорт PDF "
+                                   "подключится к нему, второй экземпляр не запускается")
+    else:
+        report("ok", "word procs", "фоновых WINWORD.EXE нет")
+
+    locked = normal_template_locked()
+    if locked and not procs:
+        report("warn", "normal.dotm", "заблокирован, хотя Word не запущен – остался процесс "
+                                      "или файл держит антивирус",
+               hint="закройте Word и повторите проверку; если не помогло – перезагрузка")
+    elif locked:
+        report("ok", "normal.dotm", "занят открытым Word пользователя (это нормально)")
+    else:
+        report("ok", "normal.dotm", "свободен")
+
+
 def check_word() -> None:
     """MS Word через COM: без него DOCX собирается, PDF и TOC – нет.
 
     Проверяется только создание COM-объекта: полноценный экспорт PDF занимает
-    десятки секунд и уже покрыт ``selftest.py --pdf``.
+    десятки секунд и уже покрыт ``selftest.py --pdf``. Запущенный Word
+    переиспользуется, свой экземпляр закрывается – иначе остаётся «зомби»,
+    который потом мешает следующему Word.
     """
     script = r"""
 $ErrorActionPreference = 'Stop'
-$word = New-Object -ComObject Word.Application
-$word.Visible = $false
-$word.DisplayAlerts = 0
-try { "OK $($word.Version)" } finally { $word.Quit() }
+$startedNew = $false
+$word = $null
+try {
+    try { $word = [Runtime.InteropServices.Marshal]::GetActiveObject('Word.Application') }
+    catch { $word = New-Object -ComObject Word.Application; $startedNew = $true; $word.Visible = $false }
+    $word.DisplayAlerts = 0
+    "OK $($word.Version)"
+} finally {
+    $empty = $false
+    try { $empty = ($word.Documents.Count -eq 0 -and -not $word.Visible) } catch {}
+    if ($startedNew -or $empty) { if ($word -ne $null) { try { $word.Quit(0) } catch {} } }
+    [GC]::Collect(); [GC]::WaitForPendingFinalizers()
+    if ($word -ne $null) { try { [void][Runtime.InteropServices.Marshal]::ReleaseComObject($word) } catch {} }
+}
 """
     fd, ps1_name = tempfile.mkstemp(suffix=".ps1")
     os.close(fd)                       # иначе Windows блокирует файл для PowerShell
@@ -111,7 +202,8 @@ try { "OK $($word.Version)" } finally { $word.Quit() }
     try:
         ps1.write_text(script, encoding="utf-8-sig")
         result = subprocess.run(
-            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(ps1)],
+            ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+             "-File", str(ps1)],
             capture_output=True, text=True, timeout=60,
         )
         out = (result.stdout or "").strip()
@@ -131,12 +223,15 @@ try { "OK $($word.Version)" } finally { $word.Quit() }
 
 
 def main() -> int:
+    clean_word = "--clean-word" in sys.argv[1:]
+
     print(f"Окружение скилла otchet ({SKILL_ROOT})")
     check_python()
     check_modules()
     check_fonts()
     check_files()
     check_word()
+    check_word_processes(clean=clean_word)
     print()
 
     if hints:

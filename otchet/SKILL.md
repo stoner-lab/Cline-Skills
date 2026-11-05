@@ -315,7 +315,8 @@ trước khi hỏi; chỉ hỏi những gì thật sự chưa có.
 7. **Xác nhận với người dùng**: dàn ý + thông tin còn thiếu.
 8. **Viết từng phần**: mặc định viết xong một phần thì dừng, chờ xác nhận.
 9. **Tạo DOCX**: dùng `scripts/docx_helpers.py`.
-10. **Xuất PDF**: dùng Word COM.
+10. **Xuất PDF**: dùng Word COM (`export_pdf_via_word()` tự dùng lại Word đang mở,
+    đóng phiên của mình và không để lại `WINWORD.EXE` treo).
 11. **Kiểm tra**: chạy `scripts/validate_docx.py`, xem page break, bảng, số trang.
 12. **Giao file**: gửi link DOCX + PDF, tóm tắt kết quả chính.
 
@@ -427,10 +428,28 @@ Ba lớp chặn đi kèm: `goal_section(doc, "")` -> `ValueError`;
     `Fields.Update()` trước khi xuất nên PDF cũng có mục lục và link, không còn
     dòng «Обновите поле»;
   - `fmt_num()`, `save_report()`, `export_pdf_via_word()`;
+  - `word_processes()`, `word_zombies()`, `close_word_processes()`,
+    `wait_for_word_exit()` – quản lý tiến trình `WINWORD.EXE`;
+- **Xuất PDF và lỗi Word «This file is in use by another application or user
+  (…\Normal.dotm)».** Lỗi này hiện ra khi có **hai** phiên Word cùng mở
+  `Normal.dotm`: thường là một `WINWORD.EXE` không có cửa sổ còn sót lại từ lần
+  xuất PDF trước. Từ nay `export_pdf_via_word()`:
+  - **dùng lại** Word đang chạy (kể cả tiến trình sót) thay vì tạo phiên thứ hai –
+    đây chính là thứ gây hộp thoại;
+  - đóng tài liệu của mình (`Close(0)`), đóng Word **chỉ khi** nó do script tạo ra
+    hoặc không còn tài liệu và không hiện ra (tức là tiến trình sót), giải phóng
+    COM (`ReleaseComObject`, `GC.Collect`), `WaitForPendingFinalizers`;
+  - chờ Word thoát hẳn (`wait_for_word_exit`), và chỉ kill những tiến trình **mới
+    xuất hiện trong lần chạy đó** – Word của người dùng không bị đụng.
+  Nếu vẫn thấy hộp thoại: `python scripts\check_env.py` liệt kê tiến trình sót và
+  trạng thái `Normal.dotm`; **hỏi user rồi mới** chạy
+  `python scripts\check_env.py --clean-word` để dọn (hoặc đóng trong Task Manager).
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
 - `scripts/check_env.py` – проверка окружения: python, python-docx/pypdf/lxml,
-  шрифт Times New Roman, файлы скилла и доступность MS Word (COM). Запускать
-  первым, если что-то «не собирается»: `python scripts/check_env.py`.
+  шрифт Times New Roman, файлы скилла, доступность MS Word (COM) и фоновые
+  `WINWORD.EXE`, которые держат `Normal.dotm`. Запускать первым, если что-то
+  «не собирается»: `python scripts/check_env.py`; с согласия пользователя –
+  `python scripts/check_env.py --clean-word` (закрывает зависшие процессы Word).
 - `scripts/validate_docx.py` – kiểm tra file DOCX/PDF: bố cục, font, dấu gạch
   ngang, metadata, **tính clickable của link** (URL để dạng chữ thường là FAIL,
   không phải cảnh báo), số annotation `/Link` trong PDF, số chương/phụ lục và

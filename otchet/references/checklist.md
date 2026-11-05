@@ -107,6 +107,12 @@
 
 - [ ] DOCX mở được, không lỗi font.
 - [ ] PDF xuất được.
+- [ ] Không còn tiến trình `WINWORD.EXE` treo sau khi xuất PDF, và `Normal.dotm`
+  không bị khoá: `python scripts\check_env.py` phải báo `word procs … фоновых …
+  нет` (hoặc Word của user đang mở). Nếu có tiến trình sót -> hỏi user rồi chạy
+  `python scripts\check_env.py --clean-word`.
+- [ ] Không thấy hộp thoại Word «This file is in use by another application or user
+  (…\Normal.dotm)»; nếu có, đó là dấu hiệu còn phiên Word thứ hai – dọn rồi xuất lại.
 - [ ] PDF không có trang trắng.
 - [ ] PDF không có bảng bị cắt.
 - [ ] Tên file đúng quy ước.
