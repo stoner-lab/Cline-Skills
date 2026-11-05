@@ -536,40 +536,64 @@ def _set_cell_text(cell, text):
 PLACEHOLDER_RE = re.compile(r"<[^<>]{2,60}>")
 
 
-def _soft_wrap_label(text: str, limit: int = 22) -> str:
-    """Длинную подпись роли ломаем по «/», а не посреди слова.
+TEACHER_LABELS = ("Руководитель", "Преподаватель")
 
-    «Преподаватель/Руководитель» – 27 символов и не влезает в первую колонку
-    (6,2 см при 14 пт), Word рвёт его как «Руководите|ль». Мягкий перенос после
-    косой черты даёт две аккуратные строки, текст подписи не меняется.
+
+def teacher_label_options(text: str) -> list[str]:
+    """Варианты подписи роли из бланка: «Преподаватель/Руководитель» -> два."""
+    return [part.strip() for part in str(text or "").split("/") if part.strip()]
+
+
+def pick_teacher_label(template_text: str, meta) -> str:
+    """Выбрать ОДНУ подпись роли: в бланке могут стоять варианты через «/».
+
+    Печатать «Преподаватель/Руководитель» нельзя – в отчёте нужна одна роль:
+    её берут из методички/образца или спрашивают у пользователя. Приоритет:
+    ``meta.teacher_label``, если он входит в варианты бланка, иначе первое
+    значение по умолчанию из ``TEACHER_LABELS``, которое есть в бланке, иначе
+    ``meta.teacher_label`` (или последний вариант бланка).
     """
-    if len(text) <= limit or "/" not in text:
-        return text
-    head, _, tail = text.rpartition("/")
-    return f"{head}/{chr(10)}{tail}" if head else text
+    options = teacher_label_options(template_text)
+    wanted = (getattr(meta, "teacher_label", "") or "").strip()
+    if wanted and (not options or wanted in options):
+        return wanted
+    for default in TEACHER_LABELS:
+        if default in options:
+            return default
+    return wanted or (options[-1] if options else "Руководитель")
 
 
 def _fill_label_cell(cell, fallback: str, replace=None):
     """Подпись роли в таблице титула: правим бланк, а не переписываем его.
 
-    Если ячейка бланка уже подписана («Студент гр. <группа>»,
-    «Преподаватель/Руководитель», «Преподаватель»), подпись сохраняется и
-    заменяются только плейсхолдеры из ``replace`` (``{"<группа>": "4395"}``).
-    Пустая ячейка или ячейка с незнакомым плейсхолдером получает ``fallback`` –
-    так шаблон может менять формулировки, не ломая генерацию.
+    Если ячейка бланка уже подписана («Студент гр. <группа>», «Руководитель»),
+    подпись сохраняется и заменяются только плейсхолдеры из ``replace``
+    (``{"<группа>": "4395"}``). Пустая ячейка или ячейка с незнакомым
+    плейсхолдером получает ``fallback`` – так шаблон может менять формулировки,
+    не ломая генерацию.
     """
     current = cell.text.strip() if cell.paragraphs else ""
     if not current:
-        _set_cell_text(cell, _soft_wrap_label(fallback))
+        _set_cell_text(cell, fallback)
         return
     updated = current
     for hole, value in (replace or {}).items():
         updated = updated.replace(hole, str(value))
     if PLACEHOLDER_RE.search(updated):
         updated = fallback
-    updated = _soft_wrap_label(updated)
     if updated != current:
         _set_cell_text(cell, updated)
+
+
+def _fill_teacher_label(cell, meta) -> str:
+    """Подпись руководителя/преподавателя – ровно одна, без «/»."""
+    options = teacher_label_options(cell.text if cell.paragraphs else "")
+    if len(options) < 2:
+        _fill_label_cell(cell, meta.teacher_label)
+        return (cell.text.strip() if cell.paragraphs else "")
+    chosen = pick_teacher_label(cell.text, meta)
+    _set_cell_text(cell, chosen)
+    return chosen
 
 
 def _drop_paragraph(paragraph):
@@ -733,7 +757,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path,
         _fill_label_cell(rows[0].cells[0], meta.student_label + str(meta.group),
                          {"<группа>": str(meta.group)})
         _set_cell_text(rows[0].cells[2], _student_display(meta))
-        _fill_label_cell(rows[1].cells[0], meta.teacher_label)
+        _fill_teacher_label(rows[1].cells[0], meta)
         _set_cell_text(rows[1].cells[2], short_name(meta.teacher))
         if meta.second_student:
             tr = copy.deepcopy(rows[1]._tr)

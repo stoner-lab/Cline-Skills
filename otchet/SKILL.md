@@ -393,10 +393,13 @@ Ba lớp chặn đi kèm: `goal_section(doc, "")` -> `ValueError`;
     `<город>`, `<год>`; `<вариант>`, `<пункты>`, `<дата>` là optional nên **không có
     trong mẫu** – code tự chèn khi `variant`/`completed_items`/`submission_date` có dữ
     liệu; muốn đổi mẫu – sửa file docx, không sửa code. **Nhãn trong bảng chữ ký
-    lấy từ бланк** (`Студент гр. <группа>`, `Преподаватель/Руководитель`…):
-    `_fill_label_cell()` chỉ thay `<группа>`, giữ nguyên chữ của mẫu, và ngắt dòng
-    mềm sau `/` nếu nhãn dài hơn 22 ký tự; `ReportMeta.teacher_label` chỉ dùng khi
-    ô đó trống. **Font và cỡ chữ của bìa
+    lấy từ бланк** (`Студент гр. <группа>`, `Руководитель`…): `_fill_label_cell()`
+    chỉ thay `<группа>` và giữ nguyên chữ của mẫu (ô trống mới dùng
+    `student_label`). Nếu бланк ghi **hai vai trò qua dấu «/»**
+    (`Преподаватель/Руководитель`) thì in **đúng một** vai trò: `pick_teacher_label()`
+    lấy `ReportMeta.teacher_label` (mặc định `Руководитель`); phương án chọn theo
+    методичка/образец, không rõ thì **hỏi user**, tuyệt đối không in cả cặp có «/».
+    **Font và cỡ chữ của bìa
     lấy từ бланк** (`COVER_DEFAULT_SIZE = 14`, Times New Roman), không theo
     `cfg.font_size`: preset 12 pt vẫn cho bìa 14 pt (trước đây `_scale_cover_fonts`
     ép cả bìa theo cfg nên bìa bị sai cỡ/sai font). Nếu mẫu vắng mặt hoặc chứa
