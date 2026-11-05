@@ -177,8 +177,16 @@ def check_word() -> None:
     Проверяется только создание COM-объекта: полноценный экспорт PDF занимает
     десятки секунд и уже покрыт ``selftest.py --pdf``. Запущенный Word
     переиспользуется, свой экземпляр закрывается – иначе остаётся «зомби»,
-    который потом мешает следующему Word.
+    который потом мешает следующему Word. Если фоновый экземпляр уже есть,
+    COM не трогаем: он может не отвечать, а причина уже видна в строке
+    «word procs».
     """
+    word_processes, _, _, _ = _word_tools()
+    if word_processes is not None and any(not p["title"] or not p.get("handle")
+                                          for p in word_processes()):
+        report("warn", "ms word", "COM не проверяли: есть фоновый WINWORD.EXE",
+               hint="уберите фоновые процессы (ниже) и повторите проверку")
+        return
     script = r"""
 $ErrorActionPreference = 'Stop'
 $startedNew = $false

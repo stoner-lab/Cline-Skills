@@ -38,7 +38,7 @@ Chỗ giữ chỗ trong mẫu và giá trị thay thế:
 | `по дисциплине «<дисциплина>»` | `discipline` (bỏ dòng nếu rỗng) |
 | `Тема: <тема>` | `topic` (bỏ dòng nếu rỗng) |
 | `Вариант <вариант>` | `variant` – **không có trong mẫu**, tự chèn dưới dòng «Тема:» khi có dữ liệu |
-| bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О. студента>` / `Руководитель` / `<Фамилия И.О. руководителя>` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
+| bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О. студента>` / `<роль из бланка>` / `<Фамилия И.О. руководителя>` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
 | `Выполненные пункты: <пункты>` | `completed_items` – **không có trong mẫu**, tự chèn khi có dữ liệu |
 | `Дата сдачи работы на проверку – <дата>` | `submission_date` – **không có trong mẫu**, tự chèn khi có dữ liệu |
 | `<город>`, `<год>` | `city`, `year` |
@@ -60,8 +60,13 @@ Quy tắc cố định của mẫu (không đổi khi điền):
   của bìa với `title_page_leti.docx` và báo FAIL khi lệch.
 - 4 dòng tên trường và dòng `Кафедра` in đậm; `ОТЧЕТ`, dòng `по ...`, `по дисциплине`,
   `Тема`, `Выполненные пункты`, `Дата сдачи` in đậm; `Вариант`, thành phố, năm để chữ thường.
-- Bảng chữ ký: 3 cột rộng bằng nhau (3118 twips ≈ 5,5 cm), chiều cao dòng tối thiểu
-  1,08 cm, **không có khung bảng**, chỉ có đường kẻ dưới ở ô giữa (cột ký tên).
+- Bảng chữ ký: 3 cột (≈6,2 / 5,6 / 5,0 cm), chiều cao dòng tối thiểu 1,08 cm,
+  **không có khung bảng**, chỉ có đường kẻ dưới ở ô giữa (chỗ ký tên).
+- **Nhãn cột 1 lấy từ бланк, code không viết lại**: mẫu hiện tại là
+  `Студент гр. <группа>` và `Преподаватель/Руководитель`; `_fill_label_cell()`
+  chỉ thay `<группа>` và để nguyên chữ của mẫu (ô trống mới dùng
+  `student_label` / `teacher_label`). Nhãn dài hơn 22 ký tự được ngắt dòng mềm
+  sau dấu `/` (`Преподаватель/` + `Руководитель`), để Word không bẻ giữa từ.
 - Kết thúc trang bìa bằng dấu ngắt trang; số trang bắt đầu hiển thị từ trang nội dung
   (`different_first_page_header_footer = True`), trang bìa không đánh số.
 - **ФИО trên trang bìa – chỉ `Фамилия И.О.`** (họ + chữ cái đầu của tên/đệm), ví dụ

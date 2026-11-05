@@ -139,6 +139,9 @@ class ReportMeta:
     second_student: str = ""
     second_student_label: str = "Студентка гр. "
     teacher: str = "<Фамилия И.О.>"
+    # Подпись роли в таблице на титуле. Если в шаблоне строка уже подписана
+    # («Преподаватель/Руководитель» и т.п.), код её сохраняет и это поле не нужно.
+    teacher_label: str = "Руководитель"
     submission_date: str = ""
     city: str = "Санкт-Петербург"
     year: str = "2026"
@@ -530,6 +533,45 @@ def _set_cell_text(cell, text):
     _set_par_text(cell.paragraphs[0], text)
 
 
+PLACEHOLDER_RE = re.compile(r"<[^<>]{2,60}>")
+
+
+def _soft_wrap_label(text: str, limit: int = 22) -> str:
+    """Длинную подпись роли ломаем по «/», а не посреди слова.
+
+    «Преподаватель/Руководитель» – 27 символов и не влезает в первую колонку
+    (6,2 см при 14 пт), Word рвёт его как «Руководите|ль». Мягкий перенос после
+    косой черты даёт две аккуратные строки, текст подписи не меняется.
+    """
+    if len(text) <= limit or "/" not in text:
+        return text
+    head, _, tail = text.rpartition("/")
+    return f"{head}/{chr(10)}{tail}" if head else text
+
+
+def _fill_label_cell(cell, fallback: str, replace=None):
+    """Подпись роли в таблице титула: правим бланк, а не переписываем его.
+
+    Если ячейка бланка уже подписана («Студент гр. <группа>»,
+    «Преподаватель/Руководитель», «Преподаватель»), подпись сохраняется и
+    заменяются только плейсхолдеры из ``replace`` (``{"<группа>": "4395"}``).
+    Пустая ячейка или ячейка с незнакомым плейсхолдером получает ``fallback`` –
+    так шаблон может менять формулировки, не ломая генерацию.
+    """
+    current = cell.text.strip() if cell.paragraphs else ""
+    if not current:
+        _set_cell_text(cell, _soft_wrap_label(fallback))
+        return
+    updated = current
+    for hole, value in (replace or {}).items():
+        updated = updated.replace(hole, str(value))
+    if PLACEHOLDER_RE.search(updated):
+        updated = fallback
+    updated = _soft_wrap_label(updated)
+    if updated != current:
+        _set_cell_text(cell, updated)
+
+
 def _drop_paragraph(paragraph):
     el = paragraph._p
     el.getparent().remove(el)
@@ -685,15 +727,20 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path,
         rows = table.rows
         if len(rows) < 2 or len(rows[0].cells) < 3:
             continue
-        _set_cell_text(rows[0].cells[0], meta.student_label + str(meta.group))
+        # Подписи ролей берём из бланка: пользователь мог переписать их на
+        # «Преподаватель/Руководитель», поэтому жёсткое «Руководитель» затирало бы
+        # его правку. Меняем только плейсхолдер <группа> и пустую ячейку.
+        _fill_label_cell(rows[0].cells[0], meta.student_label + str(meta.group),
+                         {"<группа>": str(meta.group)})
         _set_cell_text(rows[0].cells[2], _student_display(meta))
-        _set_cell_text(rows[1].cells[0], "Руководитель")
+        _fill_label_cell(rows[1].cells[0], meta.teacher_label)
         _set_cell_text(rows[1].cells[2], short_name(meta.teacher))
         if meta.second_student:
             tr = copy.deepcopy(rows[1]._tr)
             rows[1]._tr.addprevious(tr)
             extra_row = _Row(tr, table)
-            _set_cell_text(extra_row.cells[0], meta.second_student_label + str(meta.group))
+            _fill_label_cell(extra_row.cells[0], meta.second_student_label + str(meta.group),
+                             {"<группа>": str(meta.group)})
             _set_cell_text(extra_row.cells[2], short_name(meta.second_student))
 
     # Необязательные строки: в шаблоне их нет, поэтому добавляем сами, когда в
@@ -1157,7 +1204,7 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
     if meta.second_student:
         rows.append((meta.second_student_label + meta.group, "",
                      meta.student_short or short_name(meta.second_student)))
-    rows.append(("Руководитель", "", short_name(meta.teacher)))
+    rows.append((meta.teacher_label, "", short_name(meta.teacher)))
 
     table = doc.add_table(rows=len(rows), cols=3)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -1469,6 +1516,13 @@ def export_pdf_via_word(docx_path, pdf_path, timeout=180):
     docx_path = str(Path(docx_path).resolve())
     pdf_path = str(Path(pdf_path).resolve())
     Path(pdf_path).parent.mkdir(parents=True, exist_ok=True)
+    # Сломанный фоновый экземпляр (нет окна) не переиспользуем: он может не
+    # отвечать и подвесить Documents.Open. Своих же «зомби» сначала закрываем,
+    # затем работаем с Word пользователя (если он открыт) или со своим.
+    stale = [p["id"] for p in word_zombies()]
+    if stale:
+        close_word_processes(stale)
+        wait_for_word_exit(5.0, keep=())
     before = {p["id"] for p in word_processes()}
     script = f"""
 $ErrorActionPreference = 'Stop'

@@ -10,6 +10,7 @@ that placeholders are replaced and that helpers/export work:
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 import sys
 import tempfile
@@ -21,13 +22,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docx import Document
 from docx.oxml.ns import qn
 
-from docx_helpers import (ReportMeta, add_references, add_table, add_title_page, annotation,
-                          appendix, formula, goal_section, has_goal, heading, para,
-                          save_report, setup_document, short_name, task_page,
-                          title_template_path, validate_meta_names)
+from docx_helpers import (PLACEHOLDER_RE, ReportMeta, add_references, add_table,
+                          add_title_page, annotation, appendix, formula, goal_section,
+                          has_goal, heading, para, save_report, setup_document,
+                          short_name, task_page, title_template_path,
+                          validate_meta_names)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
-from validate_docx import _cover_run_format as cover_run_format
+from validate_docx import (cover_actual_format, cover_expected_format)
 
 PLACEHOLDERS = ("<кафедра>", "<номер>", "<дисциплина>", "<тема>", "<вариант>",
                 "<пункты>", "<дата>", "<группа>", "<Фамилия И.О.>",
@@ -103,16 +105,36 @@ def check(path: Path):
         problems.append("нет таблицы подписей")
     else:
         table = new.tables[0]
-        rows, cols = len(table.rows), len(table.columns)
-        if (rows, cols) != (2, 3):
-            problems.append(f"таблица подписей {rows}x{cols}, ожидалось 2x3")
-        else:
-            first = [c.text.strip() for c in table.rows[0].cells]
-            second = [c.text.strip() for c in table.rows[1].cells]
-            if "Иванов И.И." not in first:
-                problems.append("в таблице нет фамилии студента")
-            if "Петров П.П." not in second:
-                problems.append("в таблице нет фамилии руководителя")
+        shape = (len(table.rows), len(table.columns))
+        tpl_shape = ((len(tpl.tables[0].rows), len(tpl.tables[0].columns))
+                     if tpl.tables else (2, 3))
+        if shape != tpl_shape:
+            problems.append(f"таблица подписей {shape[0]}x{shape[1]}, "
+                            f"в бланке – {tpl_shape[0]}x{tpl_shape[1]}")
+        first = [c.text.strip() for c in table.rows[0].cells]
+        second = [c.text.strip() for c in table.rows[1].cells]
+        if "Иванов И.И." not in first:
+            problems.append("в таблице нет фамилии студента")
+        if "Петров П.П." not in second:
+            problems.append("в таблице нет фамилии руководителя")
+        # бланк – источник подписи роли: код не должен её переписывать
+        if tpl.tables:
+            tpl_label = tpl.tables[0].rows[1].cells[0].text.strip()
+            expected = tpl_label.replace("<группа>", "4395").replace("\n", "")
+            if second[0].replace("\n", "") != expected:
+                problems.append(f"подпись роли на титуле {second[0]!r}, "
+                                f"а в бланке {tpl_label!r}")
+            tpl_student = tpl.tables[0].rows[0].cells[0].text.strip()
+            want_student = tpl_student.replace("<группа>", "4395").replace("\n", "")
+            if first[0].replace("\n", "") != want_student:
+                problems.append(f"подпись студента на титуле {first[0]!r}, "
+                                f"а в бланке {tpl_student!r}")
+        # ни один плейсхолдер не должен дожить до готового файла
+        cell_texts = [c.text.strip() for row in table.rows for c in row.cells]
+        leftover = [t for t in new_lines + cell_texts if PLACEHOLDER_RE.search(t)]
+        if leftover:
+            problems.append("на титуле остались плейсхолдеры: "
+                            + ", ".join(repr(t) for t in leftover[:4]))
 
     section = new.sections[0]
     if section.different_first_page_header_footer is not True:
@@ -125,8 +147,8 @@ def check(path: Path):
         problems.append("нет раздела «Цель работы» (goal_section())")
 
     # титул набран ровно тем шрифтом и кеглем, что и бланк
-    tpl_fmt = set(cover_run_format(tpl))
-    new_fmt = set(cover_run_format(new))
+    tpl_fmt = cover_expected_format(tpl)
+    new_fmt = cover_actual_format(new)
     if new_fmt - tpl_fmt:
         problems.append(f"титул набран не по бланку: {sorted(new_fmt - tpl_fmt, key=str)}")
 
@@ -259,7 +281,8 @@ def check_cover_and_goal(tmp: Path):
     meta = ReportMeta(department="ИС", report_label="ОТЧЕТ", work_line="по заданию № 1",
                       discipline="Тестовая дисциплина", topic="Тема", group="4395",
                       student="Иванов И.И.", teacher="Петров П.П.")
-    tpl_fmt = set(cover_run_format(Document(str(title_template_path()))))
+    tpl = Document(str(title_template_path()))
+    tpl_fmt = cover_expected_format(tpl)
     variants = (
         ("пресет ЛЭТИ 14 пт", leti_form_config()),
         ("пресет ГОСТ 12 пт", StyleConfig(font_size=12, heading_size=12)),
@@ -267,14 +290,14 @@ def check_cover_and_goal(tmp: Path):
     for label, cfg in variants:
         doc = setup_document(cfg)
         add_title_page(doc, meta, cfg)
-        extra = set(cover_run_format(doc)) - tpl_fmt
+        extra = cover_actual_format(doc) - tpl_fmt
         if extra:
             problems.append(f"титул ({label}) вышел не по бланку: {sorted(extra, key=str)}")
 
     # без setup_document() титул тоже должен остаться бланковым
     bare = Document()
     add_title_page(bare, meta)
-    extra = set(cover_run_format(bare)) - tpl_fmt
+    extra = cover_actual_format(bare) - tpl_fmt
     if extra:
         problems.append(f"титул (без setup_document) не по бланку: {sorted(extra, key=str)}")
 
