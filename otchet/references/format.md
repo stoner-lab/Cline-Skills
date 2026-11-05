@@ -265,6 +265,11 @@ Nếu không thể không hành động:
 
 ## 14. Nguồn tham khảo
 
+⚠️ **Mục này cũng là optional.** Tạo `Список использованных источников` chỉ khi:
+(a) trong bài thực sự có nguồn được trích, hoặc (b) đề bài/методичка yêu cầu.
+Không có nguồn thì **không tạo mục rỗng** – `add_references(doc, [])` sẽ ném
+`ValueError`; hỏi user nếu đề không nói rõ.
+
 - Danh sách nguồn đặt cuối báo cáo.
 - **Danh sách luôn bắt đầu từ trang mới**: dùng `add_references(doc, items)` –
   hàm đặt `page_break_before` cho tiêu đề (không tạo trang trắng như khi chèn
@@ -302,6 +307,9 @@ add_references(doc, [
 ## 15. Phụ lục
 
 Quy tắc dưới đây lấy từ ГОСТ 7.32-2017 п.6.17 (проверено по тексту стандарта).
+
+⚠️ **Phụ lục là optional.** Chỉ tạo `ПРИЛОЖЕНИЕ` khi đề bài/методичка yêu cầu, hoặc
+user đồng ý (hỏi trước). Không có yêu cầu thì bỏ hẳn – đừng thêm «cho đủ bộ».
 
 - Phụ lục đặt sau danh sách nguồn; mỗi phụ lục bắt đầu từ trang mới.
 - Tiêu đề: `ПРИЛОЖЕНИЕ А`, `ПРИЛОЖЕНИЕ Б` – **chữ hoa**, căn giữa. Một phụ lục
