@@ -3,8 +3,9 @@
 A collection of [Cline](https://cline.bot) skills, adapted from Anthropic's
 [anthropics/skills](https://github.com/anthropics/skills), from
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
-[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) and
-[iart-ai/manim-skills](https://github.com/iart-ai/manim-skills), plus two project-specific
+[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills),
+[iart-ai/manim-skills](https://github.com/iart-ai/manim-skills) and
+[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), plus two project-specific
 skills (`otchet`, `skill-creator`).
 
 Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and
@@ -20,6 +21,7 @@ skills list is reloaded. Invoke with `/skill-name`, or just describe the job: th
 | `otchet` | Russian academic reports (ПР, лабораторная, реферат, курсовая): LETI title page, Times New Roman 14, captions, DOCX plus PDF, Vietnamese and UTF-8 rules | this repo |
 | `skill-creator` | Build, test, benchmark and package new Cline skills | adapted from anthropics/skills |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a full playbook library and a design detector | adapted from pbakaus/impeccable 4.8.0 |
+| `design-taste-frontend` | Anti-slop company sites at the figma.com and x.ai bar: one section per screen, equal edges, real photographs and product UI, shader effects only on tech, gaming and software pages, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill 2.5.0 |
 | `frontend-design` | Visual design guidance so a UI does not look templated | adapted from anthropics/skills |
 | `docx` | Create, read and edit Word documents | adapted from anthropics/skills |
 | `xlsx` | Create, read, edit and clean spreadsheets | adapted from anthropics/skills |
@@ -59,6 +61,10 @@ Details per skill: `references/cline-adaptation.md` in `skill-creator` and
   `pip install python-docx python-pptx openpyxl pypdf pdfplumber reportlab lxml pypdfium2 pyyaml`
 - Optional: Node 20+ (`docx` npm package for the docx skill, MCP SDK for mcp-builder),
   Microsoft Word for DOCX to PDF export, Playwright MCP for visual checks.
+- For `design-taste-frontend`: Node 22+ and Chrome, Edge or Chromium. The skill ships every
+  script it needs (no npm packages, headless Chrome driven over `127.0.0.1`); ffmpeg is
+  optional. Run `node design-taste-frontend\scripts\check_env.mjs` first - it prints what is
+  missing and the build waits for your yes before anything is installed.
 - For `manim`: Manim CE (`python -m pip install manim`), `ffmpeg` and `ffprobe` on PATH,
   and MiKTeX (only for `Tex`/`MathTex`). Run `manim\scripts\manim-env-check.ps1` to see
   what is missing before blaming the scene code.
@@ -71,13 +77,13 @@ Text that a person reads uses the en dash `–` with spaces, never the em dash `
 
 ## Keeping up with upstream
 
-Twelve of the thirteen skills are forks; only `otchet` is native to this repository.
+Thirteen of the fourteen skills are forks; only `otchet` is native to this repository.
 Their `SKILL.md` is **generated**, so an upstream update is re-applied mechanically
 instead of merged by hand.
 
 | Strategy | Meaning | Skills |
 |---|---|---|
-| `adapt` | `SKILL.md` is rebuilt from upstream plus `tools/notes/<skill>.md`; other files are never overwritten or deleted | pdf, docx, pptx, xlsx, frontend-design, mcp-builder, git-workflow-and-versioning, documentation-and-adrs, code-review-and-quality |
+| `adapt` | `SKILL.md` is rebuilt from upstream plus `tools/notes/<skill>.md`; other files are never overwritten or deleted | pdf, docx, pptx, xlsx, frontend-design, design-taste-frontend, mcp-builder, git-workflow-and-versioning, documentation-and-adrs, code-review-and-quality |
 | `manual` | `SKILL.md` is hand-written; sync only reports that upstream moved, you merge yourself | skill-creator, impeccable, manim |
 | `own` | this repository is the source of truth; sync skips it | otchet |
 
@@ -112,7 +118,7 @@ Rules: never edit a generated `SKILL.md` by hand. Change `tools/notes/<skill>.md
 `tools/adapt_config.json` and regenerate. `apply` preserves `LICENSE*`, `CLINE-*.md` and
 `references/cline-adaptation.md`; everything else in an `adapt` skill comes from upstream.
 
-Bản Việt: 9 skill `adapt` tự cập nhật từ upstream mỗi ngày và gộp vào một PR trên nhánh
+Bản Việt: 10 skill `adapt` tự cập nhật từ upstream mỗi ngày và gộp vào một PR trên nhánh
 `sync/upstream`; `skill-creator`, `impeccable` và `manim` sửa tay nên chỉ được báo; `otchet`
 là nguồn gốc nên bỏ qua. Bước check/apply không tốn token.
 
@@ -155,9 +161,11 @@ hay tên AI.
 ## Licensing
 
 Every skill keeps the license of its origin: `otchet` and `skill-creator` are this
-project's own work, `impeccable` is Apache 2.0 (see `impeccable/LICENSE`), the
-Anthropic-derived skills carry their `LICENSE.txt` with the upstream terms.
+project's own work, `impeccable` is Apache 2.0 (see `impeccable/LICENSE`),
+`design-taste-frontend` is MIT, Copyright (c) 2026 Leonxlnx (see
+`design-taste-frontend/LICENSE`), and the Anthropic-derived skills carry their
+`LICENSE.txt` with the upstream terms.
 
-Bản Việt: repo gom 9 skill cho Cline. Cài bằng cách copy thư mục vào
+Bản Việt: repo gom 14 skill cho Cline. Cài bằng cách copy thư mục vào
 `C:\Users\<user>\.cline\skills`, khởi động lại Cline, gọi `/tên-skill` hoặc mô tả
 việc cần làm bằng tiếng Việt.
