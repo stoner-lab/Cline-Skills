@@ -326,7 +326,14 @@ Chi tiết: `references/report-types.md`.
     выравниванием по ширине и интервалом 1,5; нумерация добавляется автоматически,
     если её нет в строке; адреса (`https://`, `www.`, `doi:`) внутри пункта
     становятся **кликабельными гиперссылками**, шрифт остаётся Times New Roman;
-  - `add_table()`, `add_picture_with_caption()`;
+  - `add_table()`, `add_picture_with_caption()` – `add_table(..., caption="Таблица 1 – …")`
+    сам ставит наименование над таблицей (по центру в ЛЭТИ, слева по ГОСТ);
+  - `appendix()` – приложение по ГОСТ 7.32-2017: «ПРИЛОЖЕНИЕ А» с новой страницы,
+    строка `(обязательное)` / `(справочное)`, стиль Heading 1 (значит, попадает в
+    содержание) и сквозная нумерация страниц;
+  - `gost_config()` – пресет под ГОСТ 7.32-2017 (кегль 12, заголовки с абзацного
+    отступа, наименование таблицы слева, `Рисунок N`); по умолчанию действует
+    ЛЭТИ, см. `references/format.md` §18;
   - `add_page_number()`, `add_toc()` – mục lục dùng field `TOC \o "1-3" \h \z \u`
     (`\h` nên từng dòng mục lục là link nội bộ); `export_pdf_via_word()` gọi
     `Fields.Update()` trước khi xuất nên PDF cũng có mục lục và link, không còn
@@ -335,7 +342,8 @@ Chi tiết: `references/report-types.md`.
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
 - `scripts/validate_docx.py` – kiểm tra file DOCX/PDF: bố cục, font, dấu gạch
   ngang, metadata, **tính clickable của link** (URL để dạng chữ thường là FAIL,
-  không phải cảnh báo) và số annotation `/Link` trong PDF.
+  không phải cảnh báo), số annotation `/Link` trong PDF, số chương/phụ lục và
+  chữ cái phụ lục có hợp lệ theo ГОСТ 7.32-2017 hay không.
 - `scripts/strip_metadata.py` – bỏ dấu vết công cụ khỏi file giao bài (`creator:
   python-docx`, `Application`, `docProps/custom.xml`, thumbnail; `Producer: ReportLab`,
   XMP trong PDF; `encoder=Lavf` trong MP4). `--check` chỉ báo cáo, không sửa.

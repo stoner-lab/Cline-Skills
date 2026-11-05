@@ -93,11 +93,19 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 - Không để heading đứng một mình ở cuối trang mà không có đoạn văn theo sau.
 - `Цель работы`, `Постановка задачи`, `Выводы`, `Заключение` cũng là heading
   và in đậm, căn giữa.
+- **ГОСТ 7.32-2017 (5.4.3)**: заголовки печатают **с абзацного отступа** (1,25 см),
+  а не по центру. Расхождение с ЛЭТИ; переключается пресетом:
+  `cfg = gost_config()` → `heading(doc, "1. Раздел", cfg=cfg)`. Методичка
+  кафедры важнее, поэтому по умолчанию остаётся центрирование.
 
 ## 5. Bảng
 
 - Caption đặt **phía trên** bảng, căn giữa, cỡ 12:
   `Таблица 3 – Название таблицы`.
+- Cách viết gọn nhất: `add_table(..., caption="Таблица 3 – Название")` – hàm tự
+  đặt caption phía trên, `keep_with_next`, không thụt dòng đầu.
+- **ГОСТ 7.32-2017 (6.4.3)**: наименование таблицы – **слева, без абзацного
+  отступа**; в пресете `gost_config()` это уже включено (`table_caption_center=False`).
 - Bảng dùng khung **Table Grid**.
 - Dòng tiêu đề in đậm.
 - Nội dung ô: căn giữa; cột văn bản dài có thể căn trái.
@@ -112,6 +120,9 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 
 - Caption đặt **phía dưới** hình, căn giữa, cỡ 12:
   `Рис. 2 – Название рисунка`.
+- **ГОСТ 7.32-2017**: слово пишут полностью – `Рисунок 2 – Название рисунка`;
+  в пресете `gost_config()` это задаёт `figure_label="Рисунок"`. Валидатор
+  принимает оба варианта.
 - Hình phải rõ, không mờ, không méo.
 - Không dùng ảnh chụp màn hình chứa cả thanh công cụ, tab trình duyệt.
 - Trong text phải có câu dẫn: `Схема приведена на рис. 2.`
@@ -123,7 +134,8 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 - Cỡ 14, cùng font Times New Roman.
 - Chỉ số trên/dưới rõ ràng: `x′ij`, `w_i`, `α_i`.
 - Nếu công thức được đánh số, đặt số trong ngoặc tròn bên phải:
-  `(1)`, `(2)`.
+  `(1)`, `(2)`. Готовый способ: `formula(doc, [("F", None), ("=", None), ("ma", None)], number=1)`
+  – формула остаётся по центру, номер уходит к правому краю (ГОСТ 7.32-2017, 6.10).
 - Ngay sau công thức cần giải thích ký hiệu:
   `где xij – оценка альтернативы j по критерию i.`
 - Không chèn công thức dưới dạng ảnh nếu có thể gõ bằng Word.
@@ -244,8 +256,13 @@ Nếu không thể không hành động:
 - **Danh sách luôn bắt đầu từ trang mới**: dùng `add_references(doc, items)` –
   hàm đặt `page_break_before` cho tiêu đề (không tạo trang trắng như khi chèn
   page break thủ công).
-- Tiêu đề `Список источников`: Times New Roman 14, đậm, **căn giữa**, không thụt
-  đầu dòng, cách đoạn sau 6 pt.
+- Tiêu đề mặc định `Список использованных источников` (đúng tên структурного
+  элемента ГОСТ 7.32-2017, §4; задаётся `StyleConfig.sources_title`): Times New
+  Roman 14, đậm, **căn giữa**, không thụt đầu dòng, cách đoạn sau 6 pt.
+  Вариант ЛЭТИ «Список источников» тоже принимается валидатором.
+- Mô tả nguồn theo **ГОСТ 7.1 / ГОСТ 7.80**, ví dụ trong Приложение Д и Е самого
+  ГОСТ 7.32-2017: автор, заглавие, вид издания, место, издательство, год, объём;
+  для электронных – `[Электронный ресурс]`, `URL`, `(дата обращения: ...)`.
 - Mỗi nguồn là **một đoạn văn bình thường**: thụt lề dòng đầu 1,25 cm, căn đều
   hai bên (justify), giãn dòng 1,5, không treo dòng (không dùng hanging indent),
   không đánh số tự động của Word – số `1.`, `2.` nằm trong text.
@@ -271,12 +288,30 @@ add_references(doc, [
 
 ## 15. Phụ lục
 
-- Phụ lục đặt sau danh sách nguồn.
-- Tiêu đề: `ПРИЛОЖЕНИЕ А`, `ПРИЛОЖЕНИЕ Б`.
+Quy tắc dưới đây lấy từ ГОСТ 7.32-2017 п.6.17 (проверено по тексту стандарта).
+
+- Phụ lục đặt sau danh sách nguồn; mỗi phụ lục bắt đầu từ trang mới.
+- Tiêu đề: `ПРИЛОЖЕНИЕ А`, `ПРИЛОЖЕНИЕ Б` – **chữ hoa**, căn giữa. Một phụ lục
+  duy nhất vẫn là `ПРИЛОЖЕНИЕ А` (6.17.4).
+- **Chữ cái hợp lệ**: А, Б, В, Г, Д, Е, Ж, И, К... – **trừ Ё, З, Й, О, Ч, Ъ, Ы, Ь**;
+  nếu dùng chữ Latin thì trừ I và O; hết chữ cái mới dùng số Ả Rập.
+- Dưới tiêu đề có thể có dòng trạng thái: `(обязательное)` hoặc `(справочное)`,
+  rồi tên phụ lục (in đậm, căn giữa).
+- Giấy A4, **cho phép A3** (6.17.5); đánh số trang **liên tục** với phần thân (6.17.6).
+- Mọi phụ lục phải được liệt kê trong **mục lục** (6.17.7) – vì vậy `appendix()`
+  tạo heading cấp 1 để field TOC bắt được.
 - Bảng/hình trong phụ lục vẫn tiếp tục đánh số toàn tài liệu (trừ khi có
-  yêu cầu riêng).
+  yêu cầu riêng, khi đó dùng `В.1`, `В.2`).
 - Không đưa code dài vào thân báo cáo; code dài đưa vào phụ lục và có chú thích
   (quy tắc chi tiết về code – §16).
+
+```python
+from docx_helpers import appendix
+
+appendix(doc, "А", "Пример оформления", status="справочное")   # новая страница, ПРИЛОЖЕНИЕ А
+para(doc, "Текст приложения.")
+```
+
 
 ## 16. Фрагменты кода в отчёте
 
@@ -353,4 +388,53 @@ add_references(doc, [
 - Không có `я/мы`.
 - Số liệu khớp với file tính.
 - Tên file đúng quy ước.
+
+## 18. ГОСТ 7.32-2017: что уже соблюдено и где расходится с ЛЭТИ
+
+Стандарт: **ГОСТ 7.32-2017 «Отчет о научно-исследовательской работе. Структура и
+правила оформления»** (с поправками ИУС 2-2019, 3-2019, 1-2022). Он задаёт
+структуру отчёта о НИР; методичка кафедры ЛЭТИ уточняет оформление студенческих
+работ и **всегда важнее** стандарта.
+
+| Требование | ГОСТ 7.32-2017 | Пресет ЛЭТИ (по умолчанию) | Как включить ГОСТ |
+|---|---|---|---|
+| Поля | 30 / 15 / 20 / 20 мм | то же | ничего, совпадает |
+| Формат | A4 | A4 | — |
+| Интервал | 1,5 | 1,5 | — |
+| Абзацный отступ | 1,25 см | 1,25 см | — |
+| Шрифт | Times New Roman | Times New Roman | — |
+| Кегль | 12 пт | 14 пт | `gost_config()` |
+| Заголовки | с абзацного отступа | по центру | `gost_config()` (`heading_center=False`) |
+| Наименование таблицы | слева, без отступа | по центру | `gost_config()` или `add_table(..., caption_align=WD_ALIGN_PARAGRAPH.LEFT)` |
+| Подпись рисунка | `Рисунок 1 – …` | `Рис. 1 – …` | `gost_config()` (`figure_label="Рисунок"`) |
+| Номер страницы | внизу по центру, без точки | то же | — |
+| Титульный лист | в нумерации, но номер не печатают | то же (`different_first_page`) | — |
+| Приложения | `ПРИЛОЖЕНИЕ А`, статус, в содержании, сквозная нумерация | так же с `appendix()` | — |
+| Список источников | `Список использованных источников` | тот же заголовок по умолчанию | — |
+
+```python
+from docx_helpers import gost_config, setup_document, heading, para
+
+cfg = gost_config()                      # кегль 12, заголовки с отступа, таблицы слева
+doc = setup_document(cfg=cfg, title="НИР", author="Иванов И.И.")
+heading(doc, "1. Раздел", cfg=cfg)
+para(doc, "Текст раздела.", cfg=cfg)     # para()/caption() берут кегль и интервал из cfg
+```
+
+Структурные элементы ГОСТ 7.32-2017 (§4), которых нет в студенческом ПР и
+которые при необходимости собираются из готовых функций:
+
+| Элемент | Чем делать |
+|---|---|
+| Список исполнителей (§5.2) | `heading()` + `add_table(["Фамилия, инициалы", "Должность", "Подпись, дата"], …)` |
+| Реферат (§5.3): объём, число страниц, иллюстраций, таблиц, приложений, ключевые слова | `heading(doc, "РЕФЕРАТ")` + `para()` |
+| Содержание (§5.4) | `add_toc(doc)` |
+| Термины и определения (§5.5) | `heading()` + `para("В настоящем отчете о НИР применяют следующие термины…")` |
+| Перечень сокращений (§5.6) – нужен, если обозначений больше трёх | `heading()` + `para()` |
+| Приложения (§6.17) | `appendix(doc, "А", "Название", status="обязательное")` |
+
+Проверка: `python scripts/validate_docx.py report.docx --pdf report.pdf` – среди
+прочего считает приложения (`INFO: Appendices: А`) и предупреждает о
+недопустимой букве (`Ё`, `З`, `О`…) или о приложении не стилем Heading 1.
+
 

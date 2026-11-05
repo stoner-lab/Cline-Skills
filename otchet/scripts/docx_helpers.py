@@ -23,7 +23,7 @@ from typing import Sequence
 from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.table import WD_ALIGN_VERTICAL, WD_TABLE_ALIGNMENT, WD_ROW_HEIGHT_RULE
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -58,6 +58,34 @@ class StyleConfig:
     caption_size: int = 12
     table_size: int = 11
     table_header_size: int = 11
+    # ЛЭТИ центрирует заголовки; ГОСТ 7.32-2017 (5.4.3) требует абзацный отступ.
+    heading_center: bool = True
+    # ГОСТ 7.32-2017 (6.4.3) ставит наименование таблицы слева, без отступа.
+    table_caption_center: bool = True
+    # Подпись рисунка: «Рис. 1» в ЛЭТИ, «Рисунок 1» по ГОСТ 7.32-2017.
+    figure_label: str = "Рис."
+    sources_title: str = "Список использованных источников"
+
+
+def gost_config() -> StyleConfig:
+    """Пресет под ГОСТ 7.32-2017 (отчёт о НИР).
+
+    Отличия от пресета ЛЭТИ: кегль 12 пт вместо 14, заголовки с абзацного
+    отступа вместо центрирования, наименование таблицы слева без отступа,
+    подпись рисунка «Рисунок N». Поля (30/15/20/20 мм), интервал 1,5 и
+    абзацный отступ 1,25 см совпадают с ЛЭТИ и остаются как есть.
+    Требования методички кафедры всегда важнее стандарта.
+    """
+    return StyleConfig(
+        font_size=12,
+        heading_size=12,
+        caption_size=12,
+        table_size=10,
+        table_header_size=10,
+        heading_center=False,
+        table_caption_center=False,
+        figure_label="Рисунок",
+    )
 
 
 @dataclass
@@ -160,11 +188,13 @@ def setup_document(cfg: StyleConfig | None = None, title: str = "", author: str 
         h.font.size = Pt(size)
         h.font.bold = True
         h.font.color.rgb = RGBColor(0, 0, 0)
-        h.paragraph_format.first_line_indent = Cm(0)
+        h.paragraph_format.first_line_indent = (
+            Cm(0) if cfg.heading_center else Cm(cfg.first_line_indent_cm))
         h.paragraph_format.space_before = Pt(12)
         h.paragraph_format.space_after = Pt(6)
         h.paragraph_format.keep_with_next = True
-        h.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        h.paragraph_format.alignment = (
+            WD_ALIGN_PARAGRAPH.CENTER if cfg.heading_center else WD_ALIGN_PARAGRAPH.LEFT)
 
     footer = sec.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -179,9 +209,16 @@ def setup_document(cfg: StyleConfig | None = None, title: str = "", author: str 
     return doc
 
 
-def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=1.25, size=14,
-         bold=False, italic=False, before=0, after=0, spacing=1.5, keep=False,
-         links=True):
+def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=None, size=None,
+         bold=False, italic=False, before=0, after=0, spacing=None, keep=False,
+         links=True, cfg: StyleConfig | None = None):
+    """Абзац обычного текста; ``cfg`` подставляет кегль, отступ и интервал пресета."""
+    indent_cm = cfg.first_line_indent_cm if (cfg and indent_cm is None) else indent_cm
+    size = cfg.font_size if (cfg and size is None) else size
+    spacing = cfg.line_spacing if (cfg and spacing is None) else spacing
+    indent_cm = 1.25 if indent_cm is None else indent_cm
+    size = 14 if size is None else size
+    spacing = 1.5 if spacing is None else spacing
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = align
@@ -199,9 +236,13 @@ def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=1.25, size=14
     return p
 
 
-def heading(doc, text, level=1, size=14):
+def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None):
+    cfg = cfg or StyleConfig()
     h = doc.add_heading(level=level)
-    h.paragraph_format.first_line_indent = Cm(0)
+    h.paragraph_format.first_line_indent = (
+        Cm(0) if cfg.heading_center else Cm(cfg.first_line_indent_cm))
+    h.paragraph_format.alignment = (
+        WD_ALIGN_PARAGRAPH.CENTER if cfg.heading_center else WD_ALIGN_PARAGRAPH.LEFT)
     r = h.add_run(text)
     set_run_font(r, size=size, bold=True)
     r.font.color.rgb = RGBColor(0, 0, 0)
@@ -274,14 +315,29 @@ def add_text_with_links(paragraph, text, size=14, bold=False, italic=False,
     return paragraph
 
 
-def formula(doc, parts: Sequence[tuple[str, str | None]], size=14):
+def formula(doc, parts: Sequence[tuple[str, str | None]], size=14, number=None,
+            cfg: StyleConfig | None = None):
+    """Формула по центру; при ``number`` – номер в скобках у правого края.
+
+    ГОСТ 7.32-2017 (6.10): формулы нумеруют сквозной нумерацией арабскими
+    цифрами в круглых скобках, номер ставят у правого края строки формулы.
+    Табуляции (центр + правый край) дают и центрирование, и номер без таблицы.
+    """
+    cfg = cfg or StyleConfig()
     p = doc.add_paragraph()
     pf = p.paragraph_format
-    pf.alignment = WD_ALIGN_PARAGRAPH.CENTER
     pf.first_line_indent = Cm(0)
     pf.space_before = Pt(3)
     pf.space_after = Pt(3)
     pf.line_spacing = 1.5
+    if number:
+        text_width_cm = cfg.page_width_cm - cfg.margin_left_cm - cfg.margin_right_cm
+        pf.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        pf.tab_stops.add_tab_stop(Cm(text_width_cm / 2), WD_TAB_ALIGNMENT.CENTER)
+        pf.tab_stops.add_tab_stop(Cm(text_width_cm), WD_TAB_ALIGNMENT.RIGHT)
+        p.add_run("\t")
+    else:
+        pf.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for text, mode in parts:
         r = p.add_run(text)
         set_run_font(r, size=size, name="Times New Roman")
@@ -289,10 +345,14 @@ def formula(doc, parts: Sequence[tuple[str, str | None]], size=14):
             r.font.subscript = True
         elif mode == "sup":
             r.font.superscript = True
+    if number:
+        r = p.add_run(f"\t({number})")
+        set_run_font(r, size=size, name="Times New Roman")
     return p
 
 
-def caption(doc, text, size=12, links=True):
+def caption(doc, text, size=None, links=True, cfg: StyleConfig | None = None):
+    size = cfg.caption_size if (cfg and size is None) else (12 if size is None else size)
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -531,7 +591,7 @@ def _student_display(meta: "ReportMeta") -> str:
     return (meta.student_short or short_name(meta.student)).strip()
 
 
-def add_references(doc, items, title="Список источников", cfg: StyleConfig | None = None):
+def add_references(doc, items, title=None, cfg: StyleConfig | None = None):
     """Список источников: всегда с новой страницы, пункты по общим правилам.
 
     Заголовок ставится с новой страницы (``page_break_before``) и выравнивается
@@ -553,7 +613,7 @@ def add_references(doc, items, title="Список источников", cfg: S
     head_format.line_spacing = cfg.line_spacing
     head_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
     head_format.keep_with_next = True
-    head_run = head.add_run(title)
+    head_run = head.add_run(title or cfg.sources_title)
     set_run_font(head_run, size=cfg.heading_size, bold=True)
 
     for index, item in enumerate(items, start=1):
@@ -568,6 +628,54 @@ def add_references(doc, items, title="Список источников", cfg: S
                  spacing=cfg.line_spacing)
         add_text_with_links(p, rendered, size=cfg.font_size)
     return doc
+
+
+def appendix(doc, letter, title="", status=None, cfg: StyleConfig | None = None):
+    """Оформить приложение по ГОСТ 7.32-2017 (6.17).
+
+    «ПРИЛОЖЕНИЕ А» печатают прописными, по центру, с новой страницы; строку
+    статуса «(обязательное)» или «(справочное)» и наименование – ниже, тоже по
+    центру. Заголовок делается стилем Heading 1, поэтому приложение попадает в
+    содержание (6.17.7), а нумерация страниц остаётся сквозной (6.17.6).
+
+    Буквы: А, Б, В, Г, Д, Е, Ж, И, К... – кроме Ё, З, Й, О, Ч, Ъ, Ы, Ь; для
+    латиницы – кроме I и O (6.17.4). Одно приложение обозначают «ПРИЛОЖЕНИЕ А».
+    """
+    cfg = cfg or StyleConfig()
+
+    head = doc.add_heading(level=1)
+    head.paragraph_format.page_break_before = True
+    head.paragraph_format.first_line_indent = Cm(0)
+    head.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    head.paragraph_format.space_before = Pt(0)
+    head.paragraph_format.space_after = Pt(6)
+    head.paragraph_format.keep_with_next = True
+    head_run = head.add_run(f"ПРИЛОЖЕНИЕ {str(letter).upper()}")
+    set_run_font(head_run, size=cfg.heading_size, bold=True)
+    head_run.font.color.rgb = RGBColor(0, 0, 0)
+
+    if status:
+        st = doc.add_paragraph()
+        st.paragraph_format.first_line_indent = Cm(0)
+        st.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        st.paragraph_format.space_before = Pt(0)
+        st.paragraph_format.space_after = Pt(6)
+        st.paragraph_format.line_spacing = cfg.line_spacing
+        st.paragraph_format.keep_with_next = True
+        st_run = st.add_run(f"({status})")
+        set_run_font(st_run, size=cfg.font_size)
+
+    if title:
+        tp = doc.add_paragraph()
+        tp.paragraph_format.first_line_indent = Cm(0)
+        tp.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        tp.paragraph_format.space_before = Pt(0)
+        tp.paragraph_format.space_after = Pt(12)
+        tp.paragraph_format.line_spacing = cfg.line_spacing
+        tp.paragraph_format.keep_with_next = True
+        tp_run = tp.add_run(title)
+        set_run_font(tp_run, size=cfg.font_size, bold=True)
+    return head
 
 
 def add_title_page(doc, meta: ReportMeta, cfg: StyleConfig | None = None, template=None):
@@ -687,10 +795,29 @@ def _set_cell(cell, text, size=11, bold=False, align=WD_ALIGN_PARAGRAPH.CENTER):
 
 def add_table(doc, headers, rows, widths_cm, cfg: StyleConfig | None = None,
               size: int | None = None, header_size: int | None = None,
-              align_left_cols=(), last_row_bold=False, spacer=True):
+              align_left_cols=(), last_row_bold=False, spacer=True,
+              caption: str | None = None, caption_align=None):
     cfg = cfg or StyleConfig()
     size = size or cfg.table_size
     header_size = header_size or cfg.table_header_size
+
+    # Наименование таблицы – над таблицей, в одну строку с номером через тире.
+    # ГОСТ 7.32-2017 (6.4.3) ставит его слева без абзацного отступа, ЛЭТИ – по
+    # центру; выбор задаёт cfg.table_caption_center или аргумент caption_align.
+    if caption:
+        align = caption_align or (
+            WD_ALIGN_PARAGRAPH.CENTER if cfg.table_caption_center else WD_ALIGN_PARAGRAPH.LEFT)
+        cap = doc.add_paragraph()
+        cap_fmt = cap.paragraph_format
+        cap_fmt.alignment = align
+        cap_fmt.first_line_indent = Cm(0)
+        cap_fmt.space_before = Pt(6)
+        cap_fmt.space_after = Pt(3)
+        cap_fmt.line_spacing = cfg.line_spacing
+        cap_fmt.keep_with_next = True
+        cap_run = cap.add_run(caption)
+        set_run_font(cap_run, size=cfg.caption_size)
+
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
