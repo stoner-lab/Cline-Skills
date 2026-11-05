@@ -1476,12 +1476,14 @@ $startedNew = $false
 $word = $null
 $doc = $null
 $alerts = $null
+$security = $null
 try {{
     # уже запущенный Word (в том числе «зомби» от прошлого экспорта) – используем
     # его: второй экземпляр и есть причина диалога про Normal.dotm
     try {{
         $word = [Runtime.InteropServices.Marshal]::GetActiveObject('Word.Application')
         $alerts = $word.DisplayAlerts
+        try {{ $security = $word.AutomationSecurity }} catch {{ $security = $null }}
         $word.DisplayAlerts = 0
     }} catch {{
         $word = New-Object -ComObject Word.Application
@@ -1506,6 +1508,7 @@ try {{
     }} finally {{
         if ($doc -ne $null) {{ try {{ $doc.Close(0) }} catch {{}} }}
         if ($alerts -ne $null -and -not $startedNew) {{ try {{ $word.DisplayAlerts = $alerts }} catch {{}} }}
+        if ($security -ne $null -and -not $startedNew) {{ try {{ $word.AutomationSecurity = $security }} catch {{}} }}
         $empty = $false
         try {{ $empty = ($word.Documents.Count -eq 0 -and -not $word.Visible) }} catch {{}}
         if ($startedNew -or $empty) {{ try {{ $word.Quit(0) }} catch {{}} }}
@@ -1574,7 +1577,14 @@ def save_report(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None, q
         )
     docx_path = Path(docx_path)
     docx_path.parent.mkdir(parents=True, exist_ok=True)
-    doc.save(str(docx_path))
+    try:
+        doc.save(str(docx_path))
+    except PermissionError as exc:
+        raise ValueError(
+            f"Файл {docx_path.name} открыт в Word – Word держит блокировку, запись "
+            f"запрещена (Permission denied). Закройте его в Word и повторите; "
+            f"открывать другие документы в Word можно, этот – нельзя."
+        ) from exc
     if pdf_path:
         export_pdf_via_word(docx_path, pdf_path)
     if not quiet:

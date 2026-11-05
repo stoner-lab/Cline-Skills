@@ -113,6 +113,9 @@
   `python scripts\check_env.py --clean-word`.
 - [ ] Không thấy hộp thoại Word «This file is in use by another application or user
   (…\Normal.dotm)»; nếu có, đó là dấu hiệu còn phiên Word thứ hai – dọn rồi xuất lại.
+- [ ] Không mở **chính file báo cáo** trong Word khi đang ghi (Word giữ khoá ->
+  `save_report()` báo `ValueError`); mở các file Word khác thì không sao, và không
+  để Word kẹt ở hộp thoại Save As/Open/Print trong lúc xuất PDF.
 - [ ] PDF không có trang trắng.
 - [ ] PDF không có bảng bị cắt.
 - [ ] Tên file đúng quy ước.
