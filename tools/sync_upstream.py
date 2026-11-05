@@ -13,7 +13,9 @@ Strategies (tools/adapt_config.json -> strategy):
     manual  SKILL.md is hand-written; sync only reports that upstream moved
     own     this repository is the source (otchet); skipped
 
-Needs a GitHub token in GH_TOKEN or GITHUB_TOKEN.
+Needs a GitHub token in GH_TOKEN or GITHUB_TOKEN for the API path; without one it
+falls back to `git ls-remote` and raw.githubusercontent.com, which works for every
+public upstream and keeps a scheduled local run token-free.
 Exit codes: check -> 0 nothing to do, 1 upstream changed, 2 error.
 """
 from __future__ import annotations
@@ -42,18 +44,40 @@ STATE = ROOT / "upstream.json"
 
 
 def token() -> str:
-    tok = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
-    if not tok:
-        sys.exit("ERROR: set GH_TOKEN (or GITHUB_TOKEN) with public read access.")
-    return tok
+    """GitHub token, optional: public repositories work without one."""
+    return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
+
+
+def git_remote_head(repo: str, ref: str) -> str:
+    """HEAD of ``ref`` in a public repo without a token: `git ls-remote`."""
+    import subprocess
+
+    if len(ref) == 40 and all(c in "0123456789abcdef" for c in ref.lower()):
+        return ref
+    url = f"https://github.com/{repo}.git"
+    want = f"refs/heads/{ref}"
+    try:
+        res = subprocess.run(["git", "ls-remote", url, want],
+                             capture_output=True, text=True, timeout=120)
+    except Exception as exc:                       # noqa: BLE001
+        sys.exit(f"ERROR: cannot reach {url}: {exc}")
+    for line in (res.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == want:
+            return parts[0]
+    sys.exit(f"ERROR: {repo} has no branch {ref!r} (checked with git ls-remote; "
+             "set GH_TOKEN if the repository is private)")
 
 
 def api(url: str, raw: bool = False, attempt: int = 0):
-    req = urllib.request.Request(url, headers={
+    headers = {
         "User-Agent": "cline-skill-sync",
-        "Authorization": "token " + token(),
         "Accept": "application/vnd.github+json",
-    })
+    }
+    tok = token()
+    if tok:
+        headers["Authorization"] = "token " + tok
+    req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=120) as r:
             return r.read() if raw else json.load(r)
@@ -78,13 +102,25 @@ class Api:
     def head(self, repo: str, ref: str) -> str:
         key = (repo, ref)
         if key not in self._heads:
-            self._heads[key] = api(f"https://api.github.com/repos/{repo}/commits/{ref}")["sha"]
+            try:
+                self._heads[key] = api(f"https://api.github.com/repos/{repo}/commits/{ref}")["sha"]
+            except (SystemExit, Exception):        # no token, rate limit, 404
+                self._heads[key] = git_remote_head(repo, ref)
         return self._heads[key]
 
     def file_text(self, repo: str, ref: str, path: str, name: str = "SKILL.md") -> str:
         full = f"{path.rstrip('/')}/{name}".lstrip("./")
         url = f"https://api.github.com/repos/{repo}/contents/{urllib.parse.quote(full)}?ref={ref}"
-        data = api(url)
+        try:
+            data = api(url)
+        except (SystemExit, Exception):            # fall back to the raw file
+            raw = f"https://raw.githubusercontent.com/{repo}/{ref}/{urllib.parse.quote(full)}"
+            try:
+                req = urllib.request.Request(raw, headers={"User-Agent": "cline-skill-sync"})
+                with urllib.request.urlopen(req, timeout=120) as r:
+                    return r.read().decode("utf-8")
+            except Exception as exc:               # noqa: BLE001
+                sys.exit(f"ERROR: cannot read {repo}:{full}: {exc}")
         if isinstance(data, list):
             sys.exit(f"ERROR: {repo}:{full} is a directory, not a file")
         return base64.b64decode(data["content"]).decode("utf-8")
