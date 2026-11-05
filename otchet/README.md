@@ -41,6 +41,10 @@ python scripts\check_env.py      # kiểm tra toàn bộ môi trường, exit 0 
 Không cần: LaTeX/MiKTeX (chỉ dùng khi chèn `MathTex`, không thuộc skill này),
 LibreOffice, pandoc, ffmpeg.
 
+**Nếu thiếu gì:** `scripts/check_env.py` in ra danh sách thiếu kèm lệnh/link khắc
+phục; agent phải **báo user và xin phép trước khi cài**, không tự `pip install`.
+Không có MS Word thì chỉ ra DOCX (không có PDF và mục lục thật) – nói rõ trước.
+
 ## Cài đặt
 
 ### Cài global cho Cline

@@ -22,34 +22,46 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 mark = {"ok": "OK  ", "warn": "WARN", "fail": "FAIL"}
 fails = 0
+hints: list[str] = []          # что именно предложить пользователю
+
+PIP = "python -m pip install "
+WORD_URL = "https://www.microsoft.com/microsoft-365/word"
+CLONE_HINT = ("git clone --depth 1 https://github.com/stoner-lab/Cline-Skills.git "
+              "\"%TEMP%\\cline-skills\" then copy "
+              "\"%TEMP%\\cline-skills\\otchet\" into \"%USERPROFILE%\\.cline\\skills\\\"")
 
 
-def report(kind: str, name: str, detail: str = "") -> None:
+def report(kind: str, name: str, detail: str = "", hint: str = "") -> None:
     global fails
     if kind == "fail":
         fails += 1
+    if hint:
+        hints.append(hint)
     print(f"  {mark[kind]} {name:<14} {detail}")
 
 
 def check_python() -> None:
     version = platform.python_version()
     kind = "ok" if sys.version_info >= (3, 9) else "fail"
-    report(kind, "python", f"{version} ({sys.executable})")
+    report(kind, "python", f"{version} ({sys.executable})",
+           hint="" if kind == "ok" else "https://www.python.org/downloads/")
 
 
 def check_modules() -> None:
     required = {"docx": "python-docx", "pypdf": "pypdf", "lxml": "lxml"}
-    optional = {"pypdfium2": "pypdfium2 (проверка PDF)", "PIL": "Pillow (картинки)"}
+    optional = {"pypdfium2": "pypdfium2", "PIL": "Pillow"}
     for mod, pip_name in required.items():
         if importlib.util.find_spec(mod):
             report("ok", pip_name, _version(mod))
         else:
-            report("fail", pip_name, f"нет: python -m pip install {pip_name.split()[0]}")
+            report("fail", pip_name, "не установлен",
+                   hint=PIP + pip_name.lower())
     for mod, pip_name in optional.items():
         if importlib.util.find_spec(mod):
             report("ok", pip_name, _version(mod))
         else:
-            report("warn", pip_name, "не установлен – соответствующая проверка пропускается")
+            report("warn", pip_name, "не установлен – соответствующая проверка пропускается",
+                   hint=PIP + pip_name.lower())
 
 
 def _version(mod: str) -> str:
@@ -63,8 +75,11 @@ def _version(mod: str) -> str:
 def check_fonts() -> None:
     for name in ("times.ttf", "timesbd.ttf"):
         path = Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts" / name
-        report("ok" if path.exists() else "warn", f"font {name}",
-               "" if path.exists() else "Times New Roman не найден – Word подставит другой")
+        exists = path.exists()
+        report("ok" if exists else "warn", f"font {name}",
+               "" if exists else "Times New Roman не найден – Word подставит другой",
+               hint="" if exists else "установите Microsoft Office (шрифт идёт с ним): "
+                                      + WORD_URL)
 
 
 def check_files() -> None:
@@ -72,7 +87,9 @@ def check_files() -> None:
                 "scripts/docx_helpers.py", "scripts/validate_docx.py",
                 "scripts/strip_metadata.py"):
         path = SKILL_ROOT / rel
-        report("ok" if path.exists() else "fail", "file", rel)
+        exists = path.exists()
+        report("ok" if exists else "fail", "file", rel,
+               hint="" if exists else CLONE_HINT)
 
 
 def check_word() -> None:
@@ -101,9 +118,11 @@ try { "OK $($word.Version)" } finally { $word.Quit() }
         if result.returncode == 0 and out.startswith("OK"):
             report("ok", "ms word", f"v{out.split()[1]} – PDF и TOC доступны")
         else:
-            report("warn", "ms word", "COM не отвечает: " + (out or result.stderr or "")[:120])
+            report("warn", "ms word", "COM не отвечает: " + (out or result.stderr or "")[:120],
+                   hint="установите Microsoft Word: " + WORD_URL)
     except Exception as exc:                            # noqa: BLE001
-        report("warn", "ms word", f"COM недоступен: {exc}")
+        report("warn", "ms word", f"COM недоступен: {exc}",
+               hint="установите Microsoft Word: " + WORD_URL)
     finally:
         try:
             ps1.unlink(missing_ok=True)
@@ -119,10 +138,24 @@ def main() -> int:
     check_files()
     check_word()
     print()
+
+    if hints:
+        print("  Чего не хватает и что можно предложить пользователю:")
+        seen = set()
+        for hint in hints:
+            if hint in seen:
+                continue
+            seen.add(hint)
+            print(f"    - {hint}")
+        print()
+        print("  ВАЖНО: ничего не устанавливайте сами. Покажите этот список")
+        print("  пользователю, спросите разрешение и только потом выполняйте команды.")
+        print("  Пока чего-то не хватает – документ собирать не начинайте.")
+
     if fails:
-        print(f"  {fails} обязательных компонентов не хватает – см. FAIL выше.")
+        print(f"  Итог: {fails} обязательных компонентов нет (см. FAIL выше).")
         return 1
-    print("  Всё обязательное на месте. PDF и обновление TOC зависят от MS Word (см. выше).")
+    print("  Итог: всё обязательное на месте. PDF и обновление TOC зависят от MS Word.")
     return 0
 
 

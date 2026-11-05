@@ -83,6 +83,25 @@ mẫu bìa riêng, truyền `add_title_page(doc, meta, template="<file>.docx")`.
   (`report_summary()`), её достаточно переписать в чат вместе с путями к файлам.
   Не отчитывайся «готово» без этих чисел.
 
+### 2.13. Thiếu file hoặc thiếu tool: hỏi user, đừng tự cài
+
+Trước khi dựng bất kỳ file nào, chạy:
+
+```powershell
+python scripts\check_env.py
+```
+
+- `exit 0` → làm tiếp bình thường.
+- Có `FAIL` / `WARN` quan trọng (thiếu `python-docx`/`pypdf`, không có MS Word,
+  thiếu file skill, thiếu font Times New Roman) → **dừng lại**, chưa dựng file.
+- Báo user **đúng danh sách thiếu + cách khắc phục cụ thể** (script in sẵn mục
+  «Чего не хватает…»): lệnh `python -m pip install <package>`, link tải Word,
+  hoặc clone lại `stoner-lab/Cline-Skills` nếu thiếu file skill.
+- **Xin phép user rồi mới chạy** lệnh cài đặt. Không tự `pip install`, không tự
+  tải/né bằng cách khác.
+- Không có MS Word → nói trước: chỉ ra được DOCX, **không có PDF và mục lục thật**;
+  hỏi user có chấp nhận không rồi mới làm.
+
 ### 2.5. Câu bị động và vô nhân xưng
 
 Không dùng các từ: `рассмотрим`, `построим`, `выберем`, `проверим`, `я`, `мы`.
