@@ -20,9 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docx import Document
 from docx.oxml.ns import qn
 
-from docx_helpers import (ReportMeta, add_references, add_table, add_title_page, appendix,
-                          formula, heading, para, save_report, setup_document,
-                          title_template_path)
+from docx_helpers import (ReportMeta, add_references, add_table, add_title_page, annotation,
+                          appendix, formula, heading, para, save_report, setup_document,
+                          short_name, task_page, title_template_path, validate_meta_names)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
 
@@ -57,6 +57,10 @@ def build(path: Path, pdf: bool):
         submission_date="05.11.2026",
     )
     add_title_page(doc, meta)
+    task_page(doc, meta, rows=[("Содержание", "1. Проверка; 2. Выводы")])
+    annotation(doc, "Цель работы – проверить шаблон отчёта.",
+               text_en="The purpose is to test the report template.",
+               keywords="шаблон, проверка")
     heading(doc, "1. Проверка")
     para(doc, "Текст проверки, подробнее: https://example.org/method.")
     formula(doc, [("E", None), ("=", None), ("mc", "sup"), ("2", None)], number=1)
@@ -128,6 +132,18 @@ def check(path: Path):
     if not any(line.startswith("Дата сдачи работы на проверку") for line in new_lines):
         problems.append("нет строки «Дата сдачи работы на проверку» на титуле")
 
+    # страницы «ЗАДАНИЕ» и «Аннотация» собираются хелперами, а не шаблоном
+    if "ЗАДАНИЕ" not in new_lines:
+        problems.append("нет страницы «ЗАДАНИЕ» (task_page())")
+    if "на отчёт" not in new_lines and "на отчет" not in new_lines:
+        problems.append("нет подзаголовка «на отчёт» на странице задания")
+    if "Аннотация" not in new_lines:
+        problems.append("нет страницы «Аннотация» (annotation())")
+    if "Summary" not in new_lines:
+        problems.append("нет блока «Summary»")
+    if not any(line.startswith("Ключевые слова:") for line in new_lines):
+        problems.append("нет строки «Ключевые слова»")
+
     # metadata must not name the generator (python-docx, ReportLab, LibreOffice...)
     pdf_path = path.with_suffix(".pdf")
     for target in (path, pdf_path):
@@ -176,6 +192,43 @@ def check(path: Path):
     return problems
 
 
+def check_names():
+    """ФИО всегда «Фамилия И.О.»; без данных сборка падает, а не выдумывает."""
+    problems = []
+    for raw, expected in (("Нгуен Тхе", "Нгуен Т."),
+                          ("Нгуен Тхе Зуй", "Нгуен Т.З."),
+                          ("Иванов И.И.", "Иванов И.И."),
+                          ("Петров Пётр Петрович", "Петров П.П.")):
+        got = short_name(raw)
+        if got != expected:
+            problems.append(f"short_name({raw!r}) = {got!r}, ожидалось {expected!r}")
+
+    empty = ReportMeta(student="", teacher="", group="")
+    if len(validate_meta_names(empty)) < 3:
+        problems.append("validate_meta_names не поймал пустые ФИО и группу")
+    junk = ReportMeta(student="<Фамилия И.О.>", teacher="Иванов", group="4395")
+    if len(validate_meta_names(junk)) < 2:
+        problems.append("validate_meta_names не поймал плейсхолдер и фамилию без инициалов")
+
+    try:
+        add_title_page(setup_document(), empty)
+    except ValueError:
+        pass
+    else:
+        problems.append("add_title_page не упал на пустых ФИО")
+
+    # work_line не должен дублировать строку «по дисциплине» на титуле
+    dup = ReportMeta(student="Иванов И.И.", teacher="Петров П.П.", group="4395",
+                     discipline="Тестовая дисциплина", topic="Тема",
+                     work_line="по дисциплине «Тестовая дисциплина»")
+    title_doc = setup_document()
+    add_title_page(title_doc, dup)
+    lines = [p.text.strip().lower() for p in title_doc.paragraphs]
+    if sum(1 for line in lines if line.startswith("по дисциплине")) != 1:
+        problems.append("строка «по дисциплине» на титуле печатается дважды")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", action="store_true", help="также собрать PDF через Word")
@@ -184,6 +237,13 @@ def main():
     tpl = title_template_path()
     if not tpl.exists():
         print(f"FAIL: шаблон не найден: {tpl}")
+        return 1
+
+    problems = check_names()
+    if problems:
+        print("FAIL:")
+        for problem in problems:
+            print("  -", problem)
         return 1
 
     tmp = Path(tempfile.mkdtemp())

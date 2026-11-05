@@ -111,19 +111,23 @@ Cấu trúc mẫu (để đối chiếu khi mở file):
 по <тип работы> №<номер>                  (đậm)
 по дисциплине «<дисциплина>»              (đậm)
 Тема: <тема>                              (đậm)
-Вариант <вариант>                         (chữ thường, bỏ nếu không có)
   [bảng 2×3: nhãn | ô ký tên có đường kẻ dưới | họ tên, dòng cao 1,08 cm]
 
 <город>
 <год>
 ```
 
-`Выполненные пункты` và `Дата сдачи работы на проверку` – **optional**: trong mẫu
-không có hai dòng này. Nếu `ReportMeta.completed_items` / `submission_date` có dữ
-liệu, `_fill_title_from_template()` tự chèn chúng ngay dưới bảng chữ ký (in đậm,
-căn giữa, cách 12 pt) và bớt 3 dòng trống phía trên «ОТЧЕТ», nhờ vậy bìa vẫn nằm
-gọn trong một trang. Mẫu tự tạo vẫn dùng được placeholder `<пункты>`/`<дата>` –
-khi đó code điền vào dòng có sẵn thay vì chèn thêm.
+Ba dòng `Вариант`, `Выполненные пункты`, `Дата сдачи работы на проверку` – **optional**
+và **không có trong mẫu**. `_fill_title_from_template()` tự chèn:
+
+- `Вариант <N>` ngay dưới «Тема: …» (chữ thường, căn giữa) – chỗ này luôn được giữ
+  một dòng, nên bìa có hay không có вариант đều cao bằng nhau;
+- `Выполненные пункты: …` và `Дата сдачи работы на проверку – …` dưới bảng chữ ký
+  (in đậm, căn giữa, cách 12 pt), đồng thời bớt 3 dòng trống phía trên «ОТЧЕТ» để
+  bìa vẫn nằm gọn trong một trang.
+
+Mẫu tự tạo vẫn dùng được placeholder `<вариант>`, `<пункты>`, `<дата>` – khi đó code
+điền vào dòng có sẵn thay vì chèn thêm.
 
 Bảng chữ ký trong mẫu gồm 3 cột bằng nhau (3118 twips ≈ 5,5 cm), không có khung
 bảng, chỉ ô giữa có đường kẻ dưới. Số trang không hiển thị trên trang bìa

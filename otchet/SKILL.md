@@ -49,6 +49,12 @@ Trợ lý tạo báo cáo học thuật tiếng Nga, làm việc theo yêu cầu
 
 - Không bịa số liệu, tên, nhóm, giảng viên, hạn nộp, variant.
 - Thiếu thông tin thì hỏi người dùng.
+- **ФИО luôn đúng định dạng «Фамилия И.О.»** trên trang bìa (họ + chữ cái đầu của
+  tên và đệm): `Нгуен Т.`, `Нгуен Т.З.`, `Иванов И.И.`. Chỉ có họ («Иванов») hoặc
+  chưa có ФИО là **thiếu dữ liệu** – phải hỏi lại người dùng, không tự đoán chữ cái
+  đầu của tên. `add_title_page()` ném `ValueError` cho tới khi có đủ
+  `student`, `teacher` và `group`; `short_name()` tự rút gọn «Нгуен Тхе» →
+  «Нгуен Т.», còn «Петров Пётр Петрович» → «Петров П.П.».
 - Không copy nguyên văn từ mẫu, từ báo cáo cũ, từ giáo trình.
 - Không chép nguyên câu/đoạn của người khác; chỉ học bố cục và cách trình bày.
 
@@ -65,6 +71,17 @@ Nếu các nguồn mâu thuẫn, ưu tiên theo thứ tự trên và ghi rõ l�
 Trang bìa luôn lấy từ `assets/templates/title_page_leti.docx` (mục 3): file được
 clone nguyên XML rồi điền `<кафедра>`, `<тема>`, `<группа>`... Nếu giảng viên đưa
 mẫu bìa riêng, truyền `add_title_page(doc, meta, template="<file>.docx")`.
+
+### 2.4.1. Кегль 14 пт по умолчанию и отчёт о параметрах
+
+- Кегль по умолчанию – **Times New Roman 14 пт** (`StyleConfig.font_size = 14`).
+  Методички ЛЭТИ пишут «Times New Roman 12 или 14»; 12 пт ставят только если
+  методичка прямо это требует, и тогда это надо сказать пользователю.
+- После сохранения файла **сообщи пользователю параметры**: шрифт и кегль,
+  междустрочный интервал, абзацный отступ, поля, число таблиц и рисунков.
+  `save_report(doc, path, pdf_path=..., cfg=cfg)` печатает готовую сводку
+  (`report_summary()`), её достаточно переписать в чат вместе с путями к файлам.
+  Не отчитывайся «готово» без этих чисел.
 
 ### 2.5. Câu bị động và vô nhân xưng
 
@@ -247,8 +264,15 @@ Hỏi người dùng nếu thiếu bất kỳ mục nào:
 - Số bài / tên bài / chủ đề.
 - Variant.
 - Nhóm.
-- Họ tên sinh viên (và người thứ hai nếu làm nhóm).
-- Giảng viên.
+- Họ tên sinh viên (và người thứ hai nếu làm nhóm) – **hỏi dạng đầy đủ
+  «Фамилия Имя Отчество»**, trên bìa sẽ in «Фамилия И.О.»; nếu người dùng chỉ đưa
+  họ hoặc viết tắt không rõ, hỏi lại chứ không tự thêm chữ cái đầu.
+- Giảng viên – cũng theo dạng «Фамилия И.О.».
+- **Особые требования к оформлению** – hỏi trước khi собирать файл: междустрочный
+  интервал, красная строка, поля, нумерация рисунков (`1.1` по главам или сквозная),
+  подписи рисунков. Если особых требований нет – берём бланк 3004:
+  `cfg = leti_form_config()` → Times New Roman 14 пт, интервал 1,5, красная строка
+  1,25 см, поля 30/10/20/20 мм, подпись «Рисунок 1 – …» курсивом без точки.
 - Ngày nộp.
 - File đề bài.
 - File mẫu cùng môn (nếu có).
@@ -305,6 +329,20 @@ Chi tiết đầy đủ: `references/format.md`.
 
 Chi tiết: `references/report-types.md`.
 
+⚠️ Trong các cấu trúc trên, `Задание`, `Аннотация` (+ `Summary`) và `Содержание`
+**chỉ thêm khi đề bài / методичка yêu cầu** (hoặc bạn được nhờ). Không có trong đề
+thì bỏ hẳn – đừng «cho đủ bộ». Nếu giáo viên phát bộ mẫu ЛЭТИ (форма 3004) thì
+các trang đó nằm trong mẫu ⇒ coi như đề bài có yêu cầu. Không rõ thì hỏi.
+
+Mỗi **heading lớn** (`1.`, `2.`, `ЗАКЛЮЧЕНИЕ`, Источники, `ПРИЛОЖЕНИЕ`) bắt đầu
+**từ trang mới**; heading nhỏ (`1.1.`, `1.2.`) thì không ngắt trang.
+`leti_form_config()` bật sẵn (`heading_page_break=True`), hoặc
+`heading(doc, "2. …", page_break=True, cfg=cfg)`.
+
+⚠️ Ngoại lệ: **раздел `1.` ngay sau «Цель работы» KHÔNG ngắt trang** – nó viết tiếp
+trên trang của Цель работы (code tự xử lý: heading số đầu tiên không ngắt). Từ
+`2.` trở đi mới sang trang mới. Muốn ép khác thì truyền `page_break=True/False`.
+
 ## 7. Công cụ và script
 
 - `scripts/docx_helpers.py` – tạo DOCX đúng style:
@@ -312,11 +350,11 @@ Chi tiết: `references/report-types.md`.
   - `setup_document()`;
   - `add_title_page()` – **trang bìa clone nguyên XML từ
     `assets/templates/title_page_leti.docx`** (không vẽ lại bằng code), rồi thay
-    các chỗ giữ chỗ `<кафедра>`, `<номер>`, `<дисциплина>`, `<тема>`, `<вариант>`,
+    các chỗ giữ chỗ `<кафедра>`, `<номер>`, `<дисциплина>`, `<тема>`,
     `<группа>`, `<Фамилия И.О. студента>`, `<Фамилия И.О. руководителя>`,
-    `<город>`, `<год>`; `<пункты>`/`<дата>` là optional nên **không có trong mẫu** –
-    code tự chèn dưới bảng chữ ký khi `completed_items`/`submission_date` có dữ liệu;
-    muốn đổi mẫu – sửa file docx, không sửa code. Nếu mẫu vắng mặt hoặc chứa
+    `<город>`, `<год>`; `<вариант>`, `<пункты>`, `<дата>` là optional nên **không có
+    trong mẫu** – code tự chèn khi `variant`/`completed_items`/`submission_date` có dữ
+    liệu; muốn đổi mẫu – sửa file docx, không sửa code. Nếu mẫu vắng mặt hoặc chứa
     ảnh/hyperlink thì tự lùi về bản dựng tay `_add_title_page_manual()`;
   - `heading()`, `para()`, `formula()`, `caption()` – `para()` và `caption()` tự
     biến URL/DOI trong câu thành hyperlink thật (`links=True`, tắt bằng
@@ -333,6 +371,9 @@ Chi tiết: `references/report-types.md`.
   - `appendix()` – приложение по ГОСТ 7.32-2017: «ПРИЛОЖЕНИЕ А» с новой страницы,
     строка `(обязательное)` / `(справочное)`, стиль Heading 1 (значит, попадает в
     содержание) и сквозная нумерация страниц;
+  - `task_page()` – trang «ЗАДАНИЕ» (заголовок, «на реферат», таблица «поле –
+    значение», строки подписей); ФИО проверяются так же, как на титуле;
+  - `annotation()` – trang «Аннотация» 8–10 dòng + «Ключевые слова» + «Summary»;
   - `gost_config()` – пресет под ГОСТ 7.32-2017 (кегль 12, заголовки с абзацного
     отступа, наименование таблицы слева, `Рисунок N`); по умолчанию действует
     ЛЭТИ, см. `references/format.md` §18;

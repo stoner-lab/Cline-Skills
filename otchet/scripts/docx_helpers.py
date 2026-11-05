@@ -45,6 +45,8 @@ def title_template_path() -> Path:
 @dataclass
 class StyleConfig:
     font_name: str = "Times New Roman"
+    # 14 пт – принятый по умолчанию кегль (методички ЛЭТИ: «Times New Roman 12
+    # или 14»); менять на 12 только если методичка прямо этого требует.
     font_size: int = 14
     line_spacing: float = 1.5
     first_line_indent_cm: float = 1.25
@@ -62,9 +64,40 @@ class StyleConfig:
     heading_center: bool = True
     # ГОСТ 7.32-2017 (6.4.3) ставит наименование таблицы слева, без отступа.
     table_caption_center: bool = True
-    # Подпись рисунка: «Рис. 1» в ЛЭТИ, «Рисунок 1» по ГОСТ 7.32-2017.
+    # Подпись рисунка: «Рис. 1» в ЛЭТИ, «Рисунок 1» по ГОСТ 7.32-2017 и в бланках.
     figure_label: str = "Рис."
+    # Подписи рисунков по методичкам ЛЭТИ – курсивом и без точки в конце.
+    caption_italic: bool = False
+    # Начинать ли каждый раздел (Heading 1) с новой страницы.
+    heading_page_break: bool = False
     sources_title: str = "Список использованных источников"
+
+
+def leti_form_config() -> StyleConfig:
+    """Пресет под официальные бланки ЛЭТИ (форма 3004).
+
+    Проверено по файлам `Cognitio\\Шаблоны\\3004_*.doc` (1–6): A4, поля
+    30/10/20/20 мм, текст Times New Roman **14 пт**, междустрочный интервал
+    **1,5**, красная строка **1,25 см** (в бланках «Normal» стоит 12 пт, но все
+    run'ы переопределены на 14 – так бланк и выглядит).
+
+    Рисунки бланки не показывают, поэтому подпись оформляется по методичкам:
+    «Рисунок 1 – Название», курсивом, без точки в конце.
+
+    Каждый раздел начинается с новой страницы (``heading_page_break=True``) –
+    так требует методичка: «структурные части начинают с нового листа».
+    """
+    return StyleConfig(
+        font_size=14,
+        heading_size=14,
+        caption_size=12,
+        table_size=11,
+        table_header_size=11,
+        margin_right_cm=1.0,
+        figure_label="Рисунок",
+        caption_italic=True,
+        heading_page_break=True,
+    )
 
 
 def gost_config() -> StyleConfig:
@@ -236,9 +269,41 @@ def para(doc, text="", align=WD_ALIGN_PARAGRAPH.JUSTIFY, indent_cm=None, size=No
     return p
 
 
-def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None):
+def _ends_with_page_break(doc) -> bool:
+    """Последний абзац уже заканчивается разрывом страницы."""
+    if not doc.paragraphs:
+        return False
+    last = doc.paragraphs[-1]
+    if last.paragraph_format.page_break_before:
+        return True
+    return any(br.get(qn("w:type")) == "page" for br in last._p.iter(qn("w:br")))
+
+
+_NUMBERED_HEADING = re.compile(r"^\d+\.\s")
+
+
+def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None,
+            page_break=None):
+    """Заголовок раздела.
+
+    ``page_break``: ``True`` – с новой страницы, ``False`` – подряд, ``None`` –
+    по правилу: крупные заголовки (``1.``, ``2.``, ``ЗАКЛЮЧЕНИЕ``…) начинают
+    новую страницу, подразделы (``1.1``) – нет. Исключение: **первый**
+    нумерованный раздел продолжает страницу с блоком «Цель работы».
+    """
     cfg = cfg or StyleConfig()
+    numbered = bool(_NUMBERED_HEADING.match(str(text).strip()))
+    if page_break is None:
+        page_break = bool(cfg.heading_page_break) and level == 1
+        if page_break and numbered and not getattr(doc, "_otchet_numbered_started", False):
+            page_break = False
+    if numbered:
+        doc._otchet_numbered_started = True
+    # если предыдущий абзац уже завершается разрывом, второй разрыв дал бы пустой лист
+    if page_break and _ends_with_page_break(doc):
+        page_break = False
     h = doc.add_heading(level=level)
+    h.paragraph_format.page_break_before = bool(page_break)
     h.paragraph_format.first_line_indent = (
         Cm(0) if cfg.heading_center else Cm(cfg.first_line_indent_cm))
     h.paragraph_format.alignment = (
@@ -351,8 +416,19 @@ def formula(doc, parts: Sequence[tuple[str, str | None]], size=14, number=None,
     return p
 
 
-def caption(doc, text, size=None, links=True, cfg: StyleConfig | None = None):
+def caption(doc, text, size=None, links=True, cfg: StyleConfig | None = None,
+            italic=None):
+    """Подпись под рисунком/над таблицей: по центру, без отступа, без точки в конце.
+
+    ``italic=None`` берёт значение из ``cfg.caption_italic`` (методички ЛЭТИ
+    требуют подписи рисунков курсивом).
+    """
     size = cfg.caption_size if (cfg and size is None) else (12 if size is None else size)
+    if italic is None:
+        italic = bool(cfg.caption_italic) if cfg else False
+    text = str(text).rstrip()
+    if text.endswith(".") and not text.endswith("..."):
+        text = text[:-1]
     p = doc.add_paragraph()
     pf = p.paragraph_format
     pf.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -362,11 +438,18 @@ def caption(doc, text, size=None, links=True, cfg: StyleConfig | None = None):
     pf.line_spacing = 1.5
     pf.keep_with_next = True
     if links and LINK_RE.search(text):
-        add_text_with_links(p, text, size=size)
+        add_text_with_links(p, text, size=size, italic=italic)
     else:
         r = p.add_run(text)
-        set_run_font(r, size=size)
+        set_run_font(r, size=size, italic=italic)
     return p
+
+
+def figure_caption(doc, number, title, cfg: StyleConfig | None = None):
+    """Подпись рисунка «Рисунок 1 – Название» (или «Рис. 1 – …»), курсивом."""
+    cfg = cfg or StyleConfig()
+    return caption(doc, f"{cfg.figure_label} {number} – {str(title).rstrip('. ')}",
+                   cfg=cfg, italic=True)
 
 
 def _set_cell_bottom_border(cell, sz=8):
@@ -428,7 +511,8 @@ def _page_break_tight(doc):
     return p
 
 
-def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
+def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path,
+                              cfg: StyleConfig | None = None) -> bool:
     """Clone the cover page XML from the .docx template and fill placeholders.
 
     The template is the single source of truth for the LETI cover: spacing,
@@ -458,7 +542,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
     tables = [Table(el, doc) for el in inserted if el.tag == qn("w:tbl")]
     # строки «Выполненные пункты» и «Дата сдачи» необязательные: в шаблоне их нет,
     # они добавляются ниже, только если в ReportMeta есть данные
-    optional_used = {"items": False, "date": False}
+    optional_used = {"items": False, "date": False, "variant": False}
 
     uni = [str(line) for line in (meta.university_lines or ())]
     for idx, paragraph in enumerate(paragraphs):
@@ -483,8 +567,14 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
             continue
 
         if text.startswith("по ") and "<номер>" in text:
-            if (meta.work_line or "").strip():
-                _set_par_text(paragraph, meta.work_line)
+            work_line = (meta.work_line or "").strip()
+            # Страховка от дубля: если в work_line положили саму строку дисциплины
+            # («по дисциплине «X»»), второй раз её не печатаем – на титуле уже есть
+            # отдельная строка по дисциплине.
+            if work_line.lower().startswith("по дисциплине"):
+                work_line = ""
+            if work_line:
+                _set_par_text(paragraph, work_line)
             else:
                 _drop_paragraph(paragraph)
             continue
@@ -509,6 +599,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
             variant = str(meta.variant or "").strip()
             if variant:
                 _set_par_text(paragraph, f"Вариант {variant}")
+                optional_used["variant"] = True
             else:
                 _drop_paragraph(paragraph)
             continue
@@ -553,7 +644,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
         _set_cell_text(rows[0].cells[0], meta.student_label + str(meta.group))
         _set_cell_text(rows[0].cells[2], _student_display(meta))
         _set_cell_text(rows[1].cells[0], "Руководитель")
-        _set_cell_text(rows[1].cells[2], meta.teacher)
+        _set_cell_text(rows[1].cells[2], short_name(meta.teacher))
         if meta.second_student:
             tr = copy.deepcopy(rows[1]._tr)
             rows[1]._tr.addprevious(tr)
@@ -561,20 +652,38 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
             _set_cell_text(extra_row.cells[0], meta.second_student_label + str(meta.group))
             _set_cell_text(extra_row.cells[2], short_name(meta.second_student))
 
-    # Необязательные строки: шаблон их не содержит, поэтому добавляем их сами,
-    # когда в ReportMeta есть данные. Шаблон, где такие placeholders остались,
-    # обрабатывается выше и в optional_used попадает отметка.
-    extra_lines = []
-    if (meta.completed_items or "").strip() and not optional_used["items"]:
-        extra_lines.append(f"Выполненные пункты: {meta.completed_items}")
-    if (meta.submission_date or "").strip() and not optional_used["date"]:
-        extra_lines.append(f"Дата сдачи работы на проверку – {meta.submission_date}")
+    # Необязательные строки: в шаблоне их нет, поэтому добавляем сами, когда в
+    # ReportMeta есть данные. Место под «Вариант» сохраняем всегда (пустой строкой),
+    # чтобы геометрия бланка не менялась; строки под таблицей места не имеют,
+    # поэтому забираем его из отступа над «ОТЧЕТ».
+    want_variant = (meta.variant or "").strip()
+    under_table = []
 
-    if extra_lines:
-        base = next((p for p in paragraphs if p.text.strip().startswith("Вариант")), None)
+    if want_variant and not optional_used["variant"]:
+        slot_text = f"Вариант {want_variant}"
+    else:
+        slot_text = ""
+    if (meta.completed_items or "").strip() and not optional_used["items"]:
+        under_table.append(f"Выполненные пункты: {meta.completed_items}")
+    if (meta.submission_date or "").strip() and not optional_used["date"]:
+        under_table.append(f"Дата сдачи работы на проверку – {meta.submission_date}")
+
+    slot_base = next((p for p in paragraphs if p.text.strip().startswith("Тема")), None)
+    if slot_base is not None:
+        new_p = copy.deepcopy(slot_base._p)
+        slot_base._p.addnext(new_p)
+        slot_par = Paragraph(new_p, doc)
+        slot_par.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        slot_par.paragraph_format.space_before = Pt(0)
+        _set_par_text(slot_par, slot_text)
+        for run in slot_par.runs:
+            set_run_font(run, size=14, bold=False)
+
+    if under_table:
+        base = next((p for p in paragraphs if p.text.strip().startswith("Тема")), None)
         if base is not None:
             anchor = tables[0]._tbl if tables else base._p
-            for text in extra_lines:
+            for text in under_table:
                 new_p = copy.deepcopy(base._p)
                 anchor.addnext(new_p)
                 anchor = new_p
@@ -585,17 +694,20 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
                 for run in extra_par.runs:
                     set_run_font(run, size=14, bold=True)
 
-            # добавленные строки занимают место – берём его из отступа над «ОТЧЕТ»
+            # эти строки занимают место – берём его из отступа над «ОТЧЕТ»
             department = next((p for p in paragraphs
                                if p.text.strip().startswith("Кафедра")), None)
             if department is not None:
-                for _ in range(len(extra_lines) + 1):
+                for _ in range(len(under_table) + 1):
                     nxt = department._p.getnext()
                     if nxt is None or nxt.tag != qn("w:p"):
                         break
                     if "".join(t.text or "" for t in nxt.iter(qn("w:t"))).strip():
                         break
                     nxt.getparent().remove(nxt)
+
+    # бланки ЛЭТИ – 12 пт, но кегль задаёт отчёт: приводим скопированный титул
+    _scale_cover_fonts(paragraphs, tables, cfg.font_size)
 
     return True
 
@@ -642,6 +754,40 @@ def short_name(full_name: str) -> str:
 def _student_display(meta: "ReportMeta") -> str:
     """ФИО для титула: явно заданное student_short или «Фамилия И.О.»."""
     return (meta.student_short or short_name(meta.student)).strip()
+
+
+# Плейсхолдеры, которые не должны попасть на титул вместо ФИО. «И.О.» здесь нет:
+# Иванов И.О. – нормальное ФИО, а не заглушка.
+NAME_JUNK = ("<", ">", "фамилия", "фио", "0000", "название")
+
+
+def name_problems(value: str, role: str) -> list[str]:
+    """Проверить, что ФИО записано как «Фамилия И.О.».
+
+    Пустая строка, плейсхолдер или одна фамилия без инициалов – проблема:
+    угадывать инициалы нельзя, их должен дать пользователь.
+    """
+    text = str(value or "").strip()
+    if not text:
+        return [f"{role}: ФИО не задано"]
+    if any(mark in text.lower() for mark in NAME_JUNK):
+        return [f"{role}: вместо ФИО плейсхолдер {text!r}"]
+    short = short_name(text)
+    if "." not in short:
+        return [f"{role}: {text!r} без инициалов, нужен формат «Фамилия И.О.»"]
+    return []
+
+
+def validate_meta_names(meta: "ReportMeta") -> list[str]:
+    """Список проблем с ФИО и группой; пустой список – можно собирать титул."""
+    problems = []
+    problems += name_problems(_student_display(meta), "Студент")
+    problems += name_problems(short_name(meta.teacher), "Руководитель")
+    group = str(meta.group or "").strip()
+    if not group or any(char in group for char in "<>"):
+        problems.append("Группа не задана")
+    return problems
+
 
 
 def add_references(doc, items, title=None, cfg: StyleConfig | None = None):
@@ -731,19 +877,153 @@ def appendix(doc, letter, title="", status=None, cfg: StyleConfig | None = None)
     return head
 
 
+def _scale_cover_fonts(paragraphs, tables, size: int) -> None:
+    """Привести шрифт скопированного титула к кеглю отчёта (бланк ЛЭТИ – 12 пт)."""
+    def fix(paragraph):
+        for run in paragraph.runs:
+            set_run_font(run, size=size, bold=bool(run.bold), italic=bool(run.italic))
+
+    for paragraph in paragraphs:
+        fix(paragraph)
+    for table in tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    fix(paragraph)
+
+
+def task_page(doc, meta: ReportMeta, work_title=None, rows=None, cfg: StyleConfig | None = None,
+              page_break=True, signature=True):
+    """Страница «ЗАДАНИЕ» – без отдельного .docx-шаблона.
+
+    Собирается из тех же примитивов, что и отчёт: заголовок, подзаголовок
+    «на <тип работы>», таблица «поле – значение» и строки для подписей. ФИО
+    проверяются так же, как на титуле (см. ``validate_meta_names``).
+
+    ``rows`` – дополнительные строки задания, например
+    ``[("Содержание", "1. …; 2. …"), ("Исходные данные", "методичка")]``.
+    """
+    problems = validate_meta_names(meta)
+    if problems:
+        raise ValueError("Задание не собрано: " + "; ".join(problems)
+                         + ". Спросите у пользователя ФИО и группу.")
+    cfg = cfg or StyleConfig()
+
+    head = doc.add_paragraph()
+    head.paragraph_format.page_break_before = page_break
+    head.paragraph_format.first_line_indent = Cm(0)
+    head.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    head.paragraph_format.space_after = Pt(6)
+    head.paragraph_format.keep_with_next = True
+    set_run_font(head.add_run("ЗАДАНИЕ"), size=cfg.heading_size, bold=True)
+
+    subtitle = (work_title or meta.report_label or "отчёт").strip()
+    sub = doc.add_paragraph()
+    sub.paragraph_format.first_line_indent = Cm(0)
+    sub.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    sub.paragraph_format.space_after = Pt(12)
+    sub.paragraph_format.keep_with_next = True
+    set_run_font(sub.add_run(f"на {subtitle.lower()}"), size=cfg.font_size)
+
+    fields = [
+        ("Студент(ка)", f"{_student_display(meta)}, гр. {meta.group}"),
+        ("Тема", (meta.topic or "").strip()),
+    ]
+    fields.extend(rows if rows is not None else [("Содержание", ""), ("Исходные данные", "")])
+    fields.append(("Срок сдачи", (meta.submission_date or "").strip()))
+    fields.append(("Руководитель", short_name(meta.teacher)))
+
+    add_table(doc, None, fields, [4.5, 12.0], cfg=cfg, size=cfg.font_size,
+              align_left_cols=(1,), spacer=False)
+
+    if signature:
+        for label, who in (("Задание выдал", short_name(meta.teacher)),
+                           ("Задание принял", _student_display(meta))):
+            line = doc.add_paragraph()
+            line.paragraph_format.first_line_indent = Cm(0)
+            line.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            line.paragraph_format.space_before = Pt(18)
+            run = line.add_run(f"{label}: {who} ____________________ (подпись, дата)")
+            set_run_font(run, size=cfg.font_size)
+    return doc
+
+
+def annotation(doc, text_ru, text_en=None, keywords=None, cfg: StyleConfig | None = None,
+               page_break=True):
+    """Страница «Аннотация» и, если передан, блок «Summary».
+
+    По форме ЛЭТИ аннотация занимает 8–10 строк: цель и основное содержание
+    работы; ниже – ключевые слова, затем тот же текст по-английски.
+    """
+    cfg = cfg or StyleConfig()
+
+    head = doc.add_paragraph()
+    head.paragraph_format.page_break_before = page_break
+    head.paragraph_format.first_line_indent = Cm(0)
+    head.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    head.paragraph_format.space_after = Pt(6)
+    head.paragraph_format.keep_with_next = True
+    set_run_font(head.add_run("Аннотация"), size=cfg.heading_size, bold=True)
+
+    para(doc, str(text_ru).strip(), cfg=cfg)
+    if keywords:
+        p = doc.add_paragraph()
+        p.paragraph_format.first_line_indent = Cm(cfg.first_line_indent_cm)
+        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        p.paragraph_format.line_spacing = cfg.line_spacing
+        label = p.add_run("Ключевые слова: ")
+        set_run_font(label, size=cfg.font_size, bold=True)
+        body = p.add_run(str(keywords).strip())
+        set_run_font(body, size=cfg.font_size)
+
+    if text_en:
+        sub = doc.add_paragraph()
+        sub.paragraph_format.first_line_indent = Cm(0)
+        sub.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        sub.paragraph_format.space_before = Pt(12)
+        sub.paragraph_format.space_after = Pt(6)
+        sub.paragraph_format.keep_with_next = True
+        set_run_font(sub.add_run("Summary"), size=cfg.heading_size, bold=True)
+        p = doc.add_paragraph()
+        p.paragraph_format.first_line_indent = Cm(cfg.first_line_indent_cm)
+        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        p.paragraph_format.line_spacing = cfg.line_spacing
+        set_run_font(p.add_run(str(text_en).strip()), size=cfg.font_size)
+    return doc
+
+
 def add_title_page(doc, meta: ReportMeta, cfg: StyleConfig | None = None, template=None):
     """Add the official LETI cover page, cloned from the .docx template.
 
     ``template`` overrides ``assets/templates/title_page_leti.docx``.
     If the template is missing or cannot be cloned (e.g. it references images
     or hyperlinks), the manual layout below is used as a fallback.
+
+    ФИО и группа проверяются до вставки: без «Фамилия И.О.» и номера группы
+    поднимается ValueError – инициалы нельзя придумывать, их должен дать
+    пользователь (см. ``validate_meta_names``).
     """
+    problems = validate_meta_names(meta)
+    if problems:
+        raise ValueError(
+            "Титульный лист не собран: " + "; ".join(problems)
+            + ". Спросите у пользователя полное ФИО (Фамилия Имя Отчество) и номер "
+              "группы, затем передайте их в ReportMeta(student=..., teacher=..., "
+              "group=...). Придумывать ФИО нельзя."
+        )
+
     cfg = cfg or StyleConfig()
     tpl_path = Path(template) if template else title_template_path()
     if tpl_path.exists():
+        body = doc.element.body
+        snapshot = list(body.iterchildren())
         try:
-            _fill_title_from_template(doc, meta, tpl_path)
+            _fill_title_from_template(doc, meta, tpl_path, cfg)
         except Exception:
+            # откатить частично вставленный титул, иначе он окажется дважды
+            for child in list(body.iterchildren()):
+                if child not in snapshot and child.tag != qn("w:sectPr"):
+                    body.remove(child)
             _add_title_page_manual(doc, meta, cfg)
             return
         _page_break_tight(doc)
@@ -785,7 +1065,7 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
     if meta.second_student:
         rows.append((meta.second_student_label + meta.group, "",
                      meta.student_short or short_name(meta.second_student)))
-    rows.append(("Руководитель", "", meta.teacher))
+    rows.append(("Руководитель", "", short_name(meta.teacher)))
 
     table = doc.add_table(rows=len(rows), cols=3)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -850,6 +1130,7 @@ def add_table(doc, headers, rows, widths_cm, cfg: StyleConfig | None = None,
               size: int | None = None, header_size: int | None = None,
               align_left_cols=(), last_row_bold=False, spacer=True,
               caption: str | None = None, caption_align=None):
+    """Таблица в рамке; ``headers=None`` – таблица без строки заголовка."""
     cfg = cfg or StyleConfig()
     size = size or cfg.table_size
     header_size = header_size or cfg.table_header_size
@@ -871,7 +1152,8 @@ def add_table(doc, headers, rows, widths_cm, cfg: StyleConfig | None = None,
         cap_run = cap.add_run(caption)
         set_run_font(cap_run, size=cfg.caption_size)
 
-    table = doc.add_table(rows=1, cols=len(headers))
+    ncols = len(headers) if headers else len(widths_cm)
+    table = doc.add_table(rows=1 if headers else 0, cols=ncols)
     table.style = "Table Grid"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     table.autofit = False
@@ -889,15 +1171,16 @@ def add_table(doc, headers, rows, widths_cm, cfg: StyleConfig | None = None,
         mar.append(el)
     tblPr.append(mar)
 
-    trPr = table.rows[0]._tr.get_or_add_trPr()
-    tblHeader = OxmlElement("w:tblHeader")
-    tblHeader.set(qn("w:val"), "true")
-    trPr.append(tblHeader)
+    if headers:
+        trPr = table.rows[0]._tr.get_or_add_trPr()
+        tblHeader = OxmlElement("w:tblHeader")
+        tblHeader.set(qn("w:val"), "true")
+        trPr.append(tblHeader)
 
-    for j, h in enumerate(headers):
-        c = table.rows[0].cells[j]
-        c.width = Cm(widths_cm[j])
-        _set_cell(c, h, size=header_size, bold=True)
+        for j, h in enumerate(headers):
+            c = table.rows[0].cells[j]
+            c.width = Cm(widths_cm[j])
+            _set_cell(c, h, size=header_size, bold=True)
 
     for r_idx, row in enumerate(rows):
         cells = table.add_row().cells
@@ -925,7 +1208,9 @@ def add_table(doc, headers, rows, widths_cm, cfg: StyleConfig | None = None,
     return table
 
 
-def add_picture_with_caption(doc, image_path, caption_text, width_cm=15.0, cfg: StyleConfig | None = None):
+def add_picture_with_caption(doc, image_path, caption_text, width_cm=15.0,
+                             cfg: StyleConfig | None = None):
+    """Рисунок по центру и подпись под ним: курсив, без точки в конце."""
     cfg = cfg or StyleConfig()
     p = doc.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -939,8 +1224,11 @@ def add_picture_with_caption(doc, image_path, caption_text, width_cm=15.0, cfg: 
     c.paragraph_format.first_line_indent = Cm(0)
     c.paragraph_format.space_before = Pt(0)
     c.paragraph_format.space_after = Pt(6)
-    r = c.add_run(caption_text)
-    set_run_font(r, size=cfg.caption_size)
+    text = str(caption_text).rstrip()
+    if text.endswith(".") and not text.endswith("..."):
+        text = text[:-1]
+    r = c.add_run(text)
+    set_run_font(r, size=cfg.caption_size, italic=bool(cfg.caption_italic))
     return p
 
 
@@ -1032,11 +1320,34 @@ try {{
     return pdf_path
 
 
-def save_report(doc, docx_path, pdf_path=None):
+def report_summary(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None) -> list[str]:
+    """Короткая сводка параметров файла – её показывают пользователю после сборки."""
+    cfg = cfg or StyleConfig()
+    figures = sum(1 for p in doc.paragraphs if p._p.findall(".//" + qn("w:drawing")))
+    return [
+        f"Шрифт {cfg.font_name} {cfg.font_size} пт, интервал {cfg.line_spacing:g}, "
+        f"абзацный отступ {cfg.first_line_indent_cm:g} см",
+        f"Поля L{cfg.margin_left_cm:g} / R{cfg.margin_right_cm:g} / "
+        f"T{cfg.margin_top_cm:g} / B{cfg.margin_bottom_cm:g} см, лист "
+        f"{cfg.page_width_cm:g}x{cfg.page_height_cm:g} см",
+        f"Заголовки {cfg.heading_size} пт, "
+        + ("по центру" if cfg.heading_center else "с абзацного отступа"),
+        f"Таблиц: {len(doc.tables)}, рисунков: {figures}",
+        f"Файлы: {Path(docx_path).name}"
+        + (f" + {Path(pdf_path).name}" if pdf_path else ""),
+    ]
+
+
+def save_report(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None, quiet=False):
+    """Сохранить DOCX (и PDF) и напечатать сводку параметров для пользователя."""
     docx_path = Path(docx_path)
     docx_path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(docx_path))
     if pdf_path:
         export_pdf_via_word(docx_path, pdf_path)
+    if not quiet:
+        print("Отчёт сохранён:")
+        for line in report_summary(doc, docx_path, pdf_path, cfg):
+            print(f"  - {line}")
     return str(docx_path)
 
