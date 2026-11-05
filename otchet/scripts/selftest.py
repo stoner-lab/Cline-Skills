@@ -20,8 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from docx import Document
 from docx.oxml.ns import qn
 
-from docx_helpers import (ReportMeta, add_references, add_title_page, heading, para, save_report,
-                          setup_document, title_template_path)
+from docx_helpers import (ReportMeta, add_references, add_table, add_title_page, appendix,
+                          formula, heading, para, save_report, setup_document,
+                          title_template_path)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
 
@@ -53,7 +54,12 @@ def build(path: Path, pdf: bool):
     add_title_page(doc, meta)
     heading(doc, "1. Проверка")
     para(doc, "Текст проверки, подробнее: https://example.org/method.")
+    formula(doc, [("E", None), ("=", None), ("mc", "sup"), ("2", None)], number=1)
+    add_table(doc, ["Показатель", "Значение"], [["Первый", "10"]], [8.0, 8.5],
+              caption="Таблица 1 – Проверочные значения")
     add_references(doc, SOURCES)
+    appendix(doc, "А", "Пример оформления", status="справочное")
+    para(doc, "Текст приложения.")
     save_report(doc, path, pdf_path=path.with_suffix(".pdf") if pdf else None)
 
     # the delivery pipeline ends with clean metadata, so the test must prove it
@@ -100,6 +106,14 @@ def check(path: Path):
         problems.append("титул получит номер страницы (titlePg выключен)")
     if "PAGE" not in section.footer.paragraphs[0]._p.xml:
         problems.append("в колонтитуле нет поля PAGE")
+
+    # ГОСТ 7.32-2017: приложение, нумерованная формула, наименование таблицы
+    if "ПРИЛОЖЕНИЕ А" not in new_lines:
+        problems.append("нет заголовка «ПРИЛОЖЕНИЕ А» (appendix())")
+    if not any("(1)" in line for line in new_lines):
+        problems.append("нет номера формулы «(1)» (formula(..., number=1))")
+    if not any(line.startswith("Таблица 1") for line in new_lines):
+        problems.append("нет наименования таблицы «Таблица 1 …»")
 
     # metadata must not name the generator (python-docx, ReportLab, LibreOffice...)
     pdf_path = path.with_suffix(".pdf")

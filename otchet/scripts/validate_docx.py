@@ -20,7 +20,9 @@ PRONOUNS = re.compile(
     re.IGNORECASE,
 )
 TABLE_CAP = re.compile(r"^\s*Таблица\s+(\d+)\b", re.IGNORECASE)
-FIG_CAP = re.compile(r"^\s*Рис\.\s*(\d+)\b", re.IGNORECASE)
+FIG_CAP = re.compile(r"^\s*(?:Рис\.|Рисунок)\s*(\d+)\b", re.IGNORECASE)
+APPENDIX_CAP = re.compile(r"^\s*ПРИЛОЖЕНИЕ\s+([^\s]+)")
+APPENDIX_BAD_LETTERS = set("ЁЗЙОЧЪЫЬIO")
 DECIMAL_DOT = re.compile(r"(?<![\d.])\d+\.\d+(?![\d.])")
 DATE_LIKE = re.compile(r"\b(?:0?[1-9]|[12]\d|3[01])\.(?:0?[1-9]|1[0-2])(?:\.\d{2,4})?\b")
 PLACEHOLDERS = (
@@ -98,8 +100,8 @@ def check_styles(doc, rep):
     size = n.font.size.pt if n.font.size else None
     if name and name != "Times New Roman":
         rep.fail(f"Normal font is {name}, expected Times New Roman")
-    if size and size not in (13, 14):
-        rep.warn(f"Normal font size is {size}, expected 13 or 14")
+    if size and size not in (12, 13, 14):
+        rep.warn(f"Normal font size is {size}, expected 12 (ГОСТ 7.32-2017), 13 or 14 (ЛЭТИ)")
     ls = n.paragraph_format.line_spacing
     if ls is not None and abs(float(ls) - 1.5) > 0.01:
         rep.warn(f"Normal line spacing is {ls}, expected 1.5")
@@ -114,8 +116,10 @@ def check_headings(doc, rep):
         if not p.text.strip():
             continue
         al = effective_alignment(p)
-        if al != WD_ALIGN_PARAGRAPH.CENTER:
-            rep.warn(f"Heading not centered: {p.text[:60]!r}")
+        # ЛЭТИ центрирует заголовки, ГОСТ 7.32-2017 – с абзацного отступа (LEFT).
+        if al not in (WD_ALIGN_PARAGRAPH.CENTER, WD_ALIGN_PARAGRAPH.LEFT):
+            rep.warn(f"Heading alignment is {al}, expected CENTER (ЛЭТИ) or LEFT (ГОСТ): "
+                     f"{p.text[:60]!r}")
         if not heading_is_bold(p):
             rep.warn(f"Heading not bold: {p.text[:60]!r}")
     for p in heads:
@@ -213,7 +217,9 @@ def check_placeholders_and_numbers(doc, rep):
                 rep.warn(f"Placeholder still present: {ph!r}")
         elif ph in all_text:
             rep.warn(f"Placeholder still present: {ph!r}")
-    dots = DECIMAL_DOT.findall(DATE_LIKE.sub(" ", all_text))
+    # номера стандартов (ГОСТ 7.32-2017, ГОСТ Р 7.0.5-2008) – не десятичные дроб
+    all_text_no_std = re.sub(r"(?i)ГОСТ(?:\s+Р)?\s*\d+(?:[.,]\d+)*", " ", all_text)
+    dots = DECIMAL_DOT.findall(DATE_LIKE.sub(" ", all_text_no_std))
     if dots:
         rep.warn(f"Decimal dots found (use comma): {dots[:10]}")
 
@@ -277,6 +283,32 @@ def check_links(doc, rep):
     else:
         rep.info("Hyperlinks: none")
     return total
+
+
+def check_appendices(doc, rep):
+    """Приложения по ГОСТ 7.32-2017 (6.17).
+
+    Обозначение – прописная буква, кроме Ё, З, Й, О, Ч, Ъ, Ы, Ь (и I, O в
+    латинице); заголовок должен быть стилем Heading 1, иначе приложение не
+    попадёт в содержание, как требует 6.17.7.
+    """
+    letters = []
+    for p in doc.paragraphs:
+        match = APPENDIX_CAP.match(p.text.strip())
+        if not match:
+            continue
+        letter = match.group(1)
+        letters.append(letter)
+        if letter in APPENDIX_BAD_LETTERS or letter.lower() in APPENDIX_BAD_LETTERS:
+            rep.fail(f"Appendix letter {letter!r} is not allowed by GOST 7.32-2017 (6.17.4)")
+        if p.style.name != "Heading 1":
+            rep.warn(f"Appendix {letter!r} is not Heading 1, it will not appear in the contents")
+    if letters:
+        if len(set(letters)) != len(letters):
+            rep.fail(f"Duplicate appendix letters: {letters}")
+        rep.info(f"Appendices: {', '.join(letters)}")
+    else:
+        rep.info("Appendices: none")
 
 
 def check_footer_page_numbers(doc, rep):
@@ -383,6 +415,7 @@ def main():
     check_placeholders_and_numbers(doc, rep)
     check_dashes(doc, rep)
     check_footer_page_numbers(doc, rep)
+    check_appendices(doc, rep)
     links = check_links(doc, rep)
     if args.pdf:
         check_pdf(args.pdf, rep, links)
