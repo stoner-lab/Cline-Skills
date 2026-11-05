@@ -456,6 +456,9 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
 
     paragraphs = [Paragraph(el, doc) for el in inserted if el.tag == qn("w:p")]
     tables = [Table(el, doc) for el in inserted if el.tag == qn("w:tbl")]
+    # строки «Выполненные пункты» и «Дата сдачи» необязательные: в шаблоне их нет,
+    # они добавляются ниже, только если в ReportMeta есть данные
+    optional_used = {"items": False, "date": False}
 
     uni = [str(line) for line in (meta.university_lines or ())]
     for idx, paragraph in enumerate(paragraphs):
@@ -513,6 +516,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
         if "<пункты>" in text:
             if (meta.completed_items or "").strip():
                 _set_par_text(paragraph, f"Выполненные пункты: {meta.completed_items}")
+                optional_used["items"] = True
             else:
                 _drop_paragraph(paragraph)
             continue
@@ -521,6 +525,7 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
             date = (meta.submission_date or "").strip()
             if date:
                 _set_par_text(paragraph, f"Дата сдачи работы на проверку – {date}")
+                optional_used["date"] = True
             else:
                 _drop_paragraph(paragraph)
             continue
@@ -555,6 +560,43 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
             extra_row = _Row(tr, table)
             _set_cell_text(extra_row.cells[0], meta.second_student_label + str(meta.group))
             _set_cell_text(extra_row.cells[2], short_name(meta.second_student))
+
+    # Необязательные строки: шаблон их не содержит, поэтому добавляем их сами,
+    # когда в ReportMeta есть данные. Шаблон, где такие placeholders остались,
+    # обрабатывается выше и в optional_used попадает отметка.
+    extra_lines = []
+    if (meta.completed_items or "").strip() and not optional_used["items"]:
+        extra_lines.append(f"Выполненные пункты: {meta.completed_items}")
+    if (meta.submission_date or "").strip() and not optional_used["date"]:
+        extra_lines.append(f"Дата сдачи работы на проверку – {meta.submission_date}")
+
+    if extra_lines:
+        base = next((p for p in paragraphs if p.text.strip().startswith("Вариант")), None)
+        if base is not None:
+            anchor = tables[0]._tbl if tables else base._p
+            for text in extra_lines:
+                new_p = copy.deepcopy(base._p)
+                anchor.addnext(new_p)
+                anchor = new_p
+                extra_par = Paragraph(new_p, doc)
+                extra_par.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                extra_par.paragraph_format.space_before = Pt(12)
+                _set_par_text(extra_par, text)
+                for run in extra_par.runs:
+                    set_run_font(run, size=14, bold=True)
+
+            # добавленные строки занимают место – берём его из отступа над «ОТЧЕТ»
+            department = next((p for p in paragraphs
+                               if p.text.strip().startswith("Кафедра")), None)
+            if department is not None:
+                for _ in range(len(extra_lines) + 1):
+                    nxt = department._p.getnext()
+                    if nxt is None or nxt.tag != qn("w:p"):
+                        break
+                    if "".join(t.text or "" for t in nxt.iter(qn("w:t"))).strip():
+                        break
+                    nxt.getparent().remove(nxt)
+
     return True
 
 

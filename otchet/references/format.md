@@ -39,8 +39,8 @@ Chỗ giữ chỗ trong mẫu và giá trị thay thế:
 | `Тема: <тема>` | `topic` (bỏ dòng nếu rỗng) |
 | `Вариант <вариант>` | `variant` (bỏ dòng nếu rỗng) |
 | bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О. студента>` / `Руководитель` / `<Фамилия И.О. руководителя>` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
-| `Выполненные пункты: <пункты>` | `completed_items` (bỏ dòng nếu rỗng) |
-| `Дата сдачи работы на проверку – <дата>` | `submission_date` (bỏ dòng nếu rỗng) |
+| `Выполненные пункты: <пункты>` | `completed_items` – **không có trong mẫu**, tự chèn khi có dữ liệu |
+| `Дата сдачи работы на проверку – <дата>` | `submission_date` – **không có trong mẫu**, tự chèn khi có dữ liệu |
 | `<город>`, `<год>` | `city`, `year` |
 
 Quy tắc cố định của mẫu (không đổi khi điền):
