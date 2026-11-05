@@ -81,7 +81,8 @@ mẫu bìa riêng, truyền `add_title_page(doc, meta, template="<file>.docx")`.
   междустрочный интервал, абзацный отступ, поля, число таблиц и рисунков.
   `save_report(doc, path, pdf_path=..., cfg=cfg)` печатает готовую сводку
   (`report_summary()`), её достаточно переписать в чат вместе с путями к файлам.
-  Не отчитывайся «готово» без этих чисел.
+  Не отчитывайся «готово» без этих чисел. Для ПР и лабораторных вызывайте
+  `save_report(..., require_goal=True)`: отчёт без «Цель работы» не сохранится.
 
 ### 2.13. Thiếu file hoặc thiếu tool: hỏi user, đừng tự cài
 
@@ -365,6 +366,20 @@ Mỗi **heading lớn** (`1.`, `2.`, `ЗАКЛЮЧЕНИЕ`, Источники,
 trên trang của Цель работы (code tự xử lý: heading số đầu tiên không ngắt). Từ
 `2.` trở đi mới sang trang mới. Muốn ép khác thì truyền `page_break=True/False`.
 
+⚠️ **«Цель работы» – bắt buộc, không phải tuỳ chọn.** Với ПР, лабораторная, НИР và
+отчёт по практике раздел входит в структуру и удалять его нельзя: không bỏ đi vì
+«báo cáo ngắn», không đổi tên thành «Задачи», không gộp vào «Постановка задачи».
+Câu mục đích lấy **nguyên văn từ đề bài/методичка**; nếu đề không nêu ->
+**hỏi user**, không tự bỏ mục. Luôn dùng helper (nó chặn chuỗi rỗng):
+
+```python
+goal_section(doc, "Цель работы – <формулировка из задания>.")
+```
+
+Ba lớp chặn đi kèm: `goal_section(doc, "")` -> `ValueError`;
+`save_report(..., require_goal=True)` không lưu báo cáo thiếu mục;
+`validate_docx.py` báo **FAIL** nếu báo cáo có mục đánh số mà thiếu «Цель работы».
+
 ## 7. Công cụ và script
 
 - `scripts/docx_helpers.py` – tạo DOCX đúng style:
@@ -376,8 +391,15 @@ trên trang của Цель работы (code tự xử lý: heading số đầu
     `<группа>`, `<Фамилия И.О. студента>`, `<Фамилия И.О. руководителя>`,
     `<город>`, `<год>`; `<вариант>`, `<пункты>`, `<дата>` là optional nên **không có
     trong mẫu** – code tự chèn khi `variant`/`completed_items`/`submission_date` có dữ
-    liệu; muốn đổi mẫu – sửa file docx, không sửa code. Nếu mẫu vắng mặt hoặc chứa
-    ảnh/hyperlink thì tự lùi về bản dựng tay `_add_title_page_manual()`;
+    liệu; muốn đổi mẫu – sửa file docx, không sửa code. **Font và cỡ chữ của bìa
+    lấy từ бланк** (`COVER_DEFAULT_SIZE = 14`, Times New Roman), không theo
+    `cfg.font_size`: preset 12 pt vẫn cho bìa 14 pt (trước đây `_scale_cover_fonts`
+    ép cả bìa theo cfg nên bìa bị sai cỡ/sai font). Nếu mẫu vắng mặt hoặc chứa
+    ảnh/hyperlink thì tự lùi về bản dựng tay `_add_title_page_manual()` (cũng 14 pt)
+    và in `WARN: титульный лист собран вручную …` ra stderr;
+  - `goal_section(doc, text)` – раздел «Цель работы»: заголовок + абзац, строка
+    пустая -> `ValueError`; `has_goal(doc)` – есть ли раздел в документе (им
+    пользуются `report_summary()` и `validate_docx.py`);
   - `heading()`, `para()`, `formula()`, `caption()` – `para()` và `caption()` tự
     biến URL/DOI trong câu thành hyperlink thật (`links=True`, tắt bằng
     `links=False` khi cần chữ thường);

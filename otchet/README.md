@@ -17,6 +17,11 @@ thiếu, viết báo cáo bằng tiếng Nga đơn giản, tạo DOCX/PDF và ki
 - Văn phong đơn giản, tự nhiên, tập trung vào việc đã làm và kết quả.
 - Hỗ trợ báo cáo thực hành, lab, реферат, курсовая, отчёт по практике, НИР, МДП.
 - Xuất DOCX/PDF và giữ bố cục theo mẫu báo cáo.
+- **Trang bìa lấy font và cỡ chữ từ бланк** (Times New Roman 14 pt), không bị co
+  theo preset của phần nội dung; `validate_docx.py` so từng dòng bìa với mẫu và
+  báo FAIL khi lệch.
+- **«Цель работы» là mục bắt buộc** với ПР/lab/НИР/практика: `goal_section()`,
+  `save_report(..., require_goal=True)` và `validate_docx.py` chặn việc bỏ mất mục.
 - Có thể dùng template riêng của trường/khoa hoặc thay bằng mẫu của bạn.
 
 ## Yêu cầu

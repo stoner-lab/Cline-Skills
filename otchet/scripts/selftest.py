@@ -10,6 +10,7 @@ that placeholders are replaced and that helpers/export work:
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 import tempfile
 import zipfile
@@ -21,10 +22,12 @@ from docx import Document
 from docx.oxml.ns import qn
 
 from docx_helpers import (ReportMeta, add_references, add_table, add_title_page, annotation,
-                          appendix, formula, heading, para, save_report, setup_document,
-                          short_name, task_page, title_template_path, validate_meta_names)
+                          appendix, formula, goal_section, has_goal, heading, para,
+                          save_report, setup_document, short_name, task_page,
+                          title_template_path, validate_meta_names)
 from strip_metadata import clean as clean_metadata
 from strip_metadata import inspect as metadata_findings
+from validate_docx import _cover_run_format as cover_run_format
 
 PLACEHOLDERS = ("<кафедра>", "<номер>", "<дисциплина>", "<тема>", "<вариант>",
                 "<пункты>", "<дата>", "<группа>", "<Фамилия И.О.>",
@@ -61,6 +64,7 @@ def build(path: Path, pdf: bool):
     annotation(doc, "Цель работы – проверить шаблон отчёта.",
                text_en="The purpose is to test the report template.",
                keywords="шаблон, проверка")
+    goal_section(doc, "Цель работы – проверить шаблон отчёта.")
     heading(doc, "1. Проверка")
     para(doc, "Текст проверки, подробнее: https://example.org/method.")
     formula(doc, [("E", None), ("=", None), ("mc", "sup"), ("2", None)], number=1)
@@ -115,6 +119,16 @@ def check(path: Path):
         problems.append("титул получит номер страницы (titlePg выключен)")
     if "PAGE" not in section.footer.paragraphs[0]._p.xml:
         problems.append("в колонтитуле нет поля PAGE")
+
+    # «Цель работы» – обязательный раздел, а не опция оформления
+    if not has_goal(new):
+        problems.append("нет раздела «Цель работы» (goal_section())")
+
+    # титул набран ровно тем шрифтом и кеглем, что и бланк
+    tpl_fmt = set(cover_run_format(tpl))
+    new_fmt = set(cover_run_format(new))
+    if new_fmt - tpl_fmt:
+        problems.append(f"титул набран не по бланку: {sorted(new_fmt - tpl_fmt, key=str)}")
 
     # ГОСТ 7.32-2017: приложение, нумерованная формула, наименование таблицы
     if "ПРИЛОЖЕНИЕ А" not in new_lines:
@@ -237,6 +251,65 @@ def check_names():
     return problems
 
 
+def check_cover_and_goal(tmp: Path):
+    """Кегль титула не зависит от пресета, а «Цель работы» нельзя потерять."""
+    from docx_helpers import StyleConfig, leti_form_config
+
+    problems = []
+    meta = ReportMeta(department="ИС", report_label="ОТЧЕТ", work_line="по заданию № 1",
+                      discipline="Тестовая дисциплина", topic="Тема", group="4395",
+                      student="Иванов И.И.", teacher="Петров П.П.")
+    tpl_fmt = set(cover_run_format(Document(str(title_template_path()))))
+    variants = (
+        ("пресет ЛЭТИ 14 пт", leti_form_config()),
+        ("пресет ГОСТ 12 пт", StyleConfig(font_size=12, heading_size=12)),
+    )
+    for label, cfg in variants:
+        doc = setup_document(cfg)
+        add_title_page(doc, meta, cfg)
+        extra = set(cover_run_format(doc)) - tpl_fmt
+        if extra:
+            problems.append(f"титул ({label}) вышел не по бланку: {sorted(extra, key=str)}")
+
+    # без setup_document() титул тоже должен остаться бланковым
+    bare = Document()
+    add_title_page(bare, meta)
+    extra = set(cover_run_format(bare)) - tpl_fmt
+    if extra:
+        problems.append(f"титул (без setup_document) не по бланку: {sorted(extra, key=str)}")
+
+    # пустая цель – ошибка, раздел нельзя «потерять»
+    try:
+        goal_section(setup_document(), "   ")
+    except ValueError:
+        pass
+    else:
+        problems.append("goal_section не упал на пустой цели")
+
+    # validate_docx должен ругаться FAIL'ом на отчёт без цели
+    doc = setup_document()
+    heading(doc, "1. Проверка")
+    para(doc, "Текст без цели работы.")
+    path = tmp / "no-goal.docx"
+    doc.save(str(path))
+    result = subprocess.run(
+        [sys.executable, "-X", "utf8", str(Path(__file__).resolve().parent / "validate_docx.py"), str(path)],
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+    )
+    output = (result.stdout or "") + (result.stderr or "")
+    if "Цель работы" not in output or result.returncode == 0:
+        problems.append("validate_docx не забраковал отчёт без «Цель работы»")
+
+    # save_report(require_goal=True) не сохраняет такой отчёт
+    try:
+        save_report(doc, tmp / "no-goal-save.docx", require_goal=True, quiet=True)
+    except ValueError:
+        pass
+    else:
+        problems.append("save_report(require_goal=True) сохранил отчёт без «Цель работы»")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", action="store_true", help="также собрать PDF через Word")
@@ -258,7 +331,7 @@ def main():
     docx_path = tmp / "selftest.docx"
     build(docx_path, args.pdf)
 
-    problems = check(docx_path)
+    problems = check_cover_and_goal(tmp) + check(docx_path)
     if args.pdf and not docx_path.with_suffix(".pdf").exists():
         problems.append("PDF не создан")
 
