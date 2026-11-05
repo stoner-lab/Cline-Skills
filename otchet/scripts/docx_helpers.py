@@ -434,8 +434,11 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
     The template is the single source of truth for the LETI cover: spacing,
     fonts, the 2x3 signature table and its borders are copied as-is, so the
     result matches ``title_page_leti.docx`` exactly. Placeholders in the
-    template: <кафедра>, <номер>, <дисциплина>, <тема>, <пункты>, <дата>,
-    <группа>, <Фамилия И.О.> (twice: student and teacher).
+    template: <кафедра>, <номер>, <дисциплина>, <тема>, <вариант>, <пункты>,
+    <дата>, <группа>, <Фамилия И.О. студента>, <Фамилия И.О. руководителя>,
+    <город>, <год>. Older templates with <Фамилия И.О.> in both signature cells,
+    «Санкт-Петербург» and a bare year still work: those branches are kept as
+    fallbacks.
     """
     tpl = Document(str(tpl_path))
     body = doc.element.body
@@ -522,8 +525,16 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path) -> bool:
                 _drop_paragraph(paragraph)
             continue
 
+        if "<город>" in text:
+            _set_par_text(paragraph, meta.city)
+            continue
+
         if text == "Санкт-Петербург":
             _set_par_text(paragraph, meta.city)
+            continue
+
+        if "<год>" in text:
+            _set_par_text(paragraph, meta.year)
             continue
 
         if text.isdigit() and len(text) == 4:
