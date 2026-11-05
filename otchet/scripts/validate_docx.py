@@ -89,9 +89,12 @@ def check_page_setup(doc, rep):
         if not (portrait or landscape):
             rep.warn(f"Section {i}: page size {w:.2f} x {h:.2f} cm (expected A4 21 x 29.7 or 29.7 x 21)")
         margins = (sec.left_margin.cm, sec.right_margin.cm, sec.top_margin.cm, sec.bottom_margin.cm)
-        expected = (3.0, 1.5, 2.0, 2.0)
-        if any(abs(a - b) > 0.15 for a, b in zip(margins, expected)):
-            rep.warn(f"Section {i}: margins L/R/T/B = {margins} (expected 3/1.5/2/2)")
+        left, right, top, bottom = margins
+        if abs(left - 3.0) > 0.15 or abs(top - 2.0) > 0.15 or abs(bottom - 2.0) > 0.15:
+            rep.warn(f"Section {i}: margins L/R/T/B = {margins} (expected 3/1–1.5/2/2)")
+        # правое поле: 10 мм в бланках ЛЭТИ (форма 3004), 15 мм в методичках
+        if not (0.95 <= right <= 1.55):
+            rep.warn(f"Section {i}: right margin {right:.2f} cm (expected 1.0–1.5)")
 
 
 def check_styles(doc, rep):

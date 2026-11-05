@@ -37,11 +37,17 @@ Chỗ giữ chỗ trong mẫu và giá trị thay thế:
 | `по практической работе №<номер>` | `work_line` (`по заданию № 1`...) |
 | `по дисциплине «<дисциплина>»` | `discipline` (bỏ dòng nếu rỗng) |
 | `Тема: <тема>` | `topic` (bỏ dòng nếu rỗng) |
-| `Вариант <вариант>` | `variant` (bỏ dòng nếu rỗng) |
+| `Вариант <вариант>` | `variant` – **không có trong mẫu**, tự chèn dưới dòng «Тема:» khi có dữ liệu |
 | bảng 2×3: `Студент гр. <группа>` / `<Фамилия И.О. студента>` / `Руководитель` / `<Фамилия И.О. руководителя>` | `student_label` + `group`, `student_short` (или `short_name(student)`), `teacher` |
 | `Выполненные пункты: <пункты>` | `completed_items` – **không có trong mẫu**, tự chèn khi có dữ liệu |
 | `Дата сдачи работы на проверку – <дата>` | `submission_date` – **không có trong mẫu**, tự chèn khi có dữ liệu |
 | `<город>`, `<год>` | `city`, `year` |
+
+`work_line` – только для работ с номером (ПР, лабораторные): `по заданию № 1`,
+`по практической работе № 2`. Для реферата, курсовой, отчёта по практике, НИР и
+МДП его не передавайте – строку про дисциплину даёт `discipline`. Если в
+`work_line` всё же попала строка «по дисциплине …», код её отбросит, чтобы на
+титуле не было дубля.
 
 Quy tắc cố định của mẫu (không đổi khi điền):
 
@@ -56,6 +62,9 @@ Quy tắc cố định của mẫu (không đổi khi điền):
   `Нгуен Т.` hoặc `Нгуен Т.З.`. Tên đầy đủ chỉ dùng trong tên file:
   `Фамилия_Имя_группа` (`Нгуен_Тхе_4395`). Hàm `short_name()` tự rút gọn; nếu cần
   dạng khác – truyền `student_short` trong `ReportMeta`.
+- `add_title_page()` kiểm tra trước khi vẽ: thiếu ФИО, ФИО chỉ có họ (không có chữ
+  cái đầu) hoặc còn placeholder thì ném `ValueError` – **phải hỏi người dùng** dạng
+  đầy đủ «Фамилия Имя Отчество» và số nhóm, không tự đoán.
 - Nếu mẫu có ảnh/logo hoặc hyperlink, cơ chế clone sẽ bỏ liên kết đó – khi đó
   `add_title_page()` tự chuyển sang bản dựng tay (`_add_title_page_manual`).
 
@@ -120,9 +129,13 @@ Quy tắc cố định của mẫu (không đổi khi điền):
 
 - Caption đặt **phía dưới** hình, căn giữa, cỡ 12:
   `Рис. 2 – Название рисунка`.
+- **В подписи рисунка точка в конце не ставится**, а сам текст идёт **курсивом**
+  (методички ЛЭТИ). Всё готово в helper:
+  `add_picture_with_caption(doc, path, "Рисунок 1 – Название", cfg=cfg)` или
+  `figure_caption(doc, 1, "Название", cfg=cfg)`.
 - **ГОСТ 7.32-2017**: слово пишут полностью – `Рисунок 2 – Название рисунка`;
-  в пресете `gost_config()` это задаёт `figure_label="Рисунок"`. Валидатор
-  принимает оба варианта.
+  в пресетах `leti_form_config()` и `gost_config()` это задаёт
+  `figure_label="Рисунок"`. Валидатор принимает оба варианта.
 - Hình phải rõ, không mờ, không méo.
 - Không dùng ảnh chụp màn hình chứa cả thanh công cụ, tab trình duyệt.
 - Trong text phải có câu dẫn: `Схема приведена на рис. 2.`
