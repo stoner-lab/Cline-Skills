@@ -8,11 +8,16 @@ LETI layout and contains only placeholders:
 - `<дисциплина>` — inside `по дисциплине «…»`
 - `<тема>` — inside `Тема: …`
 - `<вариант>` — inside `Вариант …`, dropped when `variant` is empty
-- `<пункты>` — inside `Выполненные пункты: …`, dropped when `completed_items` is empty
-- `<дата>` — inside `Дата сдачи работы на проверку – …`, dropped when `submission_date` is empty
 - `<группа>` — inside `Студент гр. …`
 - `<Фамилия И.О. студента>`, `<Фамилия И.О. руководителя>` — the two signature cells
 - `<город>`, `<год>` — the last two lines
+
+`<пункты>` and `<дата>` are **not** in the template on purpose: `completed_items`
+and `submission_date` are optional. When either is set, `_fill_title_from_template()`
+inserts the line under the signature table itself (bold, centred, 12 pt above) and
+takes the space from the gap over «ОТЧЕТ», so the cover still fits one page. A custom
+template that keeps `<пункты>` / `<дата>` is filled in place instead of getting a
+second copy.
 
 It contains no personal data. The signature block is a 2x3 table with real bottom
 borders in the middle column, not underscore characters.
