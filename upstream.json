@@ -5,77 +5,91 @@
       "ref": "main",
       "path": "skills/pdf",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "docx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/docx",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "pptx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pptx",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "xlsx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/xlsx",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "frontend-design": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/frontend-design",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "mcp-builder": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/mcp-builder",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "skill-creator": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/skill-creator",
       "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "git-workflow-and-versioning": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/git-workflow-and-versioning",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "documentation-and-adrs": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/documentation-and-adrs",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "code-review-and-quality": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/code-review-and-quality",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-02"
+      "checked_at": "2026-11-06"
     },
     "impeccable": {
       "repo": "pbakaus/impeccable",
       "ref": "main",
       "path": ".claude/skills/impeccable",
-      "sha": "e89e3ada3e875a89ac2c5d33d11e65ebef6fe285",
-      "checked_at": "2026-11-02"
+      "sha": "6d56f3b29ba150ce62236e765c0d5e965d1aa03a",
+      "checked_at": "2026-11-06"
+    },
+    "design-taste-frontend": {
+      "repo": "Leonxlnx/taste-skill",
+      "ref": "main",
+      "path": "skills/taste-skill",
+      "sha": "9b4bf937a1f69348126959c15d2f99a73e65699b",
+      "checked_at": "2026-11-06"
+    },
+    "manim": {
+      "repo": "iart-ai/manim-skills",
+      "ref": "main",
+      "path": "skills/manim",
+      "sha": "a15833c44de5108a3ee68f178a1fca126aa7c6d8",
+      "checked_at": "2026-11-06"
     }
   }
 }
