@@ -100,11 +100,37 @@ once per cron run.
 Local use:
 
 ```powershell
-$env:GH_TOKEN = # a GitHub token with public read access
+$env:GH_TOKEN = # a GitHub token with public read access - optional now
 python tools\sync_upstream.py check              # 0 = up to date, 1 = something changed
 python tools\sync_upstream.py apply pdf --diff   # regenerate one skill and show the diff
 python tools\sync_upstream.py status             # last synced commit per skill
 ```
+
+**No token needed.** Without `GH_TOKEN` the script reads upstream HEAD with
+`git ls-remote` and the upstream `SKILL.md` from `raw.githubusercontent.com`, so a
+scheduled local run works on a machine with no GitHub credentials. The token only
+raises the API rate limit.
+
+### The daily local run
+
+The workflow above opens (and reuses) exactly one pull request on `sync/upstream`.
+A Cline schedule, `daily-upstream-sync-cline-skills`, runs every day at 09:30
+Europe/Moscow (30 minutes after the workflow) and finishes the job:
+
+1. `git pull --ff-only origin main`;
+2. merges `origin/sync/upstream` into `main` when it is ahead (conflict resolution:
+   keep the local, newer `upstream.json`), which makes GitHub mark the bot's PR
+   **Merged** without any token or manual click;
+3. runs `sync_upstream.py check`; on `rc=1` runs `apply --all`, validates the
+   regenerated `adapt` skills with `quick_validate.py` and flags upstream steps that
+   only exist on Linux (`pandoc`, `soffice`, `pdftoppm`);
+4. commits `sync: upstream updates (YYYY-MM-DD)` and pushes only when something
+   actually changed; it never touches `manual` skills (`skill-creator`,
+   `impeccable`, `manim`) - those are reported as "needs hand review".
+
+Bản Việt: bot mở PR mỗi ngày (nhánh `sync/upstream` được tái sử dụng, chỉ 1 PR);
+job Cline chạy 09:30 giờ Moskva sẽ merge PR đó, cập nhật skill nếu upstream nhích,
+commit và push. Skill `manual` chỉ được báo, không tự ghi đè. Không cần token.
 
 Adding a skill from another repository:
 
