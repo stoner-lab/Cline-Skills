@@ -444,6 +444,15 @@ Ba lớp chặn đi kèm: `goal_section(doc, "")` -> `ValueError`;
   Nếu vẫn thấy hộp thoại: `python scripts\check_env.py` liệt kê tiến trình sót và
   trạng thái `Normal.dotm`; **hỏi user rồi mới** chạy
   `python scripts\check_env.py --clean-word` để dọn (hoặc đóng trong Task Manager).
+- **User được phép mở Word trong lúc skill làm việc.** Script dùng lại Word đó,
+  chỉ mở tài liệu của mình ở chế độ read-only rồi đóng, không `Quit` Word của
+  user, không đụng tài liệu của user (đo thực tế: xuất PDF 1,5 s, Word của user
+  vẫn mở nguyên). Hai điều phải tránh và phải nói cho user biết:
+  1. **Đừng mở chính file báo cáo đang được ghi** trong Word: Word giữ khoá file,
+     `save_report()` ném `ValueError: Файл … открыт в Word … закройте его` –
+     đóng file đó rồi chạy lại. Các file khác mở thoải mái.
+  2. **Đừng để Word đang mở hộp thoại modal** (Save As, Open, Print, hộp thoại
+     lỗi…): lời gọi COM sẽ chờ đến hết `timeout` và xuất PDF thất bại.
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
 - `scripts/check_env.py` – проверка окружения: python, python-docx/pypdf/lxml,
   шрифт Times New Roman, файлы скилла, доступность MS Word (COM) и фоновые
