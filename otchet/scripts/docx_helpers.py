@@ -12,11 +12,13 @@ Assets are resolved relative to this file: `<otchet>/assets/templates/`.
 from __future__ import annotations
 
 import copy
+import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
@@ -1363,35 +1365,131 @@ def _ps_quote(value: str) -> str:
     return "'" + str(value).replace("'", "''") + "'"
 
 
+def word_processes() -> list[dict]:
+    """Все запущенные WINWORD.EXE: id, время старта, заголовок окна.
+
+    Пустой ``title`` – это «зомби»: экземпляр, который остался от COM-экспорта.
+    Именно он держит ``Normal.dotm`` и вызывает диалог «This file is in use by
+    another application or user».
+    """
+    ps = ("Get-Process WINWORD -ErrorAction SilentlyContinue | "
+          "Select-Object Id,MainWindowTitle,@{n='start';e={$_.StartTime}} | "
+          "ConvertTo-Json -Compress")
+    try:
+        res = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                             capture_output=True, text=True, timeout=60)
+    except Exception:                                  # noqa: BLE001
+        return []
+    raw = (res.stdout or "").strip()
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return []
+    if isinstance(data, dict):
+        data = [data]
+    return [{"id": int(item.get("Id", 0)),
+             "title": (item.get("MainWindowTitle") or "").strip(),
+             "start": str((item.get("start") or {}).get("DateTime", "")
+                          if isinstance(item.get("start"), dict) else (item.get("start") or ""))}
+            for item in data if item.get("Id")]
+
+
+def word_zombies() -> list[dict]:
+    """Экземпляры Word без окна – остатки прошлых COM-экспортов."""
+    return [p for p in word_processes() if not p["title"]]
+
+
+def close_word_processes(pids) -> int:
+    """Завершить указанные WINWORD.EXE; вернуть число завершённых."""
+    ids = [str(int(p)) for p in pids if p]
+    if not ids:
+        return 0
+    ps = "Stop-Process -Id " + ",".join(ids) + " -Force -ErrorAction SilentlyContinue"
+    try:
+        subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                       capture_output=True, text=True, timeout=60)
+    except Exception:                                  # noqa: BLE001
+        return 0
+    left = {p["id"] for p in word_processes()}
+    return len([i for i in map(int, ids) if i not in left])
+
+
+def wait_for_word_exit(timeout: float = 15.0, keep=()) -> list[dict]:
+    """Дождаться, пока фоновые WINWORD.EXE завершатся сами (Quit асинхронный).
+
+    ``keep`` – id процессов, которые трогать не нужно (Word пользователя).
+    Возвращает список оставшихся «зомби».
+    """
+    deadline = time.time() + max(0.0, timeout)
+    while True:
+        zombies = [p for p in word_zombies() if p["id"] not in keep]
+        if not zombies or time.time() >= deadline:
+            return zombies
+        time.sleep(0.5)
+
+
 def export_pdf_via_word(docx_path, pdf_path, timeout=180):
     """Export DOCX to PDF/A-1b via MS Word COM (Windows only).
 
     PDF/A forces font embedding, so Times New Roman survives on the checker's
     machine. If Word refuses PDF/A, a plain PDF export is written instead.
+
+    The instance is closed and its COM objects are released in ``finally``, and a
+    windowless Word left behind by an earlier run is reused and then quit: a
+    second instance is what triggers «This file is in use by another application
+    or user (Normal.dotm)». Any new windowless process is killed after the run.
     """
     docx_path = str(Path(docx_path).resolve())
     pdf_path = str(Path(pdf_path).resolve())
     Path(pdf_path).parent.mkdir(parents=True, exist_ok=True)
+    before = {p["id"] for p in word_processes()}
     script = f"""
 $ErrorActionPreference = 'Stop'
-$word = New-Object -ComObject Word.Application
-$word.Visible = $false
-$word.DisplayAlerts = 0
+$startedNew = $false
+$word = $null
+$doc = $null
+$alerts = $null
 try {{
-    $doc = $word.Documents.Open({_ps_quote(docx_path)}, $false, $true)
+    # уже запущенный Word (в том числе «зомби» от прошлого экспорта) – используем
+    # его: второй экземпляр и есть причина диалога про Normal.dotm
     try {{
+        $word = [Runtime.InteropServices.Marshal]::GetActiveObject('Word.Application')
+        $alerts = $word.DisplayAlerts
+        $word.DisplayAlerts = 0
+    }} catch {{
+        $word = New-Object -ComObject Word.Application
+        $startedNew = $true
+        $word.Visible = $false
+        $word.DisplayAlerts = 0
+    }}
+    try {{ $word.AutomationSecurity = 3 }} catch {{}}
+    try {{ $word.Options.SaveNormalPrompt = $false }} catch {{}}
+    try {{
+        $doc = $word.Documents.Open({_ps_quote(docx_path)}, $false, $true)
         # TOC and PAGE are fields: build them once so the export carries real
         # entries (and clickable /Link annotations) instead of the placeholder.
         try {{ $doc.Fields.Update() | Out-Null }} catch {{}}
         foreach ($toc in $doc.TablesOfContents) {{ try {{ $toc.Update() }} catch {{}} }}
         # PDF/A-1b: BitmapMissingFonts must be False, UseISO19005_1 = True
-        $doc.ExportAsFixedFormat({_ps_quote(pdf_path)}, 17, $false, 0, 0, 0, 0, 0, $true, $false, 0, $true, $false, $true)
-    }} catch {{
-        $doc.ExportAsFixedFormat({_ps_quote(pdf_path)}, 17)
+        try {{
+            $doc.ExportAsFixedFormat({_ps_quote(pdf_path)}, 17, $false, 0, 0, 0, 0, 0, $true, $false, 0, $true, $false, $true)
+        }} catch {{
+            $doc.ExportAsFixedFormat({_ps_quote(pdf_path)}, 17)
+        }}
+    }} finally {{
+        if ($doc -ne $null) {{ try {{ $doc.Close(0) }} catch {{}} }}
+        if ($alerts -ne $null -and -not $startedNew) {{ try {{ $word.DisplayAlerts = $alerts }} catch {{}} }}
+        $empty = $false
+        try {{ $empty = ($word.Documents.Count -eq 0 -and -not $word.Visible) }} catch {{}}
+        if ($startedNew -or $empty) {{ try {{ $word.Quit(0) }} catch {{}} }}
+        [GC]::Collect(); [GC]::WaitForPendingFinalizers()
+        if ($doc -ne $null) {{ try {{ [void][Runtime.InteropServices.Marshal]::ReleaseComObject($doc) }} catch {{}} }}
+        if ($word -ne $null) {{ try {{ [void][Runtime.InteropServices.Marshal]::ReleaseComObject($word) }} catch {{}} }}
     }}
-    $doc.Close($false)
 }} finally {{
-    $word.Quit()
+    [GC]::Collect(); [GC]::WaitForPendingFinalizers()
 }}
 """
     fd, ps1 = tempfile.mkstemp(suffix=".ps1")
@@ -1400,13 +1498,17 @@ try {{
         with open(ps1, "w", encoding="utf-8-sig") as f:
             f.write(script)
         res = subprocess.run(
-            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps1],
+            ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", ps1],
             capture_output=True, text=True, timeout=timeout,
         )
         if res.returncode != 0 or not Path(pdf_path).exists():
             raise RuntimeError("Word PDF export failed: " + (res.stderr or res.stdout))
     finally:
         Path(ps1).unlink(missing_ok=True)
+        # страховка: всё, что появилось за время экспорта и осталось без окна, – наше
+        leaked = [p["id"] for p in wait_for_word_exit(8.0, keep=before)]
+        if leaked:
+            close_word_processes(leaked)
     return pdf_path
 
 

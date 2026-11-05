@@ -310,6 +310,55 @@ def check_cover_and_goal(tmp: Path):
     return problems
 
 
+def check_word_export(tmp: Path):
+    """Экспорт PDF не должен оставлять WINWORD.EXE и держать Normal.dotm.
+
+    Диалог Word «This file is in use by another application or user
+    (…\\Normal.dotm)» появляется именно тогда, когда остался фоновый экземпляр:
+    следующий Word не может открыть Normal.dotm. Тест экспортирует дважды и
+    проверяет, что новых процессов не осталось.
+    """
+    from docx_helpers import (StyleConfig, export_pdf_via_word, word_processes,
+                              word_zombies)
+
+    problems = []
+    try:
+        from check_env import normal_template_locked
+        locked = normal_template_locked
+    except Exception:                                  # noqa: BLE001
+        locked = lambda: False                         # noqa: E731
+
+    if locked():
+        problems.append("Normal.dotm занят до теста: закройте Word и повторите "
+                        "(или `python scripts\\check_env.py --clean-word`)")
+        return problems
+
+    before = {p["id"] for p in word_processes()}
+    cfg = StyleConfig()
+    for attempt in (1, 2):
+        doc = setup_document(cfg=cfg)
+        goal_section(doc, "Цель работы – проверить экспорт Word.", cfg=cfg)
+        heading(doc, "1. Проверка", cfg=cfg)
+        para(doc, "Текст для экспорта.", cfg=cfg)
+        docx_path = tmp / f"word-{attempt}.docx"
+        pdf_path = tmp / f"word-{attempt}.pdf"
+        doc.save(str(docx_path))
+        try:
+            export_pdf_via_word(docx_path, pdf_path)
+        except Exception as exc:                       # noqa: BLE001
+            problems.append(f"экспорт PDF ({attempt}) упал: {type(exc).__name__}: {exc}")
+            continue
+        if not pdf_path.exists() or pdf_path.stat().st_size < 1000:
+            problems.append(f"PDF ({attempt}) не создан или пустой")
+        leaked = [p for p in word_zombies() if p["id"] not in before]
+        if leaked:
+            problems.append(f"экспорт ({attempt}) оставил фоновый WINWORD.EXE: "
+                            + ", ".join(str(p["id"]) for p in leaked))
+    if locked():
+        problems.append("после экспорта Normal.dotm остался заблокированным")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", action="store_true", help="также собрать PDF через Word")
@@ -331,9 +380,19 @@ def main():
     docx_path = tmp / "selftest.docx"
     build(docx_path, args.pdf)
 
-    problems = check_cover_and_goal(tmp) + check(docx_path)
+    problems = check_cover_and_goal(tmp) + check_word_export(tmp) + check(docx_path)
     if args.pdf and not docx_path.with_suffix(".pdf").exists():
         problems.append("PDF не создан")
+
+    # Word закрывается асинхронно: даём ему уйти и снимаем остатки своих запусков,
+    # иначе следующий Word покажет «This file is in use by another application»
+    from docx_helpers import close_word_processes, wait_for_word_exit
+    leftovers = wait_for_word_exit(20.0)
+    if leftovers:
+        close_word_processes([p["id"] for p in leftovers])
+        if wait_for_word_exit(5.0):
+            problems.append("после selftest остались фоновые WINWORD.EXE: "
+                            + ", ".join(str(p["id"]) for p in wait_for_word_exit(1.0)))
 
     if problems:
         print("FAIL:")

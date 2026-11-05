@@ -22,6 +22,11 @@ thiếu, viết báo cáo bằng tiếng Nga đơn giản, tạo DOCX/PDF và ki
   báo FAIL khi lệch.
 - **«Цель работы» là mục bắt buộc** với ПР/lab/НИР/практика: `goal_section()`,
   `save_report(..., require_goal=True)` và `validate_docx.py` chặn việc bỏ mất mục.
+- **Xuất PDF không để lại Word treo**: `export_pdf_via_word()` dùng lại Word đang
+  mở, đóng phiên của mình và chờ nó thoát; `validate_docx.py`/`selftest.py` kiểm
+  tra; hộp thoại Word «This file is in use by another application or user
+  (Normal.dotm)» không còn xuất hiện. Dọn tay: `python scripts\check_env.py
+  --clean-word` (hỏi user trước).
 - Có thể dùng template riêng của trường/khoa hoặc thay bằng mẫu của bạn.
 
 ## Yêu cầu
