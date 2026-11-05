@@ -150,5 +150,27 @@
     "ref": "main",
     "path": ".",
     "strategy": "own"
+  },
+  "design-taste-frontend": {
+    "repo": "Leonxlnx/taste-skill",
+    "ref": "main",
+    "path": "skills/taste-skill",
+    "strategy": "adapt",
+    "description": "Build a professional company website at the level of figma.com and x.ai instead of a generic template: plain copy, one design system, one section per screen, equal edges, real photographs and real product UI, real brand icons, quiet hover micro-interactions, shader effects and scenes only on tech, gaming and software pages, plus a headless-browser checker that enforces all of it. Use for building, designing, redesigning, restyling, polishing or reviewing a landing page, company, product, shop, cafe, hotel, studio, SaaS, AI, developer-tool or game site in any stack: HTML/CSS, React, Next.js, Vue, Svelte, Astro, Tailwind. Vietnamese triggers: lam landing page, thiet ke lai trang, trang trong chung chung, web trong nhu AI lam, sua giao dien. Russian triggers: сделать нормальный лендинг, страница выглядит шаблонно, переделай сайт. Also use it when a page looks generic, templated or AI-made. Not for backend-only work or a Word, PDF or spreadsheet deliverable.",
+    "license": "MIT, Copyright (c) 2026 Leonxlnx (see LICENSE)",
+    "notes": "tools/notes/design-taste-frontend.md",
+    "keep": [
+      "LICENSE",
+      "CHANGELOG.md",
+      "CLINE.md",
+      "scripts/check_env.mjs"
+    ],
+    "compatibility": "Cline on Windows: PowerShell shell, run_commands/read_files/editor, Node 22+ and Chrome or Edge found by the scripts themselves (headless, no packages); scripts/check_env.mjs reports what is missing and the build waits for the user yes; no subagents, and browser tools never replace the skill own checkers.",
+    "replacements": [
+      [
+        "`<skill>` is this folder.",
+        "`<skill>` is the skill folder named in the Cline runtime notes above."
+      ]
+    ]
   }
 }
