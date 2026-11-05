@@ -166,6 +166,22 @@ def _cover_run_format(doc) -> dict[tuple[str | None, float | None], int]:
     return seen
 
 
+def cover_expected_format(template_doc) -> set[tuple[str, float]]:
+    """Шрифт и кегль, которые титул обязан иметь по бланку.
+
+    Бланк может не задавать их в run'ах (Word переносит в стили) – тогда
+    действует то, что подставляет код: Times New Roman 14 пт (бланк 3004).
+    """
+    return {(n or "Times New Roman", float(s or 14))
+            for n, s in _cover_run_format(template_doc)}
+
+
+def cover_actual_format(doc) -> set[tuple[str, float]]:
+    """То же для собранного документа."""
+    return {(n or "Times New Roman", float(s or 14))
+            for n, s in _cover_run_format(doc)}
+
+
 def check_cover(doc, rep):
     """Титульный лист обязан совпадать с бланком по шрифту и кеглю.
 
@@ -175,17 +191,21 @@ def check_cover(doc, rep):
     if not TITLE_TEMPLATE.exists():
         rep.info(f"титульный бланк не найден ({TITLE_TEMPLATE.name}): проверка титула пропущена")
         return
-    expected = _cover_run_format(Document(str(TITLE_TEMPLATE)))
-    got = _cover_run_format(doc)
-    if not got:
+    expected = cover_expected_format(Document(str(TITLE_TEMPLATE)))
+    got_raw = _cover_run_format(doc)
+    if not got_raw:
         rep.warn("титульный лист не найден: документ начинается сразу с текста")
         return
-    ref = ", ".join(f"{n or 'шрифт по стилю'} {int(s) if s else '?'} пт" for n, s in sorted(expected, key=str))
+    got: dict[tuple[str, float], int] = {}
+    for (n, s), count in got_raw.items():
+        key = (n or "Times New Roman", float(s or 14))
+        got[key] = got.get(key, 0) + count
+    ref = ", ".join(f"{n} {int(s)} пт" for n, s in sorted(expected, key=str))
     for (name, size), count in sorted(got.items(), key=lambda kv: str(kv[0])):
         if (name, size) not in expected:
             rep.fail(
-                f"титульный лист: строк {count} набраны «{name or 'шрифт по стилю'}» "
-                f"{int(size) if size else '?'} пт, а в бланке – {ref}. "
+                f"титульный лист: строк {count} набраны «{name}» "
+                f"{int(size)} пт, а в бланке – {ref}. "
                 f"Титул клонируется из title_page_leti.docx и не перемасштабируется."
             )
 
