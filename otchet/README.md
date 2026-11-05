@@ -24,14 +24,22 @@ thiếu, viết báo cáo bằng tiếng Nga đơn giản, tạo DOCX/PDF và ki
 - **Cline** – extension Cline trong VS Code.
 - **API AI** – cấu hình API key trong Cline (OpenAI, Anthropic, OpenRouter,
   Google hoặc provider tương đương).
-- **Python 3.10+**.
-- **python-docx**.
-- Tuỳ chọn: `pypdfium2` để kiểm tra PDF.
-- Tuỳ chọn: Microsoft Word trên Windows để xuất PDF.
+- **Python 3.10+** (đã kiểm với 3.14).
+- **python-docx** (bắt buộc) + **lxml** (python-docx cần) – dựng DOCX.
+- **pypdf** (bắt buộc) – `strip_metadata.py` xoá metadata PDF, kiểm annotation `/Link`.
+- **pypdfium2** – `validate_docx.py` đọc/kiểm trang PDF và render ảnh.
+- **Pillow** – chèn/kiểm hình minh hoạ.
+- **Microsoft Word trên Windows** (COM) – xuất PDF/A, cập nhật field TOC,
+  `Fields.Update()`; **không có Word thì chỉ ra DOCX** (TOC và PDF sẽ thiếu).
+- **Font Times New Roman** – có sẵn trong Windows.
 
 ```powershell
-python -m pip install python-docx pypdfium2
+python -m pip install python-docx pypdf pypdfium2 lxml pillow
+python scripts\check_env.py      # kiểm tra toàn bộ môi trường, exit 0 = chạy được
 ```
+
+Không cần: LaTeX/MiKTeX (chỉ dùng khi chèn `MathTex`, không thuộc skill này),
+LibreOffice, pandoc, ffmpeg.
 
 ## Cài đặt
 

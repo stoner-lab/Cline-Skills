@@ -387,6 +387,9 @@ trên trang của Цель работы (code tự xử lý: heading số đầu
     dòng «Обновите поле»;
   - `fmt_num()`, `save_report()`, `export_pdf_via_word()`;
   - `title_template_path()` – đường dẫn tới `assets/templates/title_page_leti.docx`.
+- `scripts/check_env.py` – проверка окружения: python, python-docx/pypdf/lxml,
+  шрифт Times New Roman, файлы скилла и доступность MS Word (COM). Запускать
+  первым, если что-то «не собирается»: `python scripts/check_env.py`.
 - `scripts/validate_docx.py` – kiểm tra file DOCX/PDF: bố cục, font, dấu gạch
   ngang, metadata, **tính clickable của link** (URL để dạng chữ thường là FAIL,
   không phải cảnh báo), số annotation `/Link` trong PDF, số chương/phụ lục và
