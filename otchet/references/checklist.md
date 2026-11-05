@@ -18,6 +18,9 @@
 ## 2. Nội dung
 
 - [ ] Đủ các mục theo đề.
+- [ ] **«Цель работы» có mặt** (bắt buộc với ПР/lab/НИР/практика): không bị xoá, không
+  đổi tên thành «Задачи», không gộp vào «Постановка задачи». Đề không nêu mục đích
+  -> hỏi user, không tự bỏ. Trong code: `goal_section(doc, "…")`.
 - [ ] Mỗi mục trả lời: làm gì -> công thức -> kết quả -> nghĩa.
 - [ ] Không copy định nghĩa từ giáo trình.
 - [ ] Không copy câu/đoạn từ mẫu.
@@ -82,6 +85,12 @@
 
 ## 5. Trang bìa
 
+- [ ] Bìa là **bản clone бланк** `assets/templates/title_page_leti.docx`, không dựng lại.
+- [ ] Font và cỡ chữ **đúng như бланк**: Times New Roman 14 pt cho mọi dòng (kể cả
+  bảng chữ ký); `cfg.font_size` của báo cáo **không** co bìa lại (preset 12 pt vẫn
+  cho bìa 14 pt). Kiểm tra: `validate_docx.py` báo FAIL nếu bìa lệch bланк.
+- [ ] Nếu script in `WARN: титульный лист собран вручную` – бланк không đọc được:
+  báo cho user, đừng coi bìa đó là chuẩn.
 - [ ] Đúng tên trường, khoa.
 - [ ] Đúng loại báo cáo.
 - [ ] Đúng tên môn.
@@ -112,6 +121,8 @@ python scripts/validate_docx.py "duong_dan_bao_cao.docx"
 
 Script sẽ cảnh báo:
 - sai font/lề;
+- **титул lệch бланк** (sai font hoặc cỡ chữ, ví dụ bìa bị co về 12 pt);
+- **thiếu `Цель работы`** trong báo cáo có mục đánh số (FAIL);
 - heading không căn giữa;
 - caption sai vị trí;
 - đánh số bảng/hình không liên tục;

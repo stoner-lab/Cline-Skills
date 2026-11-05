@@ -136,6 +136,80 @@ def check_headings(doc, rep):
                 rep.info(f"Heading 1 without number: {p.text[:60]!r}")
 
 
+GOAL_TEXT = re.compile(r"^\s*цель\s+работы\b", re.IGNORECASE)
+TITLE_TEMPLATE = (Path(__file__).resolve().parent.parent
+                  / "assets" / "templates" / "title_page_leti.docx")
+
+
+def _cover_run_format(doc) -> dict[tuple[str | None, float | None], int]:
+    """Шрифт и кегль run'ов титульного листа (всё до первого разрыва страницы)."""
+    seen: dict[tuple[str | None, float | None], int] = {}
+    for child in doc.element.body.iterchildren():
+        if child.tag == qn("w:p"):
+            if any(br.get(qn("w:type")) == "page" for br in child.iter(qn("w:br"))):
+                return seen          # разрыв страницы закрывает титул
+        elif child.tag != qn("w:tbl"):
+            continue
+        for run in child.iter(qn("w:r")):
+            if not "".join(t.text or "" for t in run.iter(qn("w:t"))).strip():
+                continue
+            size = name = None
+            rPr = run.find(qn("w:rPr"))
+            if rPr is not None:
+                sz = rPr.find(qn("w:sz"))
+                if sz is not None and sz.get(qn("w:val")):
+                    size = int(sz.get(qn("w:val"))) / 2      # half-points -> points
+                fonts = rPr.find(qn("w:rFonts"))
+                if fonts is not None:
+                    name = fonts.get(qn("w:ascii")) or fonts.get(qn("w:hAnsi"))
+            seen[(name, size)] = seen.get((name, size), 0) + 1
+    return seen
+
+
+def check_cover(doc, rep):
+    """Титульный лист обязан совпадать с бланком по шрифту и кеглю.
+
+    Кегль титула берётся из бланка (форма 3004 – Times New Roman 14 пт), а не из
+    ``cfg.font_size``: пресет на 12 пт не должен «усаживать» весь лист.
+    """
+    if not TITLE_TEMPLATE.exists():
+        rep.info(f"титульный бланк не найден ({TITLE_TEMPLATE.name}): проверка титула пропущена")
+        return
+    expected = _cover_run_format(Document(str(TITLE_TEMPLATE)))
+    got = _cover_run_format(doc)
+    if not got:
+        rep.warn("титульный лист не найден: документ начинается сразу с текста")
+        return
+    ref = ", ".join(f"{n or 'шрифт по стилю'} {int(s) if s else '?'} пт" for n, s in sorted(expected, key=str))
+    for (name, size), count in sorted(got.items(), key=lambda kv: str(kv[0])):
+        if (name, size) not in expected:
+            rep.fail(
+                f"титульный лист: строк {count} набраны «{name or 'шрифт по стилю'}» "
+                f"{int(size) if size else '?'} пт, а в бланке – {ref}. "
+                f"Титул клонируется из title_page_leti.docx и не перемасштабируется."
+            )
+
+
+def check_goal_section(doc, rep):
+    """«Цель работы» – обязательный раздел, а не опция оформления."""
+    texts = [(p.text or "").strip() for p in doc.paragraphs]
+    if any(GOAL_TEXT.match(t) for t in texts):
+        rep.info("«Цель работы» на месте")
+        return
+    numbered = [p for p in doc.paragraphs
+                if p.style.name == "Heading 1" and re.match(r"^\d+\.\s", (p.text or "").strip())]
+    big = [t.upper() for t in texts if t]
+    has_front_matter = any(t.startswith(("ВВЕДЕНИЕ", "СОДЕРЖАНИЕ", "АННОТАЦИЯ")) for t in big)
+    if not numbered:
+        rep.info("нумерованных разделов нет: проверка «Цель работы» пропущена")
+    elif has_front_matter:
+        rep.warn("«Цель работы» отдельным разделом не найдена: у реферата, курсовой и НИР "
+                 "цель обычно стоит во «Введении» – проверьте вручную")
+    else:
+        rep.fail("нет раздела «Цель работы»: для ПР, лабораторной, НИР и отчёта по практике "
+                 "он обязателен, вызов goal_section(doc, ...) возвращает его на место")
+
+
 def check_captions_and_tables(doc, rep):
     children = list(doc.element.body.iterchildren())
     first_heading = len(children)
@@ -412,7 +486,9 @@ def main():
     rep = Report()
     check_page_setup(doc, rep)
     check_styles(doc, rep)
+    check_cover(doc, rep)
     check_headings(doc, rep)
+    check_goal_section(doc, rep)
     check_captions_and_tables(doc, rep)
     check_personal_style(doc, rep)
     check_placeholders_and_numbers(doc, rep)

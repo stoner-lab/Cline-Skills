@@ -15,6 +15,7 @@ import copy
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -280,6 +281,43 @@ def _ends_with_page_break(doc) -> bool:
 
 
 _NUMBERED_HEADING = re.compile(r"^\d+\.\s")
+GOAL_RE = re.compile(r"^\s*цель\s+работы\b", re.IGNORECASE)
+
+
+def has_goal(doc) -> bool:
+    """Есть ли в документе блок «Цель работы» (заголовок или начало абзаца)."""
+    for p in doc.paragraphs:
+        if GOAL_RE.match(p.text or ""):
+            return True
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                if GOAL_RE.match(cell.text or ""):
+                    return True
+    return False
+
+
+def goal_section(doc, text, title="Цель работы", cfg: StyleConfig | None = None,
+                 page_break=None, size=None):
+    """Обязательный блок «Цель работы» – его нельзя терять или переименовывать.
+
+    ПР, лабораторную, НИР и отчёт по практике без этого раздела не принимают, а
+    формулировка берётся из задания дословно. Пустой ``text`` поднимает
+    ``ValueError``: раздел не должен исчезать из отчёта молча.
+    """
+    cfg = cfg or StyleConfig()
+    body = re.sub(r"\s+", " ", str(text or "")).strip()
+    body = re.sub(r"^цель\s+работы\s*[–—:-]\s*", "", body, flags=re.IGNORECASE)
+    if not body:
+        raise ValueError(
+            "«Цель работы» обязательна: возьмите формулировку из задания или спросите "
+            "пользователя. Удалять, переименовывать раздел или оставлять его пустым нельзя."
+        )
+    h = heading(doc, title, level=1, size=size or cfg.heading_size, cfg=cfg,
+                page_break=page_break)
+    para(doc, body, cfg=cfg)
+    doc._otchet_goal_written = True
+    return h
 
 
 def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None,
@@ -297,6 +335,10 @@ def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None,
         page_break = bool(cfg.heading_page_break) and level == 1
         if page_break and numbered and not getattr(doc, "_otchet_numbered_started", False):
             page_break = False
+            if not getattr(doc, "_otchet_goal_written", False):
+                # первый раздел продолжает страницу «Цель работы»; если её никто
+                # не написал – раздел потерян, о нём сообщит report_summary()
+                doc._otchet_missing_goal = True
     if numbered:
         doc._otchet_numbered_started = True
     # если предыдущий абзац уже завершается разрывом, второй разрыв дал бы пустой лист
@@ -706,8 +748,9 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path,
                         break
                     nxt.getparent().remove(nxt)
 
-    # бланки ЛЭТИ – 12 пт, но кегль задаёт отчёт: приводим скопированный титул
-    _scale_cover_fonts(paragraphs, tables, cfg.font_size)
+    # кегль и шрифт титула задаёт бланк; cfg.font_size относится к тексту отчёта
+    # и титул не перемасштабирует (иначе пресет 12 пт «сажает» весь лист)
+    _normalize_cover_fonts(paragraphs, tables)
 
     return True
 
@@ -888,11 +931,40 @@ def appendix(doc, letter, title="", status=None, cfg: StyleConfig | None = None)
     return head
 
 
-def _scale_cover_fonts(paragraphs, tables, size: int) -> None:
-    """Привести шрифт скопированного титула к кеглю отчёта (бланк ЛЭТИ – 12 пт)."""
+COVER_FONT_NAME = "Times New Roman"
+# Бланк 3004: все строки титула набраны 14 пт. Кегль берётся из бланка, а не из
+# cfg.font_size – пресет ГОСТ (12 пт) не должен «усаживать» титульный лист.
+COVER_DEFAULT_SIZE = 14
+
+
+def _normalize_cover_fonts(paragraphs, tables, fallback_size: float = COVER_DEFAULT_SIZE,
+                           name: str = COVER_FONT_NAME) -> int:
+    """Достроить титул до бланка, ничего в нём не перемасштабируя.
+
+    Бланк ЛЭТИ приходит готовым: у каждой строки свой кегль и начертание, и он не
+    зависит от ``cfg.font_size`` (тот кегль относится к тексту отчёта). Поэтому
+    run'ы, где бланк уже задал шрифт и кегль, остаются нетронутыми, а
+    достраивается только то, чего в бланке нет: часть ячеек таблицы подписей
+    содержит run'ы без ``rPr`` – они наследовали ``Normal`` документа, то есть
+    «чужой» шрифт и «чужой» кегль.
+
+    Возвращает число правленых run'ов.
+    """
+    fixed = 0
+
     def fix(paragraph):
+        nonlocal fixed
         for run in paragraph.runs:
-            set_run_font(run, size=size, bold=bool(run.bold), italic=bool(run.italic))
+            if run.font.size is not None and run.font.name is not None:
+                continue
+            set_run_font(
+                run,
+                size=run.font.size.pt if run.font.size else fallback_size,
+                bold=run.bold,          # None = наследовать, а не «не жирный»
+                italic=run.italic,
+                name=run.font.name or name,
+            )
+            fixed += 1
 
     for paragraph in paragraphs:
         fix(paragraph)
@@ -901,6 +973,7 @@ def _scale_cover_fonts(paragraphs, tables, size: int) -> None:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     fix(paragraph)
+    return fixed
 
 
 def task_page(doc, meta: ReportMeta, work_title=None, rows=None, cfg: StyleConfig | None = None,
@@ -1030,12 +1103,18 @@ def add_title_page(doc, meta: ReportMeta, cfg: StyleConfig | None = None, templa
         snapshot = list(body.iterchildren())
         try:
             _fill_title_from_template(doc, meta, tpl_path, cfg)
-        except Exception:
+        except Exception as exc:
             # откатить частично вставленный титул, иначе он окажется дважды
             for child in list(body.iterchildren()):
                 if child not in snapshot and child.tag != qn("w:sectPr"):
                     body.remove(child)
             _add_title_page_manual(doc, meta, cfg)
+            print(
+                f"WARN: титульный лист собран вручную – шаблон не прочитан "
+                f"({type(exc).__name__}: {exc}). Бланк должен клонироваться как есть: "
+                f"проверьте, что {tpl_path} открывается и не содержит битых ссылок.",
+                file=sys.stderr,
+            )
             return
         _page_break_tight(doc)
         return
@@ -1049,25 +1128,25 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
         lines.append(f"Кафедра {meta.department}")
     for line in lines:
         para(doc, line, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-             size=cfg.font_size, bold=True, spacing=cfg.line_spacing)
+             size=COVER_DEFAULT_SIZE, bold=True, spacing=cfg.line_spacing)
 
     for _ in range(3):
         para(doc, "", indent_cm=0, spacing=cfg.line_spacing)
 
     para(doc, meta.report_label, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-         size=cfg.font_size, bold=True, spacing=cfg.line_spacing)
+         size=COVER_DEFAULT_SIZE, bold=True, spacing=cfg.line_spacing)
     para(doc, meta.work_line, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-         size=cfg.font_size, bold=True, spacing=cfg.line_spacing)
+         size=COVER_DEFAULT_SIZE, bold=True, spacing=cfg.line_spacing)
     disc = meta.discipline.strip()
     if disc and not disc.startswith("«"):
         disc = f"«{disc}»"
     para(doc, f"по дисциплине {disc}", align=WD_ALIGN_PARAGRAPH.CENTER,
-         indent_cm=0, size=cfg.font_size, bold=True, spacing=cfg.line_spacing)
+         indent_cm=0, size=COVER_DEFAULT_SIZE, bold=True, spacing=cfg.line_spacing)
     para(doc, f"Тема: {meta.topic}", align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-         size=cfg.font_size, bold=True, spacing=cfg.line_spacing)
+         size=COVER_DEFAULT_SIZE, bold=True, spacing=cfg.line_spacing)
     if meta.variant:
         para(doc, f"Вариант {meta.variant}", align=WD_ALIGN_PARAGRAPH.CENTER,
-             indent_cm=0, size=cfg.font_size, spacing=cfg.line_spacing)
+             indent_cm=0, size=COVER_DEFAULT_SIZE, spacing=cfg.line_spacing)
 
     for _ in range(4):
         para(doc, "", indent_cm=0, spacing=cfg.line_spacing)
@@ -1098,7 +1177,7 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
             p.paragraph_format.line_spacing = 1.0
             p.paragraph_format.alignment = aligns[c_idx]
             run = p.add_run(value)
-            set_run_font(run, size=cfg.font_size)
+            set_run_font(run, size=COVER_DEFAULT_SIZE)
             if c_idx == 1:
                 _set_cell_bottom_border(cell, sz=8)
 
@@ -1107,17 +1186,17 @@ def _add_title_page_manual(doc, meta: ReportMeta, cfg: StyleConfig | None = None
 
     if meta.completed_items:
         para(doc, f"Выполненные пункты: {meta.completed_items}",
-             align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0, size=cfg.font_size,
+             align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0, size=COVER_DEFAULT_SIZE,
              bold=True, spacing=cfg.line_spacing)
     if meta.submission_date:
         para(doc, f"Дата сдачи работы на проверку – {meta.submission_date}",
-             align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0, size=cfg.font_size,
+             align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0, size=COVER_DEFAULT_SIZE,
              bold=True, spacing=cfg.line_spacing)
     para(doc, "", indent_cm=0, spacing=cfg.line_spacing)
     para(doc, meta.city, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-         size=cfg.font_size, spacing=cfg.line_spacing)
+         size=COVER_DEFAULT_SIZE, spacing=cfg.line_spacing)
     para(doc, meta.year, align=WD_ALIGN_PARAGRAPH.CENTER, indent_cm=0,
-         size=cfg.font_size, spacing=cfg.line_spacing)
+         size=COVER_DEFAULT_SIZE, spacing=cfg.line_spacing)
     _page_break_tight(doc)
 
 
@@ -1335,7 +1414,7 @@ def report_summary(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None
     """Короткая сводка параметров файла – её показывают пользователю после сборки."""
     cfg = cfg or StyleConfig()
     figures = sum(1 for p in doc.paragraphs if p._p.findall(".//" + qn("w:drawing")))
-    return [
+    lines = [
         f"Шрифт {cfg.font_name} {cfg.font_size} пт, интервал {cfg.line_spacing:g}, "
         f"абзацный отступ {cfg.first_line_indent_cm:g} см",
         f"Поля L{cfg.margin_left_cm:g} / R{cfg.margin_right_cm:g} / "
@@ -1347,10 +1426,27 @@ def report_summary(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None
         f"Файлы: {Path(docx_path).name}"
         + (f" + {Path(pdf_path).name}" if pdf_path else ""),
     ]
+    if not has_goal(doc):
+        lines.append(
+            "ВНИМАНИЕ: «Цель работы» отсутствует. Раздел обязателен для ПР, "
+            "лабораторной, НИР и отчёта по практике – добавьте "
+            "goal_section(doc, \"<формулировка из задания>\")."
+        )
+    return lines
 
 
-def save_report(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None, quiet=False):
-    """Сохранить DOCX (и PDF) и напечатать сводку параметров для пользователя."""
+def save_report(doc, docx_path, pdf_path=None, cfg: StyleConfig | None = None, quiet=False,
+                require_goal=False):
+    """Сохранить DOCX (и PDF) и напечатать сводку параметров для пользователя.
+
+    ``require_goal=True`` не даёт сохранить отчёт без «Цель работы» (ValueError):
+    ПР и лабораторная без этого раздела не принимаются.
+    """
+    if require_goal and not has_goal(doc):
+        raise ValueError(
+            "Отчёт не сохранён: нет раздела «Цель работы». Возьмите формулировку из "
+            "задания и вызовите goal_section(doc, ...) – раздел нельзя терять."
+        )
     docx_path = Path(docx_path)
     docx_path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(docx_path))

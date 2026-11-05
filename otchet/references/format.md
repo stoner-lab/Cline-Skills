@@ -52,6 +52,12 @@ Chỗ giữ chỗ trong mẫu và giá trị thay thế:
 Quy tắc cố định của mẫu (không đổi khi điền):
 
 - Mọi dòng trên trang bìa: Times New Roman **14 pt**, căn giữa, giãn dòng 1,5.
+- **Cỡ chữ và font của bìa lấy từ бланк, không theo `cfg.font_size`**: bìa luôn là
+  14 pt, kể cả khi preset ГОСТ (12 pt) dùng cho phần nội dung. Trước đây
+  `_scale_cover_fonts()` ép cả bìa về `cfg.font_size`, nên preset 12 pt làm bìa
+  nhỏ và sai font – nay `_normalize_cover_fonts()` chỉ điền chỗ trống trong бланк
+  (`COVER_DEFAULT_SIZE = 14`), không đổi cỡ đã có. `validate_docx.py` so từng run
+  của bìa với `title_page_leti.docx` và báo FAIL khi lệch.
 - 4 dòng tên trường và dòng `Кафедра` in đậm; `ОТЧЕТ`, dòng `по ...`, `по дисциплине`,
   `Тема`, `Выполненные пункты`, `Дата сдачи` in đậm; `Вариант`, thành phố, năm để chữ thường.
 - Bảng chữ ký: 3 cột rộng bằng nhau (3118 twips ≈ 5,5 cm), chiều cao dòng tối thiểu
@@ -430,6 +436,8 @@ para(doc, "Текст приложения.")
 | Подпись рисунка | `Рисунок 1 – …` | `Рис. 1 – …` | `gost_config()` (`figure_label="Рисунок"`) |
 | Номер страницы | внизу по центру, без точки | то же | — |
 | Титульный лист | в нумерации, но номер не печатают | то же (`different_first_page`) | — |
+| Кегль титула | 14 пт из бланка | 14 пт из бланка | — (бланк один, `cfg.font_size` его не меняет) |
+| «Цель работы» | обязательный раздел | обязательный раздел | — (`goal_section()`, иначе FAIL в `validate_docx.py`) |
 | Приложения | `ПРИЛОЖЕНИЕ А`, статус, в содержании, сквозная нумерация | так же с `appendix()` | — |
 | Список источников | `Список использованных источников` | тот же заголовок по умолчанию | — |
 
