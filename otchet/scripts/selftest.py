@@ -226,6 +226,14 @@ def check_names():
     lines = [p.text.strip().lower() for p in title_doc.paragraphs]
     if sum(1 for line in lines if line.startswith("по дисциплине")) != 1:
         problems.append("строка «по дисциплине» на титуле печатается дважды")
+
+    # пустой список источников не должен создавать пустой раздел
+    try:
+        add_references(setup_document(), [])
+    except ValueError:
+        pass
+    else:
+        problems.append("add_references([]) не упал: пустой раздел источников недопустим")
     return problems
 
 
