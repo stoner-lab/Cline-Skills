@@ -157,6 +157,62 @@ Nếu đề bài không cho phép không hành động, phải ghi rõ trong bá
 - Trong text phải nhắc đến từng bảng/hình: `(таблица 3)`, `(рис. 2)`.
 - Trong phần phụ lục tiếp tục đánh số, trừ khi giảng viên yêu cầu riêng.
 
+### 2.7.1. Ảnh chụp quá trình làm bài: mặc định **CÓ**
+
+**Mặc định phải chụp ảnh những phần quan trọng trong quá trình làm bài và chèn vào
+báo cáo.** Đây là hành vi mặc định — không chờ user nhắc, không hỏi lại.
+
+Chỉ **không** làm khi:
+- user nói rõ («đừng chụp ảnh», «không cần ảnh», «chỉ cần chữ/code», «bỏ hình»);
+- đề bài / giảng viên cấm hình;
+- không chụp được (ứng dụng không mở, không có quyền, môi trường headless).
+
+Trong hai trường hợp đầu: làm theo yêu cầu và **không** thêm ảnh nào. Trong trường hợp
+thứ ba: ghi rõ trong báo cáo/câu trả lời là **không chụp được vì lý do gì** — tuyệt đối
+không bịa ảnh, không mô tả ảnh không tồn tại.
+
+**Chụp gì** (mỗi mốc quan trọng một ảnh, không chụp tràn lan):
+- kết quả chạy chương trình: console/terminal có output thật của bài;
+- cửa sổ công cụ ở trạng thái có kết quả: Arduino IDE (biên dịch/nạp thành công),
+  Octave/MATLAB, RStudio, Jupyter, IDE đang build;
+- đồ thị / biểu đồ / dashboard do bài tạo ra;
+- phần cứng: board, sơ đồ đấu dây, màn hình thiết bị (nếu bài có phần cứng);
+- lỗi trước và sau khi sửa — chỉ khi bài yêu cầu phân tích lỗi.
+
+**Không chụp**: listing code (code phải là text — xem 2.9), cửa sổ chat/agent, màn hình
+chứa thông tin cá nhân hoặc token/mật khẩu, ảnh không được dùng trong báo cáo.
+
+**Lưu ảnh**: `<thư mục bài>\images\NN_<mo-ta-ngan>.png` — `NN` là hai chữ số theo thứ tự
+xuất hiện trong báo cáo (`01_run_result.png`). Không để ảnh rời trên Desktop.
+
+**Cắt ảnh — bắt buộc**: ảnh chèn vào báo cáo chỉ được chứa **phần cần thiết**. Không có
+desktop, taskbar, thanh công cụ/menu không liên quan, cửa sổ khác, hay mảng trống lớn.
+- cách 1 (chụp kèm vùng cắt): `capture_window.ps1 -ProcessName Arduino -CropPercent "0.02,0.10,0.60,0.35" -Out ...`;
+- cách 2 (cắt sau khi chụp): xem ảnh, xác định vùng cần, rồi
+  `crop_image.ps1 -Path <anh> -CropPercent "x,y,w,h" -Out <anh-cat>`; toạ độ tuyệt đối thì
+  dùng `-Crop "x,y,w,h"` (pixel);
+- `crop_image.ps1 -AutoTrim` để tự cắt viền đồng màu khi ảnh có nhiều khoảng trắng/đen;
+- sau khi cắt **phải kiểm lại**: đọc lại file PNG, xem có thiếu chi tiết hay cắt cụt không;
+- cắt nhưng vẫn đủ ngữ cảnh: giữ tiêu đề cửa sổ/ô nhập nếu nó cần để hiểu kết quả.
+
+**Chèn vào DOCX**:
+- `add_picture_with_caption(doc, path, "Рис. N – <mô tả>", width_cm=15, cfg=cfg)`;
+- đánh số liên tục theo 2.7, tên hình **phía dưới**, căn giữa, không có dấu chấm cuối;
+- trong text phải có câu dẫn tới hình: «… (рис. 3)»;
+- ảnh phải đủ lớn để đọc được chi tiết (chữ trong ảnh khi in không nhỏ hơn ~10 pt).
+
+**Kỹ thuật chụp trên Windows**: dùng `scripts/capture_window.ps1` (chụp đúng cửa sổ ứng
+dụng, tự đưa cửa sổ lên trước, không chụp cả màn hình nếu không cần):
+```powershell
+& "<skill>\scripts\capture_window.ps1" -ProcessName Arduino -Out "$work\images\01_compile.png"
+& "<skill>\scripts\capture_window.ps1" -ProcessName cline-app -TitleMatch "Octave" -Out "..."
+& "<skill>\scripts\capture_window.ps1" -WorkArea -Out "$work\images\02_screen.png"   # khi cần cả màn hình
+```
+Nếu có browser tool (`browser_take_screenshot`) thì dùng nó cho phần web.
+
+**Báo cáo cuối** phải liệt kê: đã chụp ảnh nào, lưu ở đâu, ảnh nào được chèn thành
+«Рис. N».
+
 ### 2.8. Đọc file mẫu
 
 Chỉ dùng mẫu để học:
