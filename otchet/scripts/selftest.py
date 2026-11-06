@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 
 from docx_helpers import (PLACEHOLDER_RE, ReportMeta, add_references, add_table,
@@ -320,6 +321,27 @@ def check_cover_and_goal(tmp: Path):
         if "/" in label:
             problems.append(f"подпись роли с «/»: {label!r}")
 
+    # второй студент: его строка подписана как студент, а не ролью преподавателя
+    pair = ReportMeta(department="ИС", report_label="ОТЧЕТ", work_line="по заданию № 1",
+                      discipline="Дисциплина", topic="Тема", group="4395",
+                      student="Иванов Иван Иванович", teacher="Петров Пётр Петрович",
+                      second_student="Петрова Мария Сергеевна")
+    doc = setup_document()
+    add_title_page(doc, pair)
+    rows = [[cell.text.strip() for cell in row.cells] for row in doc.tables[0].rows]
+    if len(rows) != 3:
+        problems.append(f"титул с двумя студентами: строк {len(rows)}, ожидалось 3")
+    else:
+        want = pair.second_student_label + pair.group
+        if rows[1][0] != want:
+            problems.append(f"подпись строки второго студента {rows[1][0]!r}, "
+                            f"ожидалось {want!r}")
+        if "Петрова М.С." not in rows[1][2]:
+            problems.append(f"вторая строка – не второй студент: {rows[1]!r}")
+        if rows[2][0] != pair.teacher_label:
+            problems.append(f"подпись преподавателя {rows[2][0]!r}, "
+                            f"ожидалось {pair.teacher_label!r}")
+
     # пустая цель – ошибка, раздел нельзя «потерять»
     try:
         goal_section(setup_document(), "   ")
@@ -401,6 +423,35 @@ def check_word_export(tmp: Path):
     return problems
 
 
+def check_heading_indent():
+    """Три варианта заголовков: по центру, с отступа 1,25 см, вплотную к полю."""
+    from docx_helpers import StyleConfig
+
+    problems = []
+    cases = (
+        ("центр", StyleConfig(heading_center=True), None, None),
+        ("гост: отступ 1,25", StyleConfig(heading_center=False), 1.25, None),
+        ("форма: вплотную", StyleConfig(heading_center=False, heading_indent_cm=0),
+         0.0, None),
+    )
+    for label, cfg, want_cm, _ in cases:
+        doc = setup_document(cfg=cfg)
+        h = heading(doc, "1. Проверка", cfg=cfg)
+        got = h.paragraph_format.first_line_indent
+        got_cm = None if got is None else round(got.cm, 2)
+        if want_cm is None:
+            if got_cm not in (0, 0.0):
+                problems.append(f"заголовок по центру: отступ {got_cm} см, ожидался 0")
+            if h.paragraph_format.alignment != WD_ALIGN_PARAGRAPH.CENTER:
+                problems.append("заголовок по центру: выравнивание не CENTER")
+        else:
+            if got_cm != want_cm:
+                problems.append(f"заголовок ({label}): отступ {got_cm} см, ожидался {want_cm}")
+            if h.paragraph_format.alignment != WD_ALIGN_PARAGRAPH.LEFT:
+                problems.append(f"заголовок ({label}): выравнивание не LEFT")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", action="store_true", help="также собрать PDF через Word")
@@ -422,7 +473,7 @@ def main():
     docx_path = tmp / "selftest.docx"
     build(docx_path, args.pdf)
 
-    problems = check_cover_and_goal(tmp) + check_word_export(tmp) + check(docx_path)
+    problems = check_cover_and_goal(tmp) + check_word_export(tmp) + check_heading_indent() + check(docx_path)
     if args.pdf and not docx_path.with_suffix(".pdf").exists():
         problems.append("PDF не создан")
 

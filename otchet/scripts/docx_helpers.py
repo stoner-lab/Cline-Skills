@@ -65,6 +65,10 @@ class StyleConfig:
     table_header_size: int = 11
     # ЛЭТИ центрирует заголовки; ГОСТ 7.32-2017 (5.4.3) требует абзацный отступ.
     heading_center: bool = True
+    # Отступ первой строки заголовка при ``heading_center=False``:
+    # None – как у текста (``first_line_indent_cm``, ГОСТ), 0 – вплотную к полю
+    # (так набраны разделы в формах ЛЭТИ: «1 ЦЕЛЬ И ЗАДАЧИ ДИСЦИПЛИНЫ»).
+    heading_indent_cm: float | None = None
     # ГОСТ 7.32-2017 (6.4.3) ставит наименование таблицы слева, без отступа.
     table_caption_center: bool = True
     # Подпись рисунка: «Рис. 1» в ЛЭТИ, «Рисунок 1» по ГОСТ 7.32-2017 и в бланках.
@@ -351,8 +355,13 @@ def heading(doc, text, level=1, size=14, cfg: StyleConfig | None = None,
         page_break = False
     h = doc.add_heading(level=level)
     h.paragraph_format.page_break_before = bool(page_break)
-    h.paragraph_format.first_line_indent = (
-        Cm(0) if cfg.heading_center else Cm(cfg.first_line_indent_cm))
+    if cfg.heading_center:
+        indent_cm = 0.0
+    elif cfg.heading_indent_cm is not None:
+        indent_cm = float(cfg.heading_indent_cm)
+    else:
+        indent_cm = cfg.first_line_indent_cm
+    h.paragraph_format.first_line_indent = Cm(indent_cm)
     h.paragraph_format.alignment = (
         WD_ALIGN_PARAGRAPH.CENTER if cfg.heading_center else WD_ALIGN_PARAGRAPH.LEFT)
     r = h.add_run(text)
@@ -763,8 +772,10 @@ def _fill_title_from_template(doc, meta: "ReportMeta", tpl_path: Path,
             tr = copy.deepcopy(rows[1]._tr)
             rows[1]._tr.addprevious(tr)
             extra_row = _Row(tr, table)
-            _fill_label_cell(extra_row.cells[0], meta.second_student_label + str(meta.group),
-                             {"<группа>": str(meta.group)})
+            # Строка второго студента клонируется с уже подписанной строки
+            # преподавателя, поэтому её подпись задаётся явно: иначе рядом с
+            # фамилией студента печатается роль преподавателя («Преподаватель»).
+            _set_cell_text(extra_row.cells[0], meta.second_student_label + str(meta.group))
             _set_cell_text(extra_row.cells[2], short_name(meta.second_student))
 
     # Необязательные строки: в шаблоне их нет, поэтому добавляем сами, когда в

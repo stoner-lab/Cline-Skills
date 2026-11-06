@@ -122,6 +122,19 @@ Quy tắc cố định của mẫu (không đổi khi điền):
   а не по центру. Расхождение с ЛЭТИ; переключается пресетом:
   `cfg = gost_config()` → `heading(doc, "1. Раздел", cfg=cfg)`. Методичка
   кафедры важнее, поэтому по умолчанию остаётся центрирование.
+- **Ba kiểu căn heading** (chọn theo mẫu giáo viên gửi), tất cả bằng `heading()`:
+
+  | Kiểu | Cấu hình | Trông như |
+  |---|---|---|
+  | căn giữa (mặc định ЛЭТИ) | `leti_form_config()` / `heading_center=True` | heading ở giữa dòng |
+  | thụt 1,25 cm (ГОСТ 7.32) | `gost_config()` / `heading_center=False` | heading thẳng hàng chữ cái đầu của đoạn văn |
+  | **sát lề, không thụt** | `StyleConfig(heading_center=False, heading_indent_cm=0)` | heading bắt đầu đúng mép trái (30 mm) |
+
+  Kiểu thứ ba là cách các **biểu mẫu ЛЭТИ** (РПД, методичка) đánh số mục kiểu
+  `1 ЦЕЛЬ И ЗАДАЧИ ДИСЦИПЛИНЫ`: in hoa, đậm, sát lề. Nếu đề/giáo viên yêu cầu
+  đúng như mẫu đó thì dùng `heading_indent_cm=0`; tiêu đề cấu trúc
+  (`СОДЕРЖАНИЕ`, `ВВЕДЕНИЕ`) theo mẫu thường **căn giữa** – truyền
+  `heading(..., cfg=центр)` cho riêng các mục đó.
 
 ## 5. Bảng
 
@@ -442,6 +455,7 @@ para(doc, "Текст приложения.")
 | Шрифт | Times New Roman | Times New Roman | — |
 | Кегль | 12 пт | 14 пт | `gost_config()` |
 | Заголовки | с абзацного отступа | по центру | `gost_config()` (`heading_center=False`) |
+| Заголовок вплотную к полю | — | — | `StyleConfig(heading_center=False, heading_indent_cm=0)` – так набраны разделы в формах ЛЭТИ (РПД) |
 | Наименование таблицы | слева, без отступа | по центру | `gost_config()` или `add_table(..., caption_align=WD_ALIGN_PARAGRAPH.LEFT)` |
 | Подпись рисунка | `Рисунок 1 – …` | `Рис. 1 – …` | `gost_config()` (`figure_label="Рисунок"`) |
 | Номер страницы | внизу по центру, без точки | то же | — |

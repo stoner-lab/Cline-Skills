@@ -367,6 +367,18 @@ Mỗi **heading lớn** (`1.`, `2.`, `ЗАКЛЮЧЕНИЕ`, Источники,
 trên trang của Цель работы (code tự xử lý: heading số đầu tiên không ngắt). Từ
 `2.` trở đi mới sang trang mới. Muốn ép khác thì truyền `page_break=True/False`.
 
+**Cách căn heading – 3 kiểu, chọn theo mẫu giáo viên gửi:**
+
+| Kiểu | Cấu hình | Dùng khi |
+|---|---|---|
+| căn giữa, đậm 14 | `leti_form_config()` (mặc định) | методичка ЛЭТИ yêu cầu «по центру» |
+| thụt đầu dòng 1,25 cm, căn trái | `gost_config()` hoặc `heading_center=False` | ГОСТ 7.32-2017 §5.4.3 |
+| **sát lề trái 30 mm, không thụt** | `StyleConfig(heading_center=False, heading_indent_cm=0)` | biểu mẫu ЛЭТИ kiểu РПД: `1 ЦЕЛЬ И ЗАДАЧИ` in hoa sát lề |
+
+Nếu đề/giáo viên đưa mẫu có heading **sát lề** (như РПД) thì dùng kiểu thứ ba, còn
+các tiêu đề cấu trúc (`СОДЕРЖАНИЕ`, `ВВЕДЕНИЕ`, `ЗАКЛЮЧЕНИЕ`) theo mẫu thường vẫn
+**căn giữa** – truyền `cfg` căn giữa cho riêng các mục đó.
+
 ⚠️ **«Цель работы» – bắt buộc, không phải tuỳ chọn.** Với ПР, лабораторная, НИР và
 отчёт по практике раздел входит в структуру и удалять его нельзя: không bỏ đi vì
 «báo cáo ngắn», không đổi tên thành «Задачи», không gộp vào «Постановка задачи».
