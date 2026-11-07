@@ -1,197 +1,61 @@
 # Cline Skills
 
-A collection of [Cline](https://cline.bot) skills, adapted from Anthropic's
-[anthropics/skills](https://github.com/anthropics/skills), from
-[pbakaus/impeccable](https://github.com/pbakaus/impeccable),
+A collection of AI agent skills, adapted for **Cline on Windows** from several platforms:
+Anthropic's [anthropics/skills](https://github.com/anthropics/skills),
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills),
-[iart-ai/manim-skills](https://github.com/iart-ai/manim-skills) and
-[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), plus two project-specific
-skills (`otchet`, `skill-creator`).
+[pbakaus/impeccable](https://github.com/pbakaus/impeccable),
+[iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
+[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) and
+[tt-a1i/archify](https://github.com/tt-a1i/archify), plus a few skills written here.
 
-Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and
-optional `scripts/`, `references/`, `assets/`. Copy a folder into
-`C:\Users\<user>\.cline\skills\` and restart Cline (or start a new task) so the
-skills list is reloaded. Invoke with `/skill-name`, or just describe the job: the
-`description` of each skill lists Vietnamese, Russian and English trigger phrases.
+Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and optional
+`scripts/`, `references/`, `assets/`. Copy a folder into `C:\Users\<user>\.cline\skills\`
+and restart Cline, or start a new task, so the skill list reloads. Call a skill by name or
+just describe the job: the `description` carries Vietnamese, Russian and English triggers.
+
+**Languages:** [English](README.md) | [Русский](README.ru.md) | [Tiếng Việt](README.vi.md)
 
 ## Skills
 
 | Skill | What it does | Origin |
 |---|---|---|
-| `otchet` | Russian academic reports (ПР, лабораторная, реферат, курсовая): LETI title page, Times New Roman 14, captions, DOCX plus PDF, Vietnamese and UTF-8 rules | this repo |
-| `skill-creator` | Build, test, benchmark and package new Cline skills | adapted from anthropics/skills |
-| `impeccable` | Frontend design direction, audit, critique and rewrite with a full playbook library and a design detector | adapted from pbakaus/impeccable 4.8.0 |
-| `design-taste-frontend` | Anti-slop company sites at the figma.com and x.ai bar: one section per screen, equal edges, real photographs and product UI, shader effects only on tech, gaming and software pages, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill 2.5.0 |
+| `otchet` | Russian academic reports (ПР, лабораторная, реферат, курсовая): LETI title page, Times New Roman 14, captions, DOCX and PDF rules | this repo |
+| `injection-scan` | Offline prompt-injection scanner for untrusted text and documents (docx, pdf, pptx, xlsx, zip), exit codes 0 clean, 1 review or unscanned, 2 block | this repo |
+| `archify` | Turn an idea, plan, Mermaid source or codebase into a validated standalone HTML diagram (architecture, workflow, sequence, dataflow, lifecycle, ERD, class, tree, timeline, waterfall) or a one-page explainer | adapted from tt-a1i/archify |
+| `skill-creator` | Build, test, benchmark and package new skills | adapted from anthropics/skills |
+| `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
+| `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `frontend-design` | Visual design guidance so a UI does not look templated | adapted from anthropics/skills |
 | `docx` | Create, read and edit Word documents | adapted from anthropics/skills |
 | `xlsx` | Create, read, edit and clean spreadsheets | adapted from anthropics/skills |
 | `pptx` | Create, read and edit presentations | adapted from anthropics/skills |
 | `pdf` | Read, extract, merge, split, fill and create PDFs | adapted from anthropics/skills |
-| `manim` | Math and physics animations in Python with Manim CE: animated equations, plotted functions, geometric proofs, 3D scenes, rendered to MP4/GIF | adapted from iart-ai/manim-skills |
+| `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |
 | `mcp-builder` | Build MCP servers in Python or Node | adapted from anthropics/skills |
-| `git-workflow-and-versioning` | Branching, atomic commits, commit messages, PRs, semantic versioning and changelogs | adapted from addyosmani/agent-skills |
-| `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase understandable | adapted from addyosmani/agent-skills |
+| `git-workflow-and-versioning` | Branching, atomic commits, commit messages, pull requests, semantic versioning | adapted from addyosmani/agent-skills |
+| `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase readable | adapted from addyosmani/agent-skills |
 | `code-review-and-quality` | Multi-axis code review before merging: correctness, design, errors, tests, security | adapted from addyosmani/agent-skills |
 
-## What "adapted to Cline" means
+## What "adapted" means
 
-Anthropic's skills assume the Claude runtime: `view` / `create_file` / `str_replace` /
-`bash_tool` tools, subagents, `claude -p`, LibreOffice, `pandoc`, `unzip`, `/mnt/...` paths.
-Each adapted skill now opens with a **Cline runtime notes** section that:
+Each adapted skill opens with a **Cline runtime notes** section: tool names mapped to Cline
+(`read_files`, `editor`, `run_commands`, `search_codebase`), the real skill directory and how
+relative paths resolve from it, what is installed on this machine, PowerShell instead of Bash,
+no subagents, and Vietnamese plus Russian trigger phrases in the `description`.
 
-- maps every tool name to the Cline equivalent (`read_files`, `editor`, `run_commands`,
-  `search_codebase`, Playwright MCP for the browser);
-- states the real skill directory and resolves relative paths from it;
-- lists what is installed (python-docx, python-pptx, openpyxl, pypdf, pdfplumber,
-  reportlab, lxml, pypdfium2, PyYAML) and what is missing (LibreOffice, pandoc,
-  poppler, Tesseract);
-- replaces Bash-only helpers with PowerShell equivalents and Word COM for PDF export;
-- removes the subagent dependency (work runs inline) and keeps UTF-8 everywhere;
-- adds Vietnamese, Russian and English trigger phrases to the `description`, because
-  Cline picks a skill from the metadata alone.
-
-Details per skill: `references/cline-adaptation.md` in `skill-creator` and
-`impeccable`, and the notes section inside every other `SKILL.md`.
+Adaptation is reproducible, not hand-edited: `upstream.json` pins the upstream commit of every
+skill, `tools/adapt_config.json` holds the per-skill description, notes file, replacements and
+files to keep, `tools/notes/*.md` holds the Cline notes, and `tools/sync_upstream.py`
+(`check`, `apply`, `status`, `add`) regenerates `SKILL.md` from those inputs.
 
 ## Requirements
 
-- Cline in VS Code (skills live in `~/.cline/skills`).
-- Python 3.11+ with: `python-docx`, `python-pptx`, `openpyxl`, `pypdf`, `pdfplumber`,
-  `reportlab`, `lxml`, `pypdfium2`, `PyYAML`:
-  `pip install python-docx python-pptx openpyxl pypdf pdfplumber reportlab lxml pypdfium2 pyyaml`
-- Optional: Node 20+ (`docx` npm package for the docx skill, MCP SDK for mcp-builder),
-  Microsoft Word for DOCX to PDF export, Playwright MCP for visual checks.
-- For `design-taste-frontend`: Node 22+ and Chrome, Edge or Chromium. The skill ships every
-  script it needs (no npm packages, headless Chrome driven over `127.0.0.1`); ffmpeg is
-  optional. Run `node design-taste-frontend\scripts\check_env.mjs` first - it prints what is
-  missing and the build waits for your yes before anything is installed.
-- For `manim`: Manim CE (`python -m pip install manim`), `ffmpeg` and `ffprobe` on PATH,
-  and MiKTeX (only for `Tex`/`MathTex`). Run `manim\scripts\manim-env-check.ps1` to see
-  what is missing before blaming the scene code.
+- Cline in VS Code or the Cline Desktop app; skills live in `~/.cline/skills`.
+- Node 18 or newer for `archify` and `design-taste-frontend`.
+- Python 3.11 or newer with `python-docx`, `python-pptx`, `openpyxl`, `pypdf`, `reportlab`,
+  `lxml` for `docx`, `pptx`, `xlsx`, `pdf`, `otchet`.
 
-## Typography rules baked into the skills
+## License
 
-Text that a person reads uses the en dash `–` with spaces, never the em dash `—`, never
-`-` as a sentence dash, no `≻`, `→`, `•`, `…`, no curly quotes. Math symbols
-(`≤`, `≥`, `±`, `×`, `≈`, `√`, `σ`, `χ²`, `α`) stay, because the course needs them.
-
-## Keeping up with upstream
-
-Thirteen of the fourteen skills are forks; only `otchet` is native to this repository.
-Their `SKILL.md` is **generated**, so an upstream update is re-applied mechanically
-instead of merged by hand.
-
-| Strategy | Meaning | Skills |
-|---|---|---|
-| `adapt` | `SKILL.md` is rebuilt from upstream plus `tools/notes/<skill>.md`; other files are never overwritten or deleted | pdf, docx, pptx, xlsx, frontend-design, design-taste-frontend, mcp-builder, git-workflow-and-versioning, documentation-and-adrs, code-review-and-quality |
-| `manual` | `SKILL.md` is hand-written; sync only reports that upstream moved, you merge yourself | skill-creator, impeccable, manim |
-| `own` | this repository is the source of truth; sync skips it | otchet |
-
-**Schedule.** GitHub Actions runs `tools/sync_upstream.py check` every day at
-06:00 UTC (13:00 Vietnam, 09:00 Moscow). When an upstream commit changed, the job runs
-`apply --all`, `quick_validate.py` and opens **one** pull request on the
-`sync/upstream` branch. The branch is reused, so a week of updates still means one PR
-to review. Nothing merges automatically.
-
-**Token cost.** `check` and `apply` are plain Python: no model tokens. Tokens are spent
-only when a human or an agent reads the diff, which happens once per pull request, not
-once per cron run.
-
-Local use:
-
-```powershell
-$env:GH_TOKEN = # a GitHub token with public read access - optional now
-python tools\sync_upstream.py check              # 0 = up to date, 1 = something changed
-python tools\sync_upstream.py apply pdf --diff   # regenerate one skill and show the diff
-python tools\sync_upstream.py status             # last synced commit per skill
-```
-
-**No token needed.** Without `GH_TOKEN` the script reads upstream HEAD with
-`git ls-remote` and the upstream `SKILL.md` from `raw.githubusercontent.com`, so a
-scheduled local run works on a machine with no GitHub credentials. The token only
-raises the API rate limit.
-
-### The daily local run
-
-The workflow above opens (and reuses) exactly one pull request on `sync/upstream`.
-A Cline schedule, `daily-upstream-sync-cline-skills`, runs every day at 09:30
-Europe/Moscow (30 minutes after the workflow) and finishes the job:
-
-1. `git pull --ff-only origin main`;
-2. merges `origin/sync/upstream` into `main` when it is ahead (conflict resolution:
-   keep the local, newer `upstream.json`), which makes GitHub mark the bot's PR
-   **Merged** without any token or manual click;
-3. runs `sync_upstream.py check`; on `rc=1` runs `apply --all`, validates the
-   regenerated `adapt` skills with `quick_validate.py` and flags upstream steps that
-   only exist on Linux (`pandoc`, `soffice`, `pdftoppm`);
-4. commits `sync: upstream updates (YYYY-MM-DD)` and pushes only when something
-   actually changed; it never touches `manual` skills (`skill-creator`,
-   `impeccable`, `manim`) - those are reported as "needs hand review".
-
-Bản Việt: bot mở PR mỗi ngày (nhánh `sync/upstream` được tái sử dụng, chỉ 1 PR);
-job Cline chạy 09:30 giờ Moskva sẽ merge PR đó, cập nhật skill nếu upstream nhích,
-commit và push. Skill `manual` chỉ được báo, không tự ghi đè. Không cần token.
-
-Adding a skill from another repository:
-
-```powershell
-python tools\sync_upstream.py add my-skill --repo owner/repo --path skills/my-skill
-# write tools/notes/my-skill.md, set description (with Vietnamese triggers) and license
-python tools\sync_upstream.py apply my-skill
-```
-
-Rules: never edit a generated `SKILL.md` by hand. Change `tools/notes/<skill>.md` or
-`tools/adapt_config.json` and regenerate. `apply` preserves `LICENSE*`, `CLINE-*.md` and
-`references/cline-adaptation.md`; everything else in an `adapt` skill comes from upstream.
-
-Bản Việt: 10 skill `adapt` tự cập nhật từ upstream mỗi ngày và gộp vào một PR trên nhánh
-`sync/upstream`; `skill-creator`, `impeccable` và `manim` sửa tay nên chỉ được báo; `otchet`
-là nguồn gốc nên bỏ qua. Bước check/apply không tốn token.
-
-## Metadata hygiene
-
-Files handed to a person must not advertise the tool, library or model that produced
-them. Every skill that writes a deliverable ships `scripts/strip_metadata.py` (identical
-copy, also kept once in `tools/strip_metadata.py`):
-
-```powershell
-python scripts\strip_metadata.py report.docx report.pdf clip.mp4   # clean in place
-python scripts\strip_metadata.py --check report.docx report.pdf    # report, exit 1 if dirty
-python scripts\strip_metadata.py --author "Ivan Ivanov" --title "Otchet" report.docx
-```
-
-What it removes:
-
-| Format | Fingerprints left by the library | After cleaning |
-|---|---|---|
-| `.docx` `.xlsx` `.pptx` | `creator: python-docx`, `description: generated by python-docx`, `lastModifiedBy: Steve Canny`, `creator: openpyxl`, `Application: Microsoft Excel Compatible / Openpyxl 3.1.5`, fake 2013 template dates, `docProps/custom.xml`, packaged thumbnail | neutral `core.xml` (title, optional author, real created/modified), producer fields removed from `app.xml`, no custom part, no thumbnail |
-| `.pdf` | `Producer: ReportLab PDF Library`, `Creator: anonymous`, `Title: untitled`, `Subject: unspecified`, XMP stream | only `/CreationDate` and `/ModDate`, no XMP |
-| `.png` `.jpg` | EXIF, XMP, text chunks (`Software`, `Author`) | pixels re-encoded, ICC profile kept |
-| `.mp4` `.mov` | `encoder=Lavf62.13.101`, `comment: Rendered with Manim Community v0.22.1` | remuxed with `-map_metadata -1` and bitexact flags |
-
-Rules: clean **before** delivering, never after a human edited the file; run `--check`
-in the same breath as the deliverable check; if an author is required, pass the real
-name (`--author`) or leave the field empty, never a tool or model name.
-
-The same rule covers source files and the commit trail: no "generated with ..." or
-"made by ..." lines in a document, a code comment or a commit trailer, and no
-`Co-Authored-By` trailer naming an assistant. Attribution to the upstream project a
-skill is derived from (licence header, README credit) stays, because the MIT licence
-requires it - that names the project, not the generator.
-
-Bản Việt: mọi file giao cho người khác không được để lại dấu vết công cụ trong
-metadata. Chạy `python scripts\strip_metadata.py <file>` trước khi giao và xác nhận
-bằng `--check`; tên tác giả chỉ ghi bằng tên thật qua `--author`, không ghi tên tool
-hay tên AI.
-
-## Licensing
-
-Every skill keeps the license of its origin: `otchet` and `skill-creator` are this
-project's own work, `impeccable` is Apache 2.0 (see `impeccable/LICENSE`),
-`design-taste-frontend` is MIT, Copyright (c) 2026 Leonxlnx (see
-`design-taste-frontend/LICENSE`), and the Anthropic-derived skills carry their
-`LICENSE.txt` with the upstream terms.
-
-Bản Việt: repo gom 14 skill cho Cline. Cài bằng cách copy thư mục vào
-`C:\Users\<user>\.cline\skills`, khởi động lại Cline, gọi `/tên-skill` hoặc mô tả
-việc cần làm bằng tiếng Việt.
+Every skill keeps the license of its upstream project; see the `LICENSE` file inside the
+folder. Skills written in this repository are MIT unless stated otherwise.
