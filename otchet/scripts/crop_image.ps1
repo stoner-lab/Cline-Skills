@@ -58,7 +58,10 @@ param(
 $ErrorActionPreference = 'Stop'
 
 Add-Type -AssemblyName System.Drawing
-Add-Type -ReferencedAssemblies System.Drawing @'
+# Windows PowerShell 5.1 exposes System.Drawing; PowerShell 7 needs System.Drawing.Common
+# plus System.Drawing.Primitives (Rectangle lives there).
+$drawingRef = if ($PSVersionTable.PSEdition -eq 'Core') { @('System.Drawing.Common', 'System.Drawing.Primitives') } else { @('System.Drawing') }
+Add-Type -ReferencedAssemblies $drawingRef @'
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
