@@ -30,7 +30,7 @@ changed by this file:
 
 | Skill directory | Upstream | License |
 |---|---|---|
-| `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder`, `skill-creator` | anthropics/skills | "All rights reserved" - see `LICENSE.txt` in each directory. Kept private: no reproduction, derivative works or distribution |
+| `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder`, `skill-creator` | anthropics/skills @ `2c5958e` | Apache-2.0 (see `LICENSE.txt` in each directory). Modified for Cline: `SKILL.md` rewritten, `scripts/strip_metadata.py` added - marked per Apache-2.0 section 4(b) |
 | `code-review-and-quality`, `documentation-and-adrs`, `git-workflow-and-versioning` | addyosmani/agent-skills | MIT |
 | `design-taste-frontend` | Leonxlnx/taste-skill | MIT |
 | `manim` | iart-ai/manim-skills | MIT |

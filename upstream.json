@@ -4,43 +4,43 @@
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/docx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "pdf": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pdf",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "pptx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pptx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "xlsx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/xlsx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "frontend-design": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/frontend-design",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "mcp-builder": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/mcp-builder",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-07"
     },
     "skill-creator": {
       "repo": "anthropics/skills",
