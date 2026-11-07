@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use these skills, cite this repository."
+title: "Cline-Skills: agent skills adapted for Cline"
+type: software
+authors:
+  - family-names: "Stoner"
+    given-names: "Duy"
+    alias: stoner-lab
+repository-code: "https://github.com/stoner-lab/Cline-Skills"
+url: "https://github.com/stoner-lab/Cline-Skills"
+license: MIT
+date-released: "2026-11-07"
+abstract: >-
+  A collection of agent skills adapted for Cline on Windows: report writing for
+  Russian university coursework, offline prompt-injection scanning, diagram
+  generation, and document, spreadsheet and presentation tooling. Skills are
+  vendored from several upstream projects at pinned commits; see upstream.json.
+keywords:
+  - agent skills
+  - cline
+  - powershell
+  - document automation
+  - prompt injection

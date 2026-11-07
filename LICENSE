@@ -1,0 +1,38 @@
+MIT License
+
+Copyright (c) 2026 stoner-lab
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+This MIT license covers only the files authored in this repository
+(`README*.md`, `SECURITY.md`, `tools/`, `otchet/`, `injection-scan/`).
+
+Skills vendored from other projects keep their own licenses, which are not
+changed by this file:
+
+| Skill directory | Upstream | License |
+|---|---|---|
+| `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder`, `skill-creator` | anthropics/skills | "All rights reserved" - see `LICENSE.txt` in each directory |
+| `code-review-and-quality`, `documentation-and-adrs`, `git-workflow-and-versioning` | addyosmani/agent-skills | MIT |
+| `design-taste-frontend` | Leonxlnx/taste-skill | MIT |
+| `manim` | iart-ai/manim-skills | MIT |
+| `impeccable` | pbakaus/impeccable | Apache-2.0 |
+| `archify` | tt-a1i/archify | Apache-2.0 (plus `LICENSE-MIT` and `NOTICE`) |

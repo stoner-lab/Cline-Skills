@@ -1,0 +1,4 @@
+# Default owner for everything in this repository.
+# Keep this account as owner of vendored skills too: upstream fixes are applied
+# here by the maintainer, not by the upstream authors.
+*       @stoner-lab

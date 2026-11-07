@@ -57,5 +57,12 @@ files to keep, `tools/notes/*.md` holds the Cline notes, and `tools/sync_upstrea
 
 ## License
 
-Every skill keeps the license of its upstream project; see the `LICENSE` file inside the
-folder. Skills written in this repository are MIT unless stated otherwise.
+Repository-level terms are in [`LICENSE`](LICENSE): the files written here are MIT.
+Skills taken from other projects keep their own license, and those terms still apply
+to this copy.
+
+> Note: the skills vendored from `anthropics/skills` (`docx`, `pdf`, `pptx`, `xlsx`,
+> `frontend-design`, `mcp-builder`, `skill-creator`) ship a `LICENSE.txt` that
+> reserves all rights and forbids redistributing the materials. See that file
+> before sharing or re-publishing this repository.
+

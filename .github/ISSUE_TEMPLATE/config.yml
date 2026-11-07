@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security issue
+    url: https://github.com/stoner-lab/Cline-Skills/security/policy
+    about: Do not open a public issue for vulnerabilities. Read the policy first, then use the Security tab.
+  - name: Security policy
+    url: https://github.com/stoner-lab/Cline-Skills/blob/main/.github/SECURITY.md
+    about: What is in scope, what to include in a report, and how long a reply takes.

@@ -58,5 +58,11 @@ Việc adapt là tái lập được, không sửa tay: `upstream.json` ghim com
 
 ## Giấy phép
 
-Mỗi skill giữ giấy phép của nguồn gốc; xem file `LICENSE` trong thư mục skill. Các skill viết
-tại repo này dùng MIT nếu không ghi khác.
+Điều khoản cấp repo nằm ở [`LICENSE`](LICENSE): các file viết tại đây dùng MIT.
+Skill lấy từ dự án khác giữ nguyên giấy phép của họ, và điều khoản đó vẫn áp dụng cho
+bản copy này.
+
+> Lưu ý: các skill lấy từ `anthropics/skills` (`docx`, `pdf`, `pptx`, `xlsx`,
+> `frontend-design`, `mcp-builder`, `skill-creator`) có `LICENSE.txt` giữ toàn bộ quyền
+> và **cấm phân phối lại** tài liệu. Đọc file đó trước khi chia sẻ hay công bố lại repo
+> này.
