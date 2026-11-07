@@ -46,11 +46,14 @@ jobs:
           body: |
             Automatic upstream sync.
 
-            - `check` found new commits in anthropics/skills, addyosmani/agent-skills,
-              pbakaus/impeccable or iart-ai/manim-skills.
+            - `check` found new commits in addyosmani/agent-skills, pbakaus/impeccable,
+              iart-ai/manim-skills, Leonxlnx/taste-skill or tt-a1i/archify.
             - `apply --all` regenerated the `adapt` skills and ran `quick_validate.py`.
-            - `manual` skills (skill-creator, impeccable, manim) and `own` (otchet) are not touched.
+            - `manual` skills (impeccable, manim) and `own` skills (otchet, injection-scan)
+              are not touched.
+            - Skills from `anthropics/skills` are not vendored in this public repository,
+              so they are not synced here.
 
-            Review the diff, especially docx / pptx / xlsx / pdf: upstream changes there
-            often add shell steps (`pandoc`, `soffice`, `pdftoppm`) that do not exist on Windows.
-            Merge when it looks right; the branch is reused next time, so there is only one PR.
+            Review the diff for shell steps that do not exist on Windows (`pandoc`,
+            `soffice`, `pdftoppm`, `libreoffice`). Merge when it looks right; the branch
+            is reused next time, so there is only one PR.

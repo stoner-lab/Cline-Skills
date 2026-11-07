@@ -84,13 +84,18 @@ targets, not contractual guarantees.
 
 Most skills are vendored copies of external projects, pinned in `upstream.json`:
 
-`anthropics/skills`, `addyosmani/agent-skills`, `pbakaus/impeccable`,
-`Leonxlnx/taste-skill`, `iart-ai/manim-skills`, `tt-a1i/archify`.
+`addyosmani/agent-skills`, `pbakaus/impeccable`, `Leonxlnx/taste-skill`,
+`iart-ai/manim-skills`, `tt-a1i/archify`.
 
-Security fixes for those files belong upstream; this repository only re-syncs them.
+Skills from `anthropics/skills` are **not** vendored here: their license forbids
+redistribution, so they are kept in a private repository. Do not report issues in
+those files against this repository.
+
+Security fixes for vendored files belong upstream; this repository only re-syncs them.
 The exceptions written here are `otchet`, `injection-scan` and the `tools/` scripts.
 If a vendored file inherits a serious bug, we will patch or drop it locally while
-the upstream fix is pending, and say so in the commit message.
+the upstream fix is pending, and say so in the commit message — the `archify`
+lockfile carries exactly such a patch (`fast-uri`).
 
 ## Reporting secrets
 

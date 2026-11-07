@@ -1,0 +1,30 @@
+version: 2
+
+updates:
+  # archify ships a package.json and package-lock.json (dev dependencies only).
+  - package-ecosystem: npm
+    directory: /archify
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(archify)"
+    labels:
+      - dependencies
+
+  # Workflows use actions/checkout, actions/setup-python and
+  # peter-evans/create-pull-request; keep the pinning current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "deps(actions)"
+    labels:
+      - dependencies
+
+  # Python skills declare no requirements file; they use the system interpreter
+  # (python-docx, python-pptx, openpyxl, pypdf, PyMuPDF). Add a pip entry here if
+  # one ever appears, for example injection-scan/requirements.txt.

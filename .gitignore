@@ -5,3 +5,11 @@ __pycache__/
 *.skill
 Thumbs.db
 tools/__pycache__/
+
+# Node dependencies (only needed for the archify build scripts, never committed)
+node_modules/
+archify/node_modules/
+
+# Local scratch
+*.log
+
