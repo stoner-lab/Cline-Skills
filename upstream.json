@@ -90,6 +90,13 @@
       "path": "skills/manim",
       "sha": "a15833c44de5108a3ee68f178a1fca126aa7c6d8",
       "checked_at": "2026-11-06"
+    },
+    "archify": {
+      "repo": "tt-a1i/archify",
+      "ref": "main",
+      "path": "archify",
+      "sha": "a4065941f12be7967436261d9934784e381d423c",
+      "checked_at": "2026-11-07"
     }
   }
 }
