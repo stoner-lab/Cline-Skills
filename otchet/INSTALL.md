@@ -15,32 +15,30 @@ python -m pip install python-docx pypdfium2
 
 ## Option 1: global Cline skill
 
-Clone the repository directly into the global skill folder:
+The skill is the `otchet` folder inside the Cline-Skills repository. Clone only that
+folder and copy it to the global skill directory:
 
 ```powershell
-git clone https://github.com/stoner-lab/Otchet.git "$HOME\.cline\skills\otchet"
+git clone --depth 1 --filter=blob:none --sparse https://github.com/stoner-lab/Cline-Skills.git "$env:TEMP\cline-skills"
+git -C "$env:TEMP\cline-skills" sparse-checkout set otchet
+Copy-Item -LiteralPath "$env:TEMP\cline-skills\otchet" -Destination "$HOME\.cline\skills\otchet" -Recurse
 ```
 
-Cline also scans `%USERPROFILE%\.agents\skills`, so either global location works.
-
-If you downloaded a ZIP instead, copy/rename its folder to `otchet`:
+Cline also scans `%USERPROFILE%\.agents\skills`, so either global location works:
 
 ```powershell
-Copy-Item -Recurse .\Otchet "$HOME\.cline\skills\otchet"
+Copy-Item -LiteralPath "$env:TEMP\cline-skills\otchet" -Destination "$HOME\.agents\skills\otchet" -Recurse
 ```
+
+If you downloaded a ZIP instead, extract it and copy the `otchet` folder to the same place.
 
 ## Option 2: workspace skill
 
-Clone the repository into the project:
-
-```powershell
-git clone https://github.com/stoner-lab/Otchet.git ".agents\skills\otchet"
-```
-
-or:
+Copy the same folder into the project:
 
 ```text
 <project>\.cline\skills\otchet
+<project>\.agents\skills\otchet
 ```
 
 Cline scans both workspace locations.
