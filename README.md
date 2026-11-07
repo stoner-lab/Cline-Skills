@@ -22,6 +22,13 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `otchet` | Russian academic reports (ПР, лабораторная, реферат, курсовая): LETI title page, Times New Roman 14, captions, DOCX and PDF rules | this repo |
 | `injection-scan` | Offline prompt-injection scanner for untrusted text and documents (docx, pdf, pptx, xlsx, zip), exit codes 0 clean, 1 review or unscanned, 2 block | this repo |
 | `archify` | Turn an idea, plan, Mermaid source or codebase into a validated standalone HTML diagram (architecture, workflow, sequence, dataflow, lifecycle, ERD, class, tree, timeline, waterfall) or a one-page explainer | adapted from tt-a1i/archify |
+| `docx` | Create, read and edit Word documents, including tables and styles | adapted from upstream (see `LICENSE`) |
+| `pdf` | Read, extract text and tables, merge, split, rotate, watermark, fill forms, encrypt, OCR | adapted from upstream (see `LICENSE`) |
+| `pptx` | Create, read and edit presentations | adapted from upstream (see `LICENSE`) |
+| `xlsx` | Create, read, edit and clean spreadsheets | adapted from upstream (see `LICENSE`) |
+| `frontend-design` | Visual design guidance so a UI does not look templated | adapted from upstream (see `LICENSE`) |
+| `mcp-builder` | Build MCP servers in Python or Node | adapted from upstream (see `LICENSE`) |
+| `skill-creator` | Build, test, benchmark and package new skills | adapted from upstream (see `LICENSE`) |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |
@@ -46,7 +53,7 @@ files to keep, `tools/notes/*.md` holds the Cline notes, and `tools/sync_upstrea
 - Cline in VS Code or the Cline Desktop app; skills live in `~/.cline/skills`.
 - Node 18 or newer for `archify` and `design-taste-frontend`.
 - Python 3.11 or newer with `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
-  `reportlab`, `lxml` for `otchet` and `injection-scan`.
+  `reportlab`, `lxml` for `docx`, `pptx`, `xlsx`, `pdf`, `otchet` and `injection-scan`.
 
 ## License
 

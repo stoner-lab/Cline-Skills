@@ -23,6 +23,13 @@ và tiếng Anh.
 | `otchet` | Báo cáo học tập tiếng Nga (ПР, лабораторная, реферат, курсовая): trang bìa LETI, Times New Roman 14, chú thích hình bảng, quy tắc DOCX và PDF | repo này |
 | `injection-scan` | Quét prompt injection offline cho văn bản và tài liệu không tin cậy (docx, pdf, pptx, xlsx, zip), exit code 0 sạch, 1 cần xem hoặc chưa quét, 2 chặn | repo này |
 | `archify` | Biến ý tưởng, kế hoạch, Mermaid hoặc codebase thành sơ đồ HTML standalone đã validate (kiến trúc, quy trình, tuần tự, luồng dữ liệu, trạng thái, ERD, lớp, cây, timeline, waterfall) hoặc một trang giải thích | adapt từ tt-a1i/archify |
+| `docx` | Tạo, đọc và sửa tài liệu Word, gồm bảng và style | adapt từ upstream (xem `LICENSE`) |
+| `pdf` | Đọc, trích text và bảng, gộp, tách, xoay, watermark, điền form, mã hoá, OCR | adapt từ upstream (xem `LICENSE`) |
+| `pptx` | Tạo, đọc và sửa bài trình chiếu | adapt từ upstream (xem `LICENSE`) |
+| `xlsx` | Tạo, đọc, sửa và làm sạch bảng tính | adapt từ upstream (xem `LICENSE`) |
+| `frontend-design` | Hướng dẫn thị giác để giao diện không trông như template | adapt từ upstream (xem `LICENSE`) |
+| `mcp-builder` | Viết MCP server bằng Python hoặc Node | adapt từ upstream (xem `LICENSE`) |
+| `skill-creator` | Tạo, test, benchmark và đóng gói skill mới | adapt từ upstream (xem `LICENSE`) |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |
@@ -47,7 +54,7 @@ Việc adapt là tái lập được, không sửa tay: `upstream.json` ghim com
 - Cline trong VS Code hoặc app Cline Desktop; skill nằm ở `~/.cline/skills`.
 - Node 18 trở lên cho `archify` và `design-taste-frontend`.
 - Python 3.11 trở lên với `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
-  `reportlab`, `lxml` cho `otchet` và `injection-scan`.
+  `reportlab`, `lxml` cho `docx`, `pptx`, `xlsx`, `pdf`, `otchet` và `injection-scan`.
 
 ## Giấy phép
 

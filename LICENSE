@@ -30,15 +30,10 @@ changed by this file:
 
 | Skill directory | Upstream | License |
 |---|---|---|
+| `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder`, `skill-creator` | anthropics/skills | "All rights reserved" - see `LICENSE.txt` in each directory. Kept private: no reproduction, derivative works or distribution |
 | `code-review-and-quality`, `documentation-and-adrs`, `git-workflow-and-versioning` | addyosmani/agent-skills | MIT |
 | `design-taste-frontend` | Leonxlnx/taste-skill | MIT |
 | `manim` | iart-ai/manim-skills | MIT |
 | `impeccable` | pbakaus/impeccable | Apache-2.0 |
 | `archify` | tt-a1i/archify | Apache-2.0 (plus `LICENSE-MIT` and `NOTICE`) |
-
-Not included: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` and
-`skill-creator` from `anthropics/skills`. Their `LICENSE.txt` is
-"© 2025 Anthropic, PBC. All rights reserved." and forbids retaining copies outside
-Anthropic's services, reproduction, derivative works and distribution, so they are
-deliberately absent from this public repository.
 

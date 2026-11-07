@@ -1,4 +1,73 @@
 {
+  "docx": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/docx",
+    "strategy": "adapt",
+    "description": "Create, read, edit or manipulate Word documents (.docx and .dotx): reports, memos, letters, templates, tables of contents, headings, page numbers, letterheads, images, find-and-replace, tracked changes and comments. Use whenever the user mentions Word, .docx, .dotx, or asks for a document/report/memo/letter deliverable. Vietnamese triggers: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Russian triggers: 'сделать docx', 'отчёт в Word', 'правка docx'. Not for PDF, spreadsheets or unrelated coding tasks.",
+    "notes": "tools/notes/docx.md",
+    "license": "Proprietary. LICENSE.txt has complete terms",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "pdf": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/pdf",
+    "strategy": "adapt",
+    "description": "Work with PDF files: read and extract text or tables, merge, split, rotate pages, add watermarks, create new PDFs, fill forms, encrypt and decrypt, extract images, OCR scanned pages. Use whenever a .pdf file is mentioned or a PDF must be produced. Vietnamese triggers: 'xu ly file pdf', 'doc file pdf', 'tach pdf', 'gop pdf', 'dien form pdf', 'pdf thanh anh', 'tao file pdf'. Russian triggers: 'работа с PDF', 'объединить PDF', 'заполнить PDF'. Use it even when the user only attaches a file and says 'file nay'.",
+    "notes": "tools/notes/pdf.md",
+    "license": "Proprietary. LICENSE.txt has complete terms",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "pptx": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/pptx",
+    "strategy": "adapt",
+    "description": "Create, read, edit or analyse PowerPoint files (.pptx, .potx): slide decks, pitch decks, presentations; extract text from existing decks; edit or update slides; combine or split files; work with templates, layouts, speaker notes and comments. Use whenever the user mentions deck, slides, presentation, .pptx or .potx. Vietnamese triggers: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Russian triggers: 'сделать презентацию', 'правка pptx'. If a .pptx file must be opened, created or touched, use this skill.",
+    "notes": "tools/notes/pptx.md",
+    "license": "Proprietary. LICENSE.txt has complete terms",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "xlsx": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/xlsx",
+    "strategy": "adapt",
+    "description": "Work with spreadsheet files as the primary input or output: open, read, edit or fix .xlsx/.xlsm/.xltx/.csv/.tsv, add columns, write formulas, format, chart, clean messy tabular data, create a spreadsheet from scratch, convert between tabular formats. Use when a spreadsheet file is named or implied and the deliverable is a spreadsheet. Vietnamese triggers: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Russian triggers: 'сделать таблицу в Excel', 'правка xlsx'. Not when the deliverable is a Word doc, HTML report or a plain script.",
+    "notes": "tools/notes/xlsx.md",
+    "license": "Proprietary. LICENSE.txt has complete terms",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "frontend-design": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/frontend-design",
+    "strategy": "adapt",
+    "description": "Visual design guidance for building or reshaping a UI so it does not look templated: aesthetic direction, typography, colour, spacing, hierarchy, distinctive choices. Use when the user wants a page, screen or component designed, restyled or critiqued for look and feel. Vietnamese triggers: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Russian triggers: 'дизайн интерфейса', 'сделать красиво'. Pairs with the `impeccable` skill for audits and rewrites.",
+    "notes": "tools/notes/frontend-design.md",
+    "license": "Complete terms in LICENSE.txt",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "mcp-builder": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/mcp-builder",
+    "strategy": "adapt",
+    "description": "Build high-quality MCP (Model Context Protocol) servers that let LLMs call external services through well-designed tools, in Python (FastMCP) or Node/TypeScript (MCP SDK). Use when the user wants to create, extend or review an MCP server, design MCP tools, or evaluate an MCP implementation. Vietnamese triggers: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Russian triggers: 'написать MCP-сервер', 'оценка MCP'. Not for plain REST API wrappers with no MCP layer.",
+    "notes": "tools/notes/mcp-builder.md",
+    "license": "Complete terms in LICENSE.txt",
+    "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
+  },
+  "skill-creator": {
+    "repo": "anthropics/skills",
+    "ref": "main",
+    "path": "skills/skill-creator",
+    "strategy": "manual",
+    "description": "Create, edit, improve, and evaluate Cline skills (SKILL.md folders under .cline/skills). Use whenever the user wants to turn a workflow into a reusable skill, write a new skill, fix a skill that does not trigger or triggers too often, rewrite or tighten an existing SKILL.md, design test prompts and iterate on a skill from the results, or package and share a skill folder. Trigger it also on Vietnamese phrasing — \"tạo skill\", \"viết skill\", \"sửa skill\", \"skill không hoạt động\", \"skill không tự kích hoạt\", \"làm skill cho việc này\", \"đóng gói skill\" — and on Russian «создать навык», «улучшить skill», «скилл не срабатывает». Trigger even when the user only says \"make this repeatable\", \"save this as a skill\", or mentions SKILL.md, .cline/skills, or a slash command.",
+    "notes": "tools/notes/skill-creator.md",
+    "license": "Apache 2.0 (see LICENSE.txt)"
+  },
   "git-workflow-and-versioning": {
     "repo": "addyosmani/agent-skills",
     "ref": "main",

@@ -23,6 +23,13 @@
 | `otchet` | Учебные отчёты (ПР, лабораторная, реферат, курсовая): титульный лист ЛЭТИ, Times New Roman 14, подписи, правила DOCX и PDF | этот репозиторий |
 | `injection-scan` | Офлайн-сканер prompt injection для недоверенного текста и документов (docx, pdf, pptx, xlsx, zip), коды возврата 0 чисто, 1 проверить или не просканировано, 2 блокировать | этот репозиторий |
 | `archify` | Превращает идею, план, Mermaid или кодовую базу в проверенную автономную HTML-схему (архитектура, процесс, последовательность, поток данных, состояния, ERD, классы, дерево, таймлайн, waterfall) или в объяснение на одной странице | адаптирован из tt-a1i/archify |
+| `docx` | Создание, чтение и правка документов Word, включая таблицы и стили | адаптирован из upstream (см. `LICENSE`) |
+| `pdf` | Чтение, извлечение текста и таблиц, объединение, разделение, поворот, водяные знаки, формы, шифрование, OCR | адаптирован из upstream (см. `LICENSE`) |
+| `pptx` | Создание, чтение и правка презентаций | адаптирован из upstream (см. `LICENSE`) |
+| `xlsx` | Создание, чтение, правка и чистка таблиц | адаптирован из upstream (см. `LICENSE`) |
+| `frontend-design` | Визуальные рекомендации, чтобы интерфейс не выглядел шаблонным | адаптирован из upstream (см. `LICENSE`) |
+| `mcp-builder` | Создание MCP-серверов на Python или Node | адаптирован из upstream (см. `LICENSE`) |
+| `skill-creator` | Создание, тестирование, бенчмарк и упаковка новых навыков | адаптирован из upstream (см. `LICENSE`) |
 | `impeccable` | Дизайн-направление фронтенда, аудит, критика и переделка, библиотека плейбуков и детектор дизайна | адаптирован из pbakaus/impeccable |
 | `design-taste-frontend` | Сайты компаний уровня figma.com и x.ai, проверяются собственным headless-браузерным чекером | адаптирован из Leonxlnx/taste-skill |
 | `manim` | Анимации по математике и физике на Manim CE, рендер в MP4 или GIF | адаптирован из iart-ai/manim-skills |
@@ -48,7 +55,7 @@ PowerShell вместо Bash, без субагентов, а в `description` �
 - Cline в VS Code или приложение Cline Desktop; навыки лежат в `~/.cline/skills`.
 - Node 18 или новее для `archify` и `design-taste-frontend`.
 - Python 3.11 или новее с `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
-  `reportlab`, `lxml` для `otchet` и `injection-scan`.
+  `reportlab`, `lxml` для `docx`, `pptx`, `xlsx`, `pdf`, `otchet` и `injection-scan`.
 
 ## Лицензия
 
