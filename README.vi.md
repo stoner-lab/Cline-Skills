@@ -6,8 +6,7 @@ viết tại đây. Nguồn:
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
 [iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) và
-[tt-a1i/archify](https://github.com/tt-a1i/archify). Skill từ `anthropics/skills`
-**không** được công bố ở đây vì lý do giấy phép — xem ghi chú dưới bảng.
+[tt-a1i/archify](https://github.com/tt-a1i/archify), cùng vài skill viết tại đây.
 
 Mỗi skill là một thư mục có `SKILL.md` (YAML frontmatter + hướng dẫn) và tuỳ chọn
 `scripts/`, `references/`, `assets/`. Copy thư mục vào `C:\Users\<user>\.cline\skills\`
@@ -31,11 +30,6 @@ và tiếng Anh.
 | `documentation-and-adrs` | Architecture decision record và tài liệu giữ codebase dễ đọc | adapt từ addyosmani/agent-skills |
 | `code-review-and-quality` | Review nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật | adapt từ addyosmani/agent-skills |
 
-Không có ở đây: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` và
-`skill-creator`. Chúng lấy từ `anthropics/skills`, nơi `LICENSE.txt` giữ toàn bộ quyền
-và cấm sao chép, tạo tác phẩm phái sinh và phân phối — nên chúng nằm trong một repo
-**private** và không được công bố ở đây. Bản đã cài vẫn chạy bình thường trên máy.
-
 ## "Adapt" nghĩa là gì
 
 Mỗi skill đã adapt mở đầu bằng mục **Cline runtime notes**: tên tool được ánh xạ sang Cline
@@ -52,17 +46,11 @@ Việc adapt là tái lập được, không sửa tay: `upstream.json` ghim com
 
 - Cline trong VS Code hoặc app Cline Desktop; skill nằm ở `~/.cline/skills`.
 - Node 18 trở lên cho `archify` và `design-taste-frontend`.
-- Python 3.11 trở lên với `python-docx`, `python-pptx`, `openpyxl`, `pypdf`, `reportlab`,
-  `lxml` cho `docx`, `pptx`, `xlsx`, `pdf`, `otchet`.
+- Python 3.11 trở lên với `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
+  `reportlab`, `lxml` cho `otchet` và `injection-scan`.
 
 ## Giấy phép
 
 Điều khoản cấp repo nằm ở [`LICENSE`](LICENSE): các file viết tại đây dùng MIT.
 Skill lấy từ dự án khác giữ nguyên giấy phép của họ, và điều khoản đó vẫn áp dụng cho
 bản copy này.
-
-> Lưu ý: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` và
-> `skill-creator` lấy từ `anthropics/skills`; `LICENSE.txt` của họ giữ toàn bộ quyền và
-> cấm sao chép, tạo tác phẩm phái sinh, phân phối. Vì vậy chúng **không có** trong repo
-> này: bản đã adapt nằm ở một repo private, bản đã cài nằm trong `~/.cline/skills` trên
-> máy dùng.

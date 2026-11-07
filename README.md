@@ -6,8 +6,7 @@ here. Skills come from several platforms:
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
 [iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) and
-[tt-a1i/archify](https://github.com/tt-a1i/archify). Skills from `anthropics/skills`
-are **not** published here, for licensing reasons - see the note under the table.
+[tt-a1i/archify](https://github.com/tt-a1i/archify), plus a few skills written here.
 
 Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and optional
 `scripts/`, `references/`, `assets/`. Copy a folder into `C:\Users\<user>\.cline\skills\`
@@ -30,12 +29,6 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase readable | adapted from addyosmani/agent-skills |
 | `code-review-and-quality` | Multi-axis code review before merging: correctness, design, errors, tests, security | adapted from addyosmani/agent-skills |
 
-Not here: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` and
-`skill-creator`. They come from `anthropics/skills`, whose `LICENSE.txt` reserves all
-rights and forbids reproduction, derivative works and distribution, so they are kept
-in a **private** repository instead and are not published here. Installed copies keep
-working locally; the public repo simply does not carry them.
-
 ## What "adapted" means
 
 Each adapted skill opens with a **Cline runtime notes** section: tool names mapped to Cline
@@ -52,19 +45,12 @@ files to keep, `tools/notes/*.md` holds the Cline notes, and `tools/sync_upstrea
 
 - Cline in VS Code or the Cline Desktop app; skills live in `~/.cline/skills`.
 - Node 18 or newer for `archify` and `design-taste-frontend`.
-- Python 3.11 or newer with `python-docx`, `python-pptx`, `openpyxl`, `pypdf`, `reportlab`,
-  `lxml` for `docx`, `pptx`, `xlsx`, `pdf`, `otchet`.
+- Python 3.11 or newer with `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
+  `reportlab`, `lxml` for `otchet` and `injection-scan`.
 
 ## License
 
 Repository-level terms are in [`LICENSE`](LICENSE): the files written here are MIT.
 Skills taken from other projects keep their own license, and those terms still apply
 to this copy.
-
-> Licensing note: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` and
-> `skill-creator` come from `anthropics/skills` and their `LICENSE.txt` reserves all
-> rights, forbidding reproduction, derivative works and distribution to third parties.
-> That is why they are not in this repository. Their adapted copies are kept in a
-> private repository on the same account, and the installed copies stay in
-> `~/.cline/skills` on the machine that uses them.
 

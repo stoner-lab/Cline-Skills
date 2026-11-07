@@ -6,8 +6,7 @@
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
 [iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) и
-[tt-a1i/archify](https://github.com/tt-a1i/archify). Навыки из `anthropics/skills`
-здесь **не публикуются** по лицензионным причинам — см. примечание под таблицей.
+[tt-a1i/archify](https://github.com/tt-a1i/archify), плюс несколько навыков, написанных здесь.
 
 Каждый навык это папка с `SKILL.md` (YAML frontmatter и инструкции) и, при необходимости,
 `scripts/`, `references/`, `assets/`. Скопируйте папку в `C:\Users\<user>\.cline\skills\` и
@@ -31,12 +30,6 @@
 | `documentation-and-adrs` | Architecture decision records и документация, которая сохраняет код читаемым | адаптирован из addyosmani/agent-skills |
 | `code-review-and-quality` | Многоаспектное ревью перед merge: корректность, дизайн, ошибки, тесты, безопасность | адаптирован из addyosmani/agent-skills |
 
-Здесь нет: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` и
-`skill-creator`. Они взяты из `anthropics/skills`, где `LICENSE.txt` сохраняет все
-права и запрещает воспроизведение, производные работы и распространение, поэтому они
-лежат в **приватном** репозитории и не публикуются здесь. Установленные копии
-продолжают работать локально.
-
 ## Что значит "адаптирован"
 
 Каждый адаптированный навык начинается с раздела **Cline runtime notes**: имена
@@ -54,17 +47,11 @@ PowerShell вместо Bash, без субагентов, а в `description` �
 
 - Cline в VS Code или приложение Cline Desktop; навыки лежат в `~/.cline/skills`.
 - Node 18 или новее для `archify` и `design-taste-frontend`.
-- Python 3.11 или новее с `python-docx`, `python-pptx`, `openpyxl`, `pypdf`, `reportlab`,
-  `lxml` для `docx`, `pptx`, `xlsx`, `pdf`, `otchet`.
+- Python 3.11 или новее с `python-docx`, `python-pptx`, `openpyxl`, `PyMuPDF`, `pypdf`,
+  `reportlab`, `lxml` для `otchet` и `injection-scan`.
 
 ## Лицензия
 
 Условия уровня репозитория — в [`LICENSE`](LICENSE): файлы, написанные здесь, под MIT.
 Навыки, взятые из других проектов, сохраняют свои лицензии, и эти условия действуют
 для данной копии.
-
-> Важно: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` и
-> `skill-creator` взяты из `anthropics/skills`; их `LICENSE.txt` сохраняет все права и
-> запрещает воспроизведение, производные работы и распространение. Поэтому их нет в
-> этом репозитории: адаптированные копии лежат в приватном репозитории, а
-> установленные — в `~/.cline/skills` на рабочей машине.
