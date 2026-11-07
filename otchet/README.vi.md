@@ -1,8 +1,8 @@
 # otchet — báo cáo học tập tiếng Nga cho Cline
 
-Skill cho [Cline](https://cline.bot) viết báo cáo đại học **bằng tiếng Nga** cho mọi
-môn học: ПР (практическая работа), лабораторная, реферат, курсовая,
-отчёт по практике, НИР, МДП.
+Skill cho [Cline](https://cline.bot) viết báo cáo đại học **bằng tiếng Nga** cho gần như
+mọi môn — mạnh nhất với các môn làm việc bằng app có CLI và lập trình:
+ПР (практическая работа), лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП.
 
 Skill đọc đề bài, tìm đúng variant, xem báo cáo mẫu gần nhất, chỉ hỏi những gì thật
 sự thiếu, viết văn bằng tiếng Nga đơn giản, dựng DOCX, xuất PDF qua Microsoft Word
@@ -16,7 +16,9 @@ và kiểm tra định dạng trước khi giao file.
 - tự chạy code cần thiết;
 - tự vào máy ảo khi cần;
 - chụp màn hình từng bước và chèn vào báo cáo;
-- không rõ thì hỏi lại bạn.
+- không rõ thì hỏi lại bạn;
+- mạnh với các môn dùng app có CLI và lập trình: trình biên dịch, Python, SQL,
+  Octave/MATLAB, Arduino, máy ảo và emulator.
 
 ## Yêu cầu
 

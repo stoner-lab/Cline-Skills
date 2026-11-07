@@ -1,8 +1,8 @@
 # otchet — Russian academic reports for Cline
 
 A [Cline](https://cline.bot) skill that writes university reports **in Russian** for
-any subject: ПР (практическая работа), лабораторная, реферат, курсовая,
-отчёт по практике, НИР, МДП.
+almost any subject — strongest where the work is done in command-line tools and code:
+ПР (практическая работа), лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП.
 
 It reads the assignment, finds the variant, looks at the nearest sample report,
 asks only for what is genuinely missing, writes the text in plain Russian, builds
@@ -17,7 +17,9 @@ handing it over.
 - runs the code it needs on its own;
 - opens the virtual machine it needs on its own;
 - captures the steps as screenshots and puts them into the report;
-- asks you when something is unclear.
+- asks you when something is unclear;
+- strongest for subjects whose work runs through a CLI or an IDE: compilers, Python,
+  SQL, Octave/MATLAB, Arduino, emulators and virtual machines.
 
 ## Requirements
 
