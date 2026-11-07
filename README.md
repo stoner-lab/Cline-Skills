@@ -1,12 +1,13 @@
 # Cline Skills
 
-A collection of AI agent skills, adapted for **Cline on Windows** from several platforms:
-Anthropic's [anthropics/skills](https://github.com/anthropics/skills),
+A collection of AI agent skills, adapted for **Cline on Windows**, plus a few written
+here. Skills come from several platforms:
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills),
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
 [iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) and
-[tt-a1i/archify](https://github.com/tt-a1i/archify), plus a few skills written here.
+[tt-a1i/archify](https://github.com/tt-a1i/archify). Skills from `anthropics/skills`
+are **not** published here, for licensing reasons - see the note under the table.
 
 Every skill is a folder with a `SKILL.md` (YAML frontmatter plus instructions) and optional
 `scripts/`, `references/`, `assets/`. Copy a folder into `C:\Users\<user>\.cline\skills\`
@@ -22,19 +23,18 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `otchet` | Russian academic reports (ПР, лабораторная, реферат, курсовая): LETI title page, Times New Roman 14, captions, DOCX and PDF rules | this repo |
 | `injection-scan` | Offline prompt-injection scanner for untrusted text and documents (docx, pdf, pptx, xlsx, zip), exit codes 0 clean, 1 review or unscanned, 2 block | this repo |
 | `archify` | Turn an idea, plan, Mermaid source or codebase into a validated standalone HTML diagram (architecture, workflow, sequence, dataflow, lifecycle, ERD, class, tree, timeline, waterfall) or a one-page explainer | adapted from tt-a1i/archify |
-| `skill-creator` | Build, test, benchmark and package new skills | adapted from anthropics/skills |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
-| `frontend-design` | Visual design guidance so a UI does not look templated | adapted from anthropics/skills |
-| `docx` | Create, read and edit Word documents | adapted from anthropics/skills |
-| `xlsx` | Create, read, edit and clean spreadsheets | adapted from anthropics/skills |
-| `pptx` | Create, read and edit presentations | adapted from anthropics/skills |
-| `pdf` | Read, extract, merge, split, fill and create PDFs | adapted from anthropics/skills |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |
-| `mcp-builder` | Build MCP servers in Python or Node | adapted from anthropics/skills |
 | `git-workflow-and-versioning` | Branching, atomic commits, commit messages, pull requests, semantic versioning | adapted from addyosmani/agent-skills |
 | `documentation-and-adrs` | Architecture decision records and the documentation that keeps a codebase readable | adapted from addyosmani/agent-skills |
 | `code-review-and-quality` | Multi-axis code review before merging: correctness, design, errors, tests, security | adapted from addyosmani/agent-skills |
+
+Not here: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` and
+`skill-creator`. They come from `anthropics/skills`, whose `LICENSE.txt` reserves all
+rights and forbids reproduction, derivative works and distribution, so they are kept
+in a **private** repository instead and are not published here. Installed copies keep
+working locally; the public repo simply does not carry them.
 
 ## What "adapted" means
 
@@ -61,8 +61,10 @@ Repository-level terms are in [`LICENSE`](LICENSE): the files written here are M
 Skills taken from other projects keep their own license, and those terms still apply
 to this copy.
 
-> Note: the skills vendored from `anthropics/skills` (`docx`, `pdf`, `pptx`, `xlsx`,
-> `frontend-design`, `mcp-builder`, `skill-creator`) ship a `LICENSE.txt` that
-> reserves all rights and forbids redistributing the materials. See that file
-> before sharing or re-publishing this repository.
+> Licensing note: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` and
+> `skill-creator` come from `anthropics/skills` and their `LICENSE.txt` reserves all
+> rights, forbidding reproduction, derivative works and distribution to third parties.
+> That is why they are not in this repository. Their adapted copies are kept in a
+> private repository on the same account, and the installed copies stay in
+> `~/.cline/skills` on the machine that uses them.
 

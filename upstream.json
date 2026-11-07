@@ -1,54 +1,5 @@
 {
   "skills": {
-    "pdf": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/pdf",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "docx": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/docx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "pptx": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/pptx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "xlsx": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/xlsx",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "frontend-design": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/frontend-design",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "mcp-builder": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/mcp-builder",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
-    "skill-creator": {
-      "repo": "anthropics/skills",
-      "ref": "main",
-      "path": "skills/skill-creator",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
-    },
     "git-workflow-and-versioning": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",

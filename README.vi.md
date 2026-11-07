@@ -1,12 +1,13 @@
 # Cline Skills
 
-Bộ sưu tập skill cho AI agent, được **adapt cho Cline trên Windows** từ nhiều nền tảng:
-[anthropics/skills](https://github.com/anthropics/skills),
+Bộ sưu tập skill cho AI agent, được **adapt cho Cline trên Windows**, cùng vài skill
+viết tại đây. Nguồn:
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills),
 [pbakaus/impeccable](https://github.com/pbakaus/impeccable),
 [iart-ai/manim-skills](https://github.com/iart-ai/manim-skills),
 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) và
-[tt-a1i/archify](https://github.com/tt-a1i/archify), cùng vài skill viết tại đây.
+[tt-a1i/archify](https://github.com/tt-a1i/archify). Skill từ `anthropics/skills`
+**không** được công bố ở đây vì lý do giấy phép — xem ghi chú dưới bảng.
 
 Mỗi skill là một thư mục có `SKILL.md` (YAML frontmatter + hướng dẫn) và tuỳ chọn
 `scripts/`, `references/`, `assets/`. Copy thư mục vào `C:\Users\<user>\.cline\skills\`
@@ -23,19 +24,17 @@ và tiếng Anh.
 | `otchet` | Báo cáo học tập tiếng Nga (ПР, лабораторная, реферат, курсовая): trang bìa LETI, Times New Roman 14, chú thích hình bảng, quy tắc DOCX và PDF | repo này |
 | `injection-scan` | Quét prompt injection offline cho văn bản và tài liệu không tin cậy (docx, pdf, pptx, xlsx, zip), exit code 0 sạch, 1 cần xem hoặc chưa quét, 2 chặn | repo này |
 | `archify` | Biến ý tưởng, kế hoạch, Mermaid hoặc codebase thành sơ đồ HTML standalone đã validate (kiến trúc, quy trình, tuần tự, luồng dữ liệu, trạng thái, ERD, lớp, cây, timeline, waterfall) hoặc một trang giải thích | adapt từ tt-a1i/archify |
-| `skill-creator` | Tạo, test, benchmark và đóng gói skill mới | adapt từ anthropics/skills |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
-| `frontend-design` | Hướng dẫn thị giác để giao diện không trông như template | adapt từ anthropics/skills |
-| `docx` | Tạo, đọc và sửa tài liệu Word | adapt từ anthropics/skills |
-| `xlsx` | Tạo, đọc, sửa và làm sạch bảng tính | adapt từ anthropics/skills |
-| `pptx` | Tạo, đọc và sửa bài trình chiếu | adapt từ anthropics/skills |
-| `pdf` | Đọc, trích xuất, gộp, tách, điền form và tạo PDF | adapt từ anthropics/skills |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |
-| `mcp-builder` | Viết MCP server bằng Python hoặc Node | adapt từ anthropics/skills |
 | `git-workflow-and-versioning` | Nhánh, commit nguyên tử, commit message, pull request, semantic versioning | adapt từ addyosmani/agent-skills |
 | `documentation-and-adrs` | Architecture decision record và tài liệu giữ codebase dễ đọc | adapt từ addyosmani/agent-skills |
 | `code-review-and-quality` | Review nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật | adapt từ addyosmani/agent-skills |
+
+Không có ở đây: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` và
+`skill-creator`. Chúng lấy từ `anthropics/skills`, nơi `LICENSE.txt` giữ toàn bộ quyền
+và cấm sao chép, tạo tác phẩm phái sinh và phân phối — nên chúng nằm trong một repo
+**private** và không được công bố ở đây. Bản đã cài vẫn chạy bình thường trên máy.
 
 ## "Adapt" nghĩa là gì
 
@@ -62,7 +61,8 @@ Việc adapt là tái lập được, không sửa tay: `upstream.json` ghim com
 Skill lấy từ dự án khác giữ nguyên giấy phép của họ, và điều khoản đó vẫn áp dụng cho
 bản copy này.
 
-> Lưu ý: các skill lấy từ `anthropics/skills` (`docx`, `pdf`, `pptx`, `xlsx`,
-> `frontend-design`, `mcp-builder`, `skill-creator`) có `LICENSE.txt` giữ toàn bộ quyền
-> và **cấm phân phối lại** tài liệu. Đọc file đó trước khi chia sẻ hay công bố lại repo
-> này.
+> Lưu ý: `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `mcp-builder` và
+> `skill-creator` lấy từ `anthropics/skills`; `LICENSE.txt` của họ giữ toàn bộ quyền và
+> cấm sao chép, tạo tác phẩm phái sinh, phân phối. Vì vậy chúng **không có** trong repo
+> này: bản đã adapt nằm ở một repo private, bản đã cài nằm trong `~/.cline/skills` trên
+> máy dùng.
