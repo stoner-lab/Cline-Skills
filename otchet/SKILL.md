@@ -1,6 +1,6 @@
 ---
 name: otchet
-description: "Dùng khi người dùng yêu cầu làm báo cáo tiếng Nga cho bất kỳ môn học nào (trigger: /otchet; làm báo cáo, làm bài, ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП). Đọc đề bài và mẫu trong assets/templates của skill (hoặc thư mục do biến môi trường OTCHET_TEMPLATES chỉ định), hỏi thông tin còn thiếu, viết báo cáo tiếng Nga đơn giản, tạo DOCX/PDF và kiểm tra định dạng."
+description: "Dùng khi người dùng yêu cầu làm báo cáo tiếng Nga cho bất kỳ môn học nào (trigger: /otchet; làm báo cáo, làm bài, ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП, giáo trình, методичка). Nếu người dùng chỉ gửi giáo trình/методичка mà không nói gì thêm thì làm đúng 100% theo giáo trình, kể cả mục «Рекомендации». Đọc đề bài và mẫu trong assets/templates của skill (hoặc thư mục do biến môi trường OTCHET_TEMPLATES chỉ định), hỏi thông tin còn thiếu, viết báo cáo tiếng Nga đơn giản, tạo DOCX/PDF và kiểm tra định dạng."
 ---
 
 # Skill: làm báo cáo tiếng Nga (`otchet`)
@@ -11,7 +11,9 @@ Dùng skill này khi người dùng yêu cầu:
 - làm báo cáo thực hành / ПР / лабораторная;
 - làm реферат, курсовую, отчёт по практике, НИР, МДП;
 - viết lại, sửa format, hoặc kiểm tra một báo cáo tiếng Nga;
-- chuyển ghi chú/số liệu thành báo cáo hoàn chỉnh.
+- chuyển ghi chú/số liệu thành báo cáo hoàn chỉnh;
+- **gửi giáo trình / методичка mà không nói gì thêm** → mặc định làm 100% theo
+  giáo trình, kể cả mục «Рекомендации» (mục 2.15), chỉ hỏi phần giáo trình không nói.
 
 Không dùng skill này để viết bài luận tiếng Việt hoặc tài liệu không phải báo cáo học thuật.
 
@@ -60,11 +62,17 @@ Trợ lý tạo báo cáo học thuật tiếng Nga, làm việc theo yêu cầu
 
 ### 2.4. Thứ tự ưu tiên khi chọn format
 
-1. Yêu cầu ghi trong file đề bài.
+1. Giáo trình / методичка / đề bài — mọi điều ghi trong đó, **kể cả mục
+   «Рекомендации»** (xem 2.15).
 2. Báo cáo mẫu cùng môn (ví dụ `prak*.docx`, `sys*.docx`).
 3. File tương ứng trong `assets/templates/` của skill (hoặc thư mục do
    `OTCHET_TEMPLATES` chỉ định).
 4. Quy tắc mặc định trong skill này.
+
+Giáo trình **thắng mọi mặc định** của skill: nếu giáo trình quy định khác (12 пт,
+интервал 1,0, нумерация `1.1`, объём 25 страниц, подпись «Рис. 1.»…) thì làm theo
+giáo trình và nói lại điều đã chọn. Mặc định của skill chỉ để **lấp chỗ giáo trình
+im lặng**.
 
 Nếu các nguồn mâu thuẫn, ưu tiên theo thứ tự trên và ghi rõ lựa chọn trong chat.
 
@@ -356,6 +364,36 @@ cùng lúc với các câu hỏi khác; không hỏi giữa lúc đang viết.
 - **Cấm bù trang bằng nội dung rỗng** («вода»). Thiếu nội dung thật thì nói rõ thiếu
   gì và hỏi có bổ sung mục hay không (mục 2.3).
 
+### 2.15. Giáo trình: làm 100% theo giáo trình
+
+Khi người dùng gửi **giáo trình / методичка / учебное пособие / рекомендации по
+выполнению** mà không nói gì thêm (chỉ đưa file), mặc định là: **làm đúng 100%
+những gì giáo trình viết** — không rút gọn, không thay bằng thói quen của skill.
+
+1. **Đọc hết file trước khi viết** (file nhận từ ngoài thì quét theo `security.md`
+   mục 9 trước). Lập danh sách yêu cầu theo đúng thứ tự xuất hiện: cấu trúc, thành
+   phần bắt buộc, công thức/ký hiệu, đơn vị đo, cách đánh số mục, quy cách bảng và
+   hình, приложения, титульный лист, объём.
+2. **«Рекомендация» = yêu cầu, không phải lời khuyên.** Mọi câu «рекомендуется»,
+   «следует», «необходимо», «требуется», «должно быть», «обратите внимание»,
+   «целесообразно» trong giáo trình đều phải thực hiện và phải tự kiểm lại. Không
+   được bỏ qua với lý do «đây chỉ là khuyến nghị».
+3. **Không bỏ bước, không gộp mục, không giảm số lượng.** Giáo trình yêu cầu 3 ví dụ,
+   5 вариантов расчёта, 2 рисунка, bảng so sánh — làm đủ đúng số đó.
+4. **Không tự thêm** thứ làm đổi cấu trúc (mục phụ tự nghĩ, kết luận lan man, phụ lục
+   không được yêu cầu). Thiếu nội dung thật thì báo thiếu, không bù «водой» (2.3).
+5. **Chỉ khi giáo trình im lặng** mới dùng mặc định của skill (2.4), và phải nói rõ
+   đang dùng mặc định nào.
+6. **Mâu thuẫn** giáo trình ↔ skill ↔ mẫu: theo 2.4 (giáo trình trước) và ghi một dòng
+   trong chat: «giáo trình yêu cầu X, mặc định của skill là Y → làm theo X».
+7. **Số trang**: giáo trình quy định объём thì dùng đúng số đó và **không hỏi lại**
+   (2.14 chỉ áp dụng khi giáo trình không nói).
+8. **Trước khi giao file**: in bảng đối chiếu cho **mọi** yêu cầu đã liệt kê ở bước 1:
+   `| Требование giáo trình | Где выполнено (раздел/страница) |`. Còn dòng chưa có chỗ
+   đáp ứng thì chưa được coi là xong.
+9. Chỗ không đọc được (ảnh scan mờ, công thức mất ký tự, bảng bị cắt) → nói rõ và hỏi;
+   **không đoán**.
+
 ## 3. Thông tin phải thu thập trước khi viết
 
 Hỏi người dùng nếu thiếu bất kỳ mục nào:
@@ -366,6 +404,9 @@ Hỏi người dùng nếu thiếu bất kỳ mục nào:
 - Loại báo cáo: ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП.
 - **Số trang mong muốn** – bắt buộc với `курсовая`, `НИР`, `МДП`, `отчёт по практике`,
   nghiên cứu/исследование: hỏi **30 / 50 / 70 / tự nhập** (chi tiết: mục 2.14).
+- Nếu người dùng chỉ gửi **giáo trình / методичка** mà không nói gì thêm: **không hỏi
+  lại những gì giáo trình đã quy định** — chỉ hỏi phần giáo trình không nói, và làm
+  100% theo giáo trình kể cả mục «Рекомендации» (mục 2.15).
 - Số bài / tên bài / chủ đề.
 - Variant.
 - Nhóm.
