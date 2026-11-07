@@ -330,6 +330,32 @@ của bài hiện tại.
 `3.1\встраиваемые системы`, — только локальные файлы). Moodle используется
 исключительно по прямой просьбе пользователя.
 
+### 2.14. Объём работы (số trang): hỏi trước khi viết
+
+Với bài dài — `курсовая`, `НИР`, `МДП`, `отчёт по практике`, nghiên cứu / исследование —
+**bắt buộc hỏi người dùng muốn bao nhiêu trang** ở bước thu thập thông tin (mục 3),
+cùng lúc với các câu hỏi khác; không hỏi giữa lúc đang viết.
+
+- Đưa lựa chọn: **30 / 50 / 70 / tự nhập**. Chấp nhận số khác, số lẻ, hoặc khoảng
+  («45–50», «не меньше 60»).
+- Không tự đoán, không im lặng chọn hộ. Nếu người dùng nói «как получится»,
+  «не важно», «на твоё усмотрение»: dùng mốc mặc định theo loại và **nói rõ đang
+  dùng mốc nào** — курсовая 30–35 стр.; НИР / МДП / отчёт по практике 50 стр.;
+  реферат 15–20 стр.
+- Cách đếm (phải nói rõ để người dùng hiểu giống mình): từ **Введение đến
+  Заключение**; титульный лист, задание, содержание, список источников и приложения
+  **không** tính. Nếu người dùng đếm khác thì theo cách của họ và ghi lại con số đã
+  chốt ngay trong dàn ý.
+- Sau khi có mốc: lập **bảng phân bổ trang** cho từng mục (Введение 2–3, Глава 1 …,
+  Глава 2 …, Заключение 2 …) cộng đúng bằng mốc và gửi người dùng xác nhận
+  **trước khi viết** (bước 7 mục 4).
+- Kiểm tra sau khi xuất: đếm trang thật từ PDF đã render —
+  `python -c "import fitz,sys; print(fitz.open(sys.argv[1]).page_count)" out.pdf`
+  (`validate_docx.py` **không** đếm số trang). Lệch quá ±10% so với mốc thì báo lại
+  và đề xuất tăng/giảm ở mục cụ thể.
+- **Cấm bù trang bằng nội dung rỗng** («вода»). Thiếu nội dung thật thì nói rõ thiếu
+  gì và hỏi có bổ sung mục hay không (mục 2.3).
+
 ## 3. Thông tin phải thu thập trước khi viết
 
 Hỏi người dùng nếu thiếu bất kỳ mục nào:
@@ -338,6 +364,8 @@ Hỏi người dùng nếu thiếu bất kỳ mục nào:
   nếu trường khác thì hỏi người dùng).
 - Môn học.
 - Loại báo cáo: ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП.
+- **Số trang mong muốn** – bắt buộc với `курсовая`, `НИР`, `МДП`, `отчёт по практике`,
+  nghiên cứu/исследование: hỏi **30 / 50 / 70 / tự nhập** (chi tiết: mục 2.14).
 - Số bài / tên bài / chủ đề.
 - Variant.
 - Nhóm.
@@ -404,6 +432,10 @@ Chi tiết đầy đủ: `references/format.md`.
 | Курсовая | Титульный лист -> Задание -> Содержание -> Введение -> Главы -> Заключение -> Источники (nếu có nguồn) -> Приложения (nếu cần) |
 | Отчёт по практике | Титульный лист -> Задание -> Аннотация -> Содержание -> Введение -> Разделы -> Заключение -> Источники (nếu có nguồn) |
 | НИР / МДП | Титульный лист -> Задание -> Содержание -> Введение -> Методика -> Результаты -> Заключение -> Источники (nếu có nguồn) |
+
+> Объём (`Курсовая`, `НИР`, `МДП`, `отчёт по практике`) — số trang hỏi **trước** khi
+> viết theo mục 2.14 (30 / 50 / 70 / tự nhập), không đoán và không bù trang bằng
+> nội dung rỗng.
 
 Chi tiết: `references/report-types.md`.
 
