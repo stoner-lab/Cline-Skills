@@ -127,15 +127,6 @@ loại báo cáo), `references/checklist.md` (checklist trước khi giao),
 `references/extraction.md` (đọc đề bài và bản mẫu), `references/templates.md`
 (template trang bìa).
 
-## Ảnh minh hoạ
-
-Báo cáo ПР-3 dưới đây được tạo **100% bằng skill**, không chỉnh sửa tay. Họ tên và
-số nhóm đã được che. Ảnh lấy từ PDF do skill xuất ra.
-
-<p align="center">
-  <img src="assets/screenshots/pr3-cover-full.png" width="680" alt="Trang bìa báo cáo ПР-3">
-</p>
-
 ## Giới hạn (nói thẳng)
 
 - Không bịa số liệu hay kết quả: thiếu dữ liệu thì báo thiếu, không bù.

@@ -127,15 +127,6 @@ Copy-Item -LiteralPath "$env:TEMP\cline-skills\otchet" -Destination "$env:USERPR
 `references/extraction.md` (чтение задания и образца),
 `references/templates.md` (шаблоны титульного листа).
 
-## Скриншоты
-
-Отчёт ПР-3, собранный **полностью навыком**, без ручной правки. Фамилия и номер
-группы замазаны. Изображения взяты из PDF, который экспортировал навык.
-
-<p align="center">
-  <img src="assets/screenshots/pr3-cover-full.png" width="680" alt="Титульный лист отчёта ПР-3">
-</p>
-
 ## Честные ограничения
 
 - Не придумывает измерения и результаты: недостающие данные называет, а не заполняет.

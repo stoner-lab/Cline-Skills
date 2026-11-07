@@ -130,15 +130,6 @@ confirmation. Hand it a методичка and nothing else and it follows the t
 `references/extraction.md` (reading the assignment and the sample),
 `references/templates.md` (title page templates).
 
-## Screenshots
-
-A ПР-3 report built **entirely by the skill**, no manual editing. Names and group
-numbers are masked. Images come from the PDF the skill exported.
-
-<p align="center">
-  <img src="assets/screenshots/pr3-cover-full.png" width="680" alt="Title page of a ПР-3 report">
-</p>
-
 ## Honest limits
 
 - It does not invent measurements or results: missing data is reported, not filled.
