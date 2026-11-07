@@ -1,5 +1,12 @@
 # Checklist trước khi giao báo cáo
 
+## 0. Trước khi bắt đầu
+
+- [ ] Đã hỏi người dùng **có dùng skill `otchet` hay không**, nếu họ chỉ nói «làm
+  bài / làm báo cáo / làm ПР» mà không gọi `/otchet` (mục 0.1 của SKILL.md).
+- [ ] Người dùng **đã đồng ý** dùng skill (câu trả lời rõ ràng, không phải «ok»/im lặng).
+  Nếu từ chối — báo cáo làm ngoài skill, không trộn preset ЛЭТИ.
+
 ## 1. Đề bài và số liệu
 
 - [ ] Đúng loại báo cáo.
