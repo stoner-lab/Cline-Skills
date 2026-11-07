@@ -13,26 +13,11 @@ handing it over.
 
 ## What it does well
 
-- **Any subject, any university.** Nothing is hard-coded: subject, chair, teacher,
-  variant and structure come from the assignment or from you. LETI is only the
-  default title page.
-- **Follows the provided textbook to the letter.** Hand it a методичка and say
-  nothing else: every requirement is implemented, including the «Рекомендации»
-  section. *рекомендуется*, *следует*, *необходимо* are requirements, not advice.
-- **Asks for the page count** on coursework and research work (30 / 50 / 70 or a
-  custom number) and distributes it across chapters before writing anything.
-- **Screenshots are opt-out.** Results, IDE windows, graphs and boards are captured
-  and cropped to the useful area, then inserted as `Рис. N` with continuous
-  numbering. Code is never a screenshot: it stays text, introduced by a lead-in
-  sentence.
-- **«Цель работы» cannot be lost.** `save_report(..., require_goal=True)` refuses to
-  save a practical report without it, and `validate_docx.py` checks it afterwards.
-- **Title page cloned from the бланк**, so it keeps Times New Roman 14 pt instead of
-  being rescaled by the body preset.
-- **PDF export leaves no Word behind**: `export_pdf_via_word()` reuses an already
-  open Word, closes only its own session and waits for it to exit.
-- **No VPN, no network services.** Everything runs locally; the model is whatever
-  you configured in Cline.
+- writes the report itself, section by section;
+- runs the code it needs on its own;
+- opens the virtual machine it needs on its own;
+- captures the steps as screenshots and puts them into the report;
+- asks you when something is unclear.
 
 ## Requirements
 

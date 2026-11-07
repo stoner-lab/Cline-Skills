@@ -12,24 +12,11 @@ và kiểm tra định dạng trước khi giao file.
 
 ## Điểm mạnh
 
-- **Mọi môn, mọi trường.** Không có gì bị hard-code: môn, khoa, giảng viên, variant
-  và cấu trúc lấy từ đề bài hoặc từ bạn. LETI chỉ là trang bìa mặc định.
-- **Làm đúng 100% theo giáo trình.** Đưa методичка mà không nói gì thêm: mọi yêu cầu
-  đều được thực hiện, kể cả mục «Рекомендации». *рекомендуется*, *следует*,
-  *необходимо* là yêu cầu, không phải lời khuyên.
-- **Hỏi số trang** với курсовая và НИР (30 / 50 / 70 hoặc số tự nhập) rồi phân bổ
-  trang cho từng chương trước khi viết.
-- **Ảnh chụp mặc định CÓ.** Kết quả chạy, cửa sổ IDE, đồ thị, board được chụp, cắt
-  đúng phần cần thiết và chèn thành `Рис. N` đánh số liên tục. Code không bao giờ
-  chụp ảnh: luôn là text, có câu dẫn.
-- **«Цель работы» không thể bị bỏ.** `save_report(..., require_goal=True)` không lưu
-  báo cáo ПР nếu thiếu, và `validate_docx.py` kiểm lại sau khi dựng.
-- **Trang bìa clone từ бланк** nên giữ Times New Roman 14 pt, không bị co theo preset
-  của phần nội dung.
-- **Xuất PDF không để Word treo**: `export_pdf_via_word()` dùng lại Word đang mở, chỉ
-  đóng phiên của mình và chờ nó thoát.
-- **Không cần VPN, không gọi dịch vụ ngoài.** Chạy hoàn toàn local; model là cấu hình
-  bạn đặt trong Cline.
+- tự làm báo cáo, từng phần một;
+- tự chạy code cần thiết;
+- tự vào máy ảo khi cần;
+- chụp màn hình từng bước và chèn vào báo cáo;
+- không rõ thì hỏi lại bạn.
 
 ## Yêu cầu
 
