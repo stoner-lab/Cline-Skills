@@ -1,6 +1,6 @@
 ---
 name: otchet
-description: "Dùng khi người dùng yêu cầu làm báo cáo tiếng Nga cho bất kỳ môn học nào (trigger: /otchet; làm báo cáo, làm bài, ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП, giáo trình, методичка). Nếu người dùng chỉ gửi giáo trình/методичка mà không nói gì thêm thì làm đúng 100% theo giáo trình, kể cả mục «Рекомендации». Đọc đề bài và mẫu trong assets/templates của skill (hoặc thư mục do biến môi trường OTCHET_TEMPLATES chỉ định), hỏi thông tin còn thiếu, viết báo cáo tiếng Nga đơn giản, tạo DOCX/PDF và kiểm tra định dạng."
+description: "Dùng khi người dùng yêu cầu làm báo cáo tiếng Nga cho bất kỳ môn học nào (trigger: /otchet; làm báo cáo, làm bài, ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП, giáo trình, методичка; không dấu: lam bao cao, lam bai, viet bao cao, bao cao mon). QUAN TRỌNG: nếu người dùng chỉ nói «làm bài», «làm báo cáo», «làm ПР», «làm реферат» mà KHÔNG gọi /otchet — phải HỎI đúng một câu xem có dùng skill này không (ask_question: dùng / không dùng) rồi mới bắt tay làm; chỉ dùng skill khi họ đồng ý, không tự áp preset và script của skill. Nếu người dùng chỉ gửi giáo trình/методичка mà không nói gì thêm thì làm đúng 100% theo giáo trình, kể cả mục «Рекомендации». Đọc đề bài và mẫu trong assets/templates của skill (hoặc thư mục do biến môi trường OTCHET_TEMPLATES chỉ định), hỏi thông tin còn thiếu, viết báo cáo tiếng Nga đơn giản, tạo DOCX/PDF và kiểm tra định dạng."
 ---
 
 # Skill: làm báo cáo tiếng Nga (`otchet`)
@@ -22,6 +22,37 @@ cụ thể. Không mặc định môn là «Системный анализ», k
 Môn học, khoa, trường, giảng viên, variant và cấu trúc bài luôn lấy từ đề bài
 hoặc do người dùng cung cấp. Thông tin trường có thể lấy theo mẫu (ví dụ LETI
 nếu học LETI); nếu học trường khác, thay bằng thông tin trong mẫu của trường đó.
+
+### 0.1. Bắt buộc hỏi trước khi dùng: `/otchet` hay không
+
+**Skill không tự áp dụng.** Nếu người dùng chỉ nói «làm bài», «làm báo cáo»,
+«làm ПР», «làm реферат», «sửa báo cáo»… mà **không** gọi `/otchet` và chưa trả lời
+câu hỏi này trong cuộc hội thoại — trước khi đọc đề, tính toán hay dựng file, phải
+hỏi **đúng một câu** bằng `ask_question`:
+
+> «Làm bài này theo skill `otchet` không? (bìa theo бланк ЛЭТИ, Times New Roman 14,
+> giãn dòng 1,5, lề 30/15/20/20 мм, đánh số trang, DOCX + PDF, tự kiểm tra bằng
+> `validate_docx.py` và `strip_metadata.py`)»
+
+Lựa chọn gợi ý (2–4 ô):
+
+- «Có — làm theo /otchet»
+- «Không — làm nhanh theo yêu cầu của tôi»
+- «Có, nhưng không cần ảnh chụp màn hình»
+- «Có, nhưng theo mẫu/format của giảng viên (tôi sẽ gửi mẫu)»
+
+Quy tắc:
+
+- Người dùng **đã gõ `/otchet`** hoặc đã nói rõ «làm theo skill otchet» / «dùng
+  otchet» → **không hỏi lại**, làm luôn.
+- Hỏi **một lần cho mỗi bài**; trong cùng bài không hỏi lại, kể cả khi người dùng
+  bổ sung yêu cầu. Câu trả lời đã có ở lượt trước trong cùng hội thoại được dùng lại.
+- «Không» → **không** áp preset ЛЭТИ, **không** gọi `check_env.py`,
+  `docx_helpers.py`, `validate_docx.py`; làm theo yêu cầu thường và nói rõ trong
+  chat là đang làm ngoài skill. Nếu vẫn cần file Word/PDF thì hỏi lại format mong
+  muốn (font, lề, giãn dòng, bìa).
+- «Ok», «ừ», im lặng hoặc câu trả lời không nói về skill **không** được coi là đồng ý.
+- Chỉ sau khi người dùng đồng ý mới chạy `check_env.py` và bắt đầu quy trình ở mục 4.
 
 ## 1. Vai trò
 
@@ -430,6 +461,9 @@ trước khi hỏi; chỉ hỏi những gì thật sự chưa có.
 
 ## 4. Quy trình làm việc
 
+0. **Hỏi có dùng skill hay không** (mục 0.1). Nếu người dùng chưa gọi `/otchet`
+   và chưa trả lời câu hỏi này — hỏi một câu rồi **dừng, chờ trả lời**. Chỉ sau khi
+   đồng ý mới chạy `check_env.py` và đi tiếp bước 1. Trả lời «không» → làm ngoài skill.
 1. **Đọc đề bài**: xác định yêu cầu, các mục cần làm, thang điểm.
 2. **Tìm variant**: đọc bảng variant trong docx/pdf/pptx; nếu là ảnh, giải nén
    `word/media` hoặc render trang PDF rồi đọc ảnh.
