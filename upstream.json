@@ -125,6 +125,20 @@
       "path": "skills/productivity/handoff",
       "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
       "checked_at": "2026-11-08"
+    },
+    "ui-ux-pro-max": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/ui-ux-pro-max",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "caveman": {
+      "repo": "JuliusBrussee/caveman",
+      "ref": "main",
+      "path": "skills/caveman",
+      "sha": "1e91f1306d602d4ca23618701b1185575ae1869b",
+      "checked_at": "2026-11-08"
     }
   }
 }

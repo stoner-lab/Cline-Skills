@@ -112,7 +112,9 @@ class Api:
         return self._heads[key]
 
     def file_text(self, repo: str, ref: str, path: str, name: str = "SKILL.md") -> str:
-        full = f"{path.rstrip('/')}/{name}".lstrip("./")
+        full = f"{path.rstrip('/')}/{name}"
+        if full.startswith("./"):          # only a real relative prefix, not a dot-directory
+            full = full[2:]
         url = f"https://api.github.com/repos/{repo}/contents/{urllib.parse.quote(full)}?ref={ref}"
         try:
             data = api(url)

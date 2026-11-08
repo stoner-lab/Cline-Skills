@@ -255,5 +255,35 @@
         "naming which skills the next agent should call the `skills` tool for (Cline)."
       ]
     ]
+  },
+  "ui-ux-pro-max": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/ui-ux-pro-max",
+    "strategy": "adapt",
+    "description": "Bộ dữ liệu UI/UX tra cứu ngay trên máy: 80 style, 192 palette theo loại sản phẩm, 74 cặp font, 120 guideline UX, 105 icon, 22 stack; chạy bằng script tìm kiếm local. Dùng khi người dùng nói: 'thiết kế UI', 'làm giao diện', 'chọn màu và font', 'review UX', 'kiểm tra accessibility', 'làm design system', 'chọn style cho app'. Không dấu cũng khớp: 'thiet ke UI', 'lam giao dien', 'chon mau va font', 'review UX', 'kiem tra accessibility', 'lam design system', 'chon style cho app'. Kết hợp: impeccable để audit, design-taste-frontend để dựng trang, frontend-design để chốt hướng thị giác. Không dùng cho việc chỉ backend hoặc hạ tầng.",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python on PATH (stdlib only), read_files/editor/run_commands; no subagents, no network; see the Cline runtime notes inside.",
+    "notes": "tools/notes/ui-ux-pro-max.md",
+    "replacements": [
+      [
+        "${CLAUDE_PLUGIN_ROOT}/.claude/skills/ui-ux-pro-max/scripts/search.py",
+        "$env:USERPROFILE\\.cline\\skills\\ui-ux-pro-max\\scripts\\search.py"
+      ],
+      [
+        "```bash",
+        "```powershell"
+      ]
+    ]
+  },
+  "caveman": {
+    "repo": "JuliusBrussee/caveman",
+    "ref": "main",
+    "path": "skills/caveman",
+    "strategy": "adapt",
+    "description": "Trả lời cụt kiểu caveman: đáp án trước, bỏ hết rườm rà, giữ nguyên mọi chi tiết kỹ thuật (code, đường dẫn, số, thông báo lỗi). Bật khi người dùng nói: 'caveman', 'caveman mode', 'nói ngắn', 'ngắn gọn thôi', 'trả lời cụt', 'ít token', 'bỏ rườm rà'. Không dấu cũng khớp: 'noi ngan', 'ngan gon thoi', 'tra loi cut', 'it token', 'bo ruom ra'. Tắt khi người dùng nói: 'stop caveman', 'bình thường lại', 'normal mode'. Vẫn viết đầy đủ câu khi cảnh báo bảo mật, hành động không thể hoàn tác, hoặc khi đang hỏi lại người dùng.",
+    "license": "Apache-2.0 (c) 2026 Julius Brussee - full text in LICENSE, attributions in NOTICE, both inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands; no hooks, no /caveman command, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/caveman.md"
   }
 }

@@ -34,6 +34,8 @@ và tiếng Anh.
 | `grill-me` | Alias một dòng, khởi động `grilling` | adapt từ upstream (xem `LICENSE`) |
 | `diagnosing-bugs` | Vòng chẩn đoán bug khó và suy giảm hiệu năng: dựng feedback loop đỏ, thu nhỏ, đặt giả thuyết, instrument, sửa, dọn dẹp | adapt từ upstream (xem `LICENSE`) |
 | `handoff` | Nén hội thoại hiện tại thành tài liệu bàn giao cho phiên sau, đã che secrets | adapt từ upstream (xem `LICENSE`) |
+| `ui-ux-pro-max` | Catalog UI/UX offline, tra bằng script local: 80 style, 192 palette theo loại sản phẩm, 74 cặp font, 120 rule UX, 105 icon, 22 stack, kèm generator design system | adapt từ upstream (xem `LICENSE`) |
+| `caveman` | Kiểu trả lời cụt: đáp án trước, bỏ rườm rà, giữ nguyên chi tiết kỹ thuật; giữ đến khi nói "stop caveman" | adapt từ upstream (xem `LICENSE`) |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |

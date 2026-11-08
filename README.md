@@ -33,6 +33,8 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `grill-me` | One-line alias that starts `grilling` | adapted from upstream (see `LICENSE`) |
 | `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions: build a failing feedback loop, minimise, hypothesise, instrument, fix, clean up | adapted from upstream (see `LICENSE`) |
 | `handoff` | Compact the current conversation into a handoff document for the next session, with secrets redacted | adapted from upstream (see `LICENSE`) |
+| `ui-ux-pro-max` | Offline UI/UX catalogue queried by a local script: 80 styles, 192 product palettes, 74 font pairings, 120 UX rules, 105 icons, 22 stacks, plus a design-system generator | adapted from upstream (see `LICENSE`) |
+| `caveman` | Terse reply style: answer first, no ceremony, every technical fact kept verbatim; stays on until "stop caveman" | adapted from upstream (see `LICENSE`) |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |
