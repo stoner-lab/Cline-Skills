@@ -139,6 +139,48 @@
       "path": "skills/caveman",
       "sha": "1e91f1306d602d4ca23618701b1185575ae1869b",
       "checked_at": "2026-11-08"
+    },
+    "design": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/design",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "design-system": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/design-system",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "ui-styling": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/ui-styling",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "brand": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/brand",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "slides": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/slides",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
+    },
+    "banner-design": {
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "path": ".claude/skills/banner-design",
+      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
+      "checked_at": "2026-11-08"
     }
   }
 }

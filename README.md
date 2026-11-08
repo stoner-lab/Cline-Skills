@@ -35,6 +35,12 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `handoff` | Compact the current conversation into a handoff document for the next session, with secrets redacted | adapted from upstream (see `LICENSE`) |
 | `ui-ux-pro-max` | Offline UI/UX catalogue queried by a local script: 80 styles, 192 product palettes, 74 font pairings, 120 UX rules, 105 icons, 22 stacks, plus a design-system generator | adapted from upstream (see `LICENSE`) |
 | `caveman` | Terse reply style: answer first, no ceremony, every technical fact kept verbatim; stays on until "stop caveman" | adapted from upstream (see `LICENSE`) |
+| `design` | Full design toolkit: brand identity, design tokens, UI styling, logo generation (needs an API key), corporate identity pack, HTML previews | adapted from upstream (see `LICENSE`) |
+| `design-system` | Three-layer token architecture (primitive to semantic to component), component specs, token-driven slide generation | adapted from upstream (see `LICENSE`) |
+| `ui-styling` | shadcn/ui and Tailwind work: add components, generate a Tailwind config, canvas designs, accessibility checks | adapted from upstream (see `LICENSE`) |
+| `brand` | Brand voice, visual identity, messaging frameworks, asset management and consistency checks | adapted from upstream (see `LICENSE`) |
+| `slides` | HTML presentations with Chart.js, design tokens, responsive layouts and slide copywriting formulas | adapted from upstream (see `LICENSE`) |
+| `banner-design` | Banner and hero artwork for social, ads, web and print, with several art directions | adapted from upstream (see `LICENSE`) |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |

@@ -36,6 +36,12 @@ và tiếng Anh.
 | `handoff` | Nén hội thoại hiện tại thành tài liệu bàn giao cho phiên sau, đã che secrets | adapt từ upstream (xem `LICENSE`) |
 | `ui-ux-pro-max` | Catalog UI/UX offline, tra bằng script local: 80 style, 192 palette theo loại sản phẩm, 74 cặp font, 120 rule UX, 105 icon, 22 stack, kèm generator design system | adapt từ upstream (xem `LICENSE`) |
 | `caveman` | Kiểu trả lời cụt: đáp án trước, bỏ rườm rà, giữ nguyên chi tiết kỹ thuật; giữ đến khi nói "stop caveman" | adapt từ upstream (xem `LICENSE`) |
+| `design` | Bộ công cụ thiết kế đầy đủ: brand identity, design token, UI styling, tạo logo (cần API key), gói corporate identity, HTML preview | adapt từ upstream (xem `LICENSE`) |
+| `design-system` | Kiến trúc token 3 lớp (primitive → semantic → component), spec component, sinh slide từ token | adapt từ upstream (xem `LICENSE`) |
+| `ui-styling` | Làm UI với shadcn/ui và Tailwind: thêm component, sinh tailwind config, canvas design, kiểm tra accessibility | adapt từ upstream (xem `LICENSE`) |
+| `brand` | Giọng điệu thương hiệu, nhận diện, messaging framework, quản lý asset, kiểm tra tính nhất quán | adapt từ upstream (xem `LICENSE`) |
+| `slides` | Bài trình chiếu HTML với Chart.js, design token, layout responsive, công thức copywriting cho slide | adapt từ upstream (xem `LICENSE`) |
+| `banner-design` | Banner và hero cho mạng xã hội, quảng cáo, website, bản in, nhiều hướng art direction | adapt từ upstream (xem `LICENSE`) |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |

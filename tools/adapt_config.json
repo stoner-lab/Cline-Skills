@@ -285,5 +285,101 @@
     "license": "Apache-2.0 (c) 2026 Julius Brussee - full text in LICENSE, attributions in NOTICE, both inside this directory",
     "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands; no hooks, no /caveman command, no subagents; see the Cline runtime notes inside.",
     "notes": "tools/notes/caveman.md"
+  },
+  "design": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/design",
+    "strategy": "adapt",
+    "description": "Bộ công cụ thiết kế đầy đủ: brand identity, design token, UI styling, tạo logo (55 style, cần API key), corporate identity 50 hạng mục, HTML preview. Dùng khi người dùng nói: 'thiết kế bộ nhận diện', 'làm logo', 'tạo design token', 'làm brand identity', 'sinh corporate identity', 'thiết kế thương hiệu'. Không dấu cũng khớp: 'thiet ke bo nhan dien', 'lam logo', 'tao design token', 'lam brand identity', 'sinh corporate identity', 'thiet ke thuong hieu'. Logo generation cần gói `google` và API key, hiện chưa có: nói rõ là không chạy được thay vì bịa. Kết hợp: design-system cho token, ui-styling cho code UI.",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/design.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
+  },
+  "design-system": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/design-system",
+    "strategy": "adapt",
+    "description": "Kiến trúc token 3 lớp (primitive → semantic → component), spec component, và sinh slide chiến lược từ token. Dùng khi người dùng nói: 'làm design system', 'tạo design token', 'viết spec component', 'chuẩn hoá token', 'sinh slide từ token'. Không dấu cũng khớp: 'lam design system', 'tao design token', 'viet spec component', 'chuan hoa token', 'sinh slide tu token'. Khác ui-ux-pro-max: skill này sinh file token/spec/slide, còn ui-ux-pro-max chỉ tra catalogue. Kết hợp: ui-styling để áp token vào Tailwind.",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/design-system.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
+  },
+  "ui-styling": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/ui-styling",
+    "strategy": "adapt",
+    "description": "Dựng UI bằng shadcn/ui (Radix + Tailwind): thêm component, sinh tailwind config, canvas design, kiểm tra accessibility. Dùng khi người dùng nói: 'dùng shadcn', 'thêm component shadcn', 'sinh tailwind config', 'style bằng tailwind', 'dựng ui bằng shadcn'. Không dấu cũng khớp: 'dung shadcn', 'them component shadcn', 'sinh tailwind config', 'style bang tailwind', 'dung ui bang shadcn'. Khác pptx/docx: đích là code UI. `npx shadcn-ui` cần mạng và một project Node có sẵn.",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/ui-styling.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
+  },
+  "brand": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/brand",
+    "strategy": "adapt",
+    "description": "Giọng điệu thương hiệu, nhận diện, messaging framework, quản lý asset và kiểm tra tính nhất quán của thương hiệu. Dùng khi người dùng nói: 'viết brand voice', 'giọng điệu thương hiệu', 'messaging framework', 'kiểm tra brand compliance', 'quản lý asset thương hiệu'. Không dấu cũng khớp: 'viet brand voice', 'giong dieu thuong hieu', 'messaging framework', 'kiem tra brand compliance', 'quan ly asset thuong hieu'. Không dùng cho thiết kế UI cụ thể (dùng ui-styling) hay slide (dùng slides).",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/brand.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
+  },
+  "slides": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/slides",
+    "strategy": "adapt",
+    "description": "Làm bài trình chiếu HTML có Chart.js, design token, layout responsive và công thức copywriting theo ngữ cảnh. Dùng khi người dùng nói: 'làm slide html', 'bài thuyết trình html', 'slide có chart', 'deck html', 'làm presentation html'. Không dấu cũng khớp: 'lam slide html', 'bai thuyet trinh html', 'slide co chart', 'deck html', 'lam presentation html'. Khác pptx: `slides` ra file HTML, còn pptx sửa/tạo file .pptx thật.",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/slides.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
+  },
+  "banner-design": {
+    "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "ref": "main",
+    "path": ".claude/skills/banner-design",
+    "strategy": "adapt",
+    "description": "Thiết kế banner cho mạng xã hội, quảng cáo, hero website và bản in, nhiều hướng art direction, có thể dùng ảnh sinh hoặc ảnh bạn đưa. Dùng khi người dùng nói: 'làm banner', 'thiết kế banner', 'banner mạng xã hội', 'banner quảng cáo', 'hero image'. Không dấu cũng khớp: 'lam banner', 'thiet ke banner', 'banner mang xa hoi', 'banner quang cao', 'hero image'. Không dùng cho landing page đầy đủ (dùng design-taste-frontend) hay UI app (ui-styling).",
+    "license": "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/banner-design.md",
+    "replacements": [
+      [
+        "python3 ",
+        "python "
+      ]
+    ]
   }
 }
