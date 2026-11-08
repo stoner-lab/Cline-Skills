@@ -1,6 +1,6 @@
 ---
 name: xlsx
-description: "Đọc, sửa, làm sạch bảng tính (.xlsx, .xlsm, .csv): thêm cột, công thức, format, chart, chuyển đổi định dạng. Dùng khi người dùng nói: 'làm file excel', 'tạo xlsx', 'sửa bảng tính', 'đọc file excel', 'công thức excel', 'làm sạch dữ liệu bảng'. Không dấu cũng khớp: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Không dùng khi đích là Word, HTML report hay script. Kết hợp: pptx khi số liệu phải thành slide, docx khi phải thành báo cáo."
+description: "Đọc, sửa, làm sạch bảng tính (.xlsx, .xlsm, .csv): thêm cột, công thức, format, chart, chuyển đổi định dạng. Dùng khi người dùng nói: 'làm file excel', 'tạo xlsx', 'sửa bảng tính', 'đọc file excel', 'công thức excel', 'làm sạch dữ liệu bảng'. Không dấu cũng khớp: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Không dùng khi đích là Word, HTML report hay script. Kết hợp: pptx khi số liệu phải thành slide, docx khi phải thành báo cáo. Nếu bảng là phụ lục của báo cáo học tập thì otchet lo; xlsx cho bảng tính độc lập."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

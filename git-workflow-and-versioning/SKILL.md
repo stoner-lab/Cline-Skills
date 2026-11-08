@@ -1,6 +1,6 @@
 ---
 name: git-workflow-and-versioning
-description: "Nhánh, commit nguyên tử, commit message, pull request, semantic versioning, changelog. Dùng khi người dùng nói: 'commit', 'tách commit', 'viết commit message', 'tạo nhánh', 'merge', 'xử lý conflict', 'tạo PR', 'đánh version', 'viết changelog'. Không dấu cũng khớp: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Dùng cả khi diff được dán trực tiếp trong chat. Kết hợp: code-review-and-quality trước khi tạo PR, diagnosing-bugs khi commit kèm bản sửa lỗi."
+description: "Nhánh, commit nguyên tử, commit message, pull request, semantic versioning, changelog. Dùng khi người dùng nói: 'commit', 'tách commit', 'viết commit message', 'tạo nhánh', 'merge', 'xử lý conflict', 'tạo PR', 'đánh version', 'viết changelog'. Không dấu cũng khớp: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Dùng cả khi diff được dán trực tiếp trong chat. Kết hợp: code-review-and-quality trước khi tạo PR, diagnosing-bugs khi commit kèm bản sửa lỗi. Chỉ về git: commit, nhánh, PR, version, changelog. Không dùng để sửa code hay tìm bug."
 license: "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)"
 compatibility: "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
 metadata:

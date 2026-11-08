@@ -1,6 +1,6 @@
 ---
 name: banner-design
-description: "Thiết kế banner cho mạng xã hội, quảng cáo, hero website và bản in, nhiều hướng art direction, có thể dùng ảnh sinh hoặc ảnh bạn đưa. Dùng khi người dùng nói: 'làm banner', 'thiết kế banner', 'banner mạng xã hội', 'banner quảng cáo', 'hero image'. Không dấu cũng khớp: 'lam banner', 'thiet ke banner', 'banner mang xa hoi', 'banner quang cao', 'hero image'. Không dùng cho landing page đầy đủ (dùng design-taste-frontend) hay UI app (ui-styling)."
+description: "Thiết kế banner cho mạng xã hội, quảng cáo, hero website và bản in, nhiều hướng art direction, có thể dùng ảnh sinh hoặc ảnh bạn đưa. Dùng khi người dùng nói: 'làm banner', 'thiết kế banner', 'banner mạng xã hội', 'banner quảng cáo', 'hero image'. Không dấu cũng khớp: 'lam banner', 'thiet ke banner', 'banner mang xa hoi', 'banner quang cao', 'hero image'. Không dùng cho landing page đầy đủ (dùng design-taste-frontend) hay UI app (ui-styling). Chỉ cho banner/hero đơn lẻ. Cần cả trang thì design-taste-frontend; cần app UI thì ui-styling."
 license: "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory"
 compatibility: "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside."
 metadata:

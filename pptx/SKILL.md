@@ -1,6 +1,6 @@
 ---
 name: pptx
-description: "Tạo, đọc, sửa và phân tích PowerPoint (.pptx, .potx): slide, layout, speaker notes, gộp và tách file. Dùng khi người dùng nói: 'làm slide', 'tạo powerpoint', 'sửa file pptx', 'bài thuyết trình', 'tách slide', 'gộp slide'. Không dấu cũng khớp: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Kết hợp: xlsx khi số liệu còn phải tính, docx khi cần tài liệu kèm."
+description: "Tạo, đọc, sửa và phân tích PowerPoint (.pptx, .potx): slide, layout, speaker notes, gộp và tách file. Dùng khi người dùng nói: 'làm slide', 'tạo powerpoint', 'sửa file pptx', 'bài thuyết trình', 'tách slide', 'gộp slide'. Không dấu cũng khớp: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Kết hợp: xlsx khi số liệu còn phải tính, docx khi cần tài liệu kèm. Làm/sửa file .pptx thật. Muốn bài trình chiếu HTML có Chart.js thì slides; báo cáo học tập tiếng Nga thì otchet."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: mcp-builder
-description: "Viết MCP server bằng Python hoặc Node, thiết kế tool và review MCP. Dùng khi người dùng nói: 'viết MCP server', 'tạo MCP', 'review MCP', 'thiết kế tool cho MCP'. Không dấu cũng khớp: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Không dùng cho REST API wrapper thuần không có lớp MCP. Kết hợp: code-review-and-quality sau khi viết xong server."
+description: "Viết MCP server bằng Python hoặc Node, thiết kế tool và review MCP. Dùng khi người dùng nói: 'viết MCP server', 'tạo MCP', 'review MCP', 'thiết kế tool cho MCP'. Không dấu cũng khớp: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Không dùng cho REST API wrapper thuần không có lớp MCP. Kết hợp: code-review-and-quality sau khi viết xong server. Chỉ khi viết/review MCP server. Code thường thì không cần skill này."
 license: "Complete terms in LICENSE.txt"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

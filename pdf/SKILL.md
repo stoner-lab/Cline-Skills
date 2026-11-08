@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: "Đọc, trích text và bảng từ PDF; gộp, tách, xoay, watermark, điền form, mã hoá, OCR, tạo PDF mới. Dùng khi người dùng nói: 'xử lý file pdf', 'đọc file pdf', 'tách pdf', 'gộp pdf', 'điền form pdf', 'pdf thành ảnh', 'tạo file pdf'. Không dấu cũng khớp: 'xu ly file pdf', 'doc file pdf', 'tach pdf', 'gop pdf', 'dien form pdf', 'pdf thanh anh', 'tao file pdf'. Dùng cả khi người dùng chỉ đính kèm một file .pdf và nói «file này». Kết hợp: otchet khi cần báo cáo, docx khi phải sửa nguồn Word trước khi xuất."
+description: "Đọc, trích text và bảng từ PDF; gộp, tách, xoay, watermark, điền form, mã hoá, OCR, tạo PDF mới. Dùng khi người dùng nói: 'xử lý file pdf', 'đọc file pdf', 'tách pdf', 'gộp pdf', 'điền form pdf', 'pdf thành ảnh', 'tạo file pdf'. Không dấu cũng khớp: 'xu ly file pdf', 'doc file pdf', 'tach pdf', 'gop pdf', 'dien form pdf', 'pdf thanh anh', 'tao file pdf'. Dùng cả khi người dùng chỉ đính kèm một file .pdf và nói «file này». Kết hợp: otchet khi cần báo cáo, docx khi phải sửa nguồn Word trước khi xuất. Nếu PDF sinh ra từ báo cáo học tập thì otchet lo phần đó. pdf dùng cho thao tác PDF độc lập."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

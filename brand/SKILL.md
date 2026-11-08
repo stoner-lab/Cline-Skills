@@ -1,6 +1,6 @@
 ---
 name: brand
-description: "Giọng điệu thương hiệu, nhận diện, messaging framework, quản lý asset và kiểm tra tính nhất quán của thương hiệu. Dùng khi người dùng nói: 'viết brand voice', 'giọng điệu thương hiệu', 'messaging framework', 'kiểm tra brand compliance', 'quản lý asset thương hiệu'. Không dấu cũng khớp: 'viet brand voice', 'giong dieu thuong hieu', 'messaging framework', 'kiem tra brand compliance', 'quan ly asset thuong hieu'. Không dùng cho thiết kế UI cụ thể (dùng ui-styling) hay slide (dùng slides)."
+description: "Giọng điệu thương hiệu, nhận diện, messaging framework, quản lý asset và kiểm tra tính nhất quán của thương hiệu. Dùng khi người dùng nói: 'viết brand voice', 'giọng điệu thương hiệu', 'messaging framework', 'kiểm tra brand compliance', 'quản lý asset thương hiệu'. Không dấu cũng khớp: 'viet brand voice', 'giong dieu thuong hieu', 'messaging framework', 'kiem tra brand compliance', 'quan ly asset thuong hieu'. Không dùng cho thiết kế UI cụ thể (dùng ui-styling) hay slide (dùng slides). Chỉ về giọng điệu, messaging, asset, tính nhất quán thương hiệu. Không thay ui-ux-pro-max khi cần thị giác, không thay design khi cần bộ nhận diện đầy đủ."
 license: "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory"
 compatibility: "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside."
 metadata:

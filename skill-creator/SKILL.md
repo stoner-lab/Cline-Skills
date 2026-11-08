@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: "Tạo, sửa, kiểm thử và đóng gói skill: viết SKILL.md, viết test prompt, sửa skill không chịu kích hoạt. Dùng khi người dùng nói: 'tạo skill', 'viết skill', 'sửa skill', 'skill không hoạt động', 'skill không tự kích hoạt', 'làm skill cho việc này', 'đóng gói skill'. Không dấu cũng khớp: 'tao skill', 'viet skill', 'sua skill', 'skill khong hoat dong', 'skill khong tu kich hoat', 'lam skill cho viec nay', 'dong goi skill'. Dùng cả khi người dùng nói «làm cái này thành skill» hoặc nhắc tới SKILL.md, .cline/skills. Kết hợp: injection-scan nếu skill mới sẽ đọc nội dung từ ngoài vào."
+description: "Tạo, sửa, kiểm thử và đóng gói skill: viết SKILL.md, viết test prompt, sửa skill không chịu kích hoạt. Dùng khi người dùng nói: 'tạo skill', 'viết skill', 'sửa skill', 'skill không hoạt động', 'skill không tự kích hoạt', 'làm skill cho việc này', 'đóng gói skill'. Không dấu cũng khớp: 'tao skill', 'viet skill', 'sua skill', 'skill khong hoat dong', 'skill khong tu kich hoat', 'lam skill cho viec nay', 'dong goi skill'. Dùng cả khi người dùng nói «làm cái này thành skill» hoặc nhắc tới SKILL.md, .cline/skills. Kết hợp: injection-scan nếu skill mới sẽ đọc nội dung từ ngoài vào. Chỉ khi tạo/sửa/đóng gói skill. Việc thường ngày không dùng skill này."
 ---
 
 # Skill Creator (Cline edition)

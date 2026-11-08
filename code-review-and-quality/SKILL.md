@@ -1,6 +1,6 @@
 ---
 name: code-review-and-quality
-description: "Soát code nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật. Dùng khi người dùng nói: 'review code', 'soát code', 'kiểm tra code trước khi merge', 'đánh giá chất lượng code', 'review pull request'. Không dấu cũng khớp: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code', 'review pull request'. Chạy được trên diff dán trực tiếp hoặc trên nhánh đã checkout. Kết hợp: sau khi review thì git-workflow-and-versioning để tách commit và mở PR."
+description: "Soát code nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật. Dùng khi người dùng nói: 'review code', 'soát code', 'kiểm tra code trước khi merge', 'đánh giá chất lượng code', 'review pull request'. Không dấu cũng khớp: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code', 'review pull request'. Chạy được trên diff dán trực tiếp hoặc trên nhánh đã checkout. Kết hợp: sau khi review thì git-workflow-and-versioning để tách commit và mở PR. Ưu tiên khi cần soát code TRƯỚC khi merge và chưa có lỗi cụ thể. Đang có lỗi thì diagnosing-bugs. Xong review thì git-workflow-and-versioning để tách commit."
 license: "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)"
 compatibility: "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
 metadata:

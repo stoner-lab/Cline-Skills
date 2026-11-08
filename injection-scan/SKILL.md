@@ -1,6 +1,6 @@
 ---
 name: injection-scan
-description: "Quét prompt injection offline cho văn bản và tài liệu (docx, pdf, pptx, xlsx, zip); exit 0 sạch, 1 chưa quét, 2 chặn. Dùng khi người dùng nói: 'quét injection', 'kiểm tra file độc hại', 'file này có injection không', 'quét trước khi đọc file lạ', 'kiểm tra prompt injection'. Không dấu cũng khớp: 'quet injection', 'kiem tra file doc hai', 'file nay co injection khong', 'quet truoc khi doc file la', 'kiem tra prompt injection'. Cũng chạy khi người dùng đưa một file lạ mà không nói rõ muốn gì. Kết hợp: gọi trước khi otchet, pdf, docx hoặc xlsx đọc bất kỳ file tải về."
+description: "Quét prompt injection offline cho văn bản và tài liệu (docx, pdf, pptx, xlsx, zip); exit 0 sạch, 1 chưa quét, 2 chặn. Dùng khi người dùng nói: 'quét injection', 'kiểm tra file độc hại', 'file này có injection không', 'quét trước khi đọc file lạ'. Không dấu cũng khớp: 'quet injection', 'kiem tra file doc hai', 'file nay co injection khong', 'quet truoc khi doc file la'. Cũng chạy khi người dùng đưa file lạ mà không nói rõ. Chạy trước khi đọc nội dung tải về; không thay skill xử lý tài liệu, chỉ là bước kiểm."
 license: "MIT"
 compatibility: "Cline on Windows: PowerShell 5.1 + Python 3 (python-docx, python-pptx, openpyxl, PyMuPDF optional but recommended); run_commands; no subagents, no network."
 metadata:

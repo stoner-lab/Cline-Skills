@@ -1,6 +1,6 @@
 ---
 name: ui-styling
-description: "Dựng UI bằng shadcn/ui (Radix + Tailwind): thêm component, sinh tailwind config, canvas design, kiểm tra accessibility. Dùng khi người dùng nói: 'dùng shadcn', 'thêm component shadcn', 'sinh tailwind config', 'style bằng tailwind', 'dựng ui bằng shadcn'. Không dấu cũng khớp: 'dung shadcn', 'them component shadcn', 'sinh tailwind config', 'style bang tailwind', 'dung ui bang shadcn'. Khác pptx/docx: đích là code UI. `npx shadcn-ui` cần mạng và một project Node có sẵn."
+description: "Dựng UI bằng shadcn/ui (Radix + Tailwind): thêm component, sinh tailwind config, canvas design, kiểm tra accessibility. Dùng khi người dùng nói: 'dùng shadcn', 'thêm component shadcn', 'sinh tailwind config', 'style bằng tailwind', 'dựng ui bằng shadcn'. Không dấu cũng khớp: 'dung shadcn', 'them component shadcn', 'sinh tailwind config', 'style bang tailwind', 'dung ui bang shadcn'. Khác pptx/docx: đích là code UI. `npx shadcn-ui` cần mạng và một project Node có sẵn. Dùng khi đã có hướng thị giác và cần CODE: shadcn/ui, Tailwind config, component. Chọn style/palette thì ui-ux-pro-max trước; audit kết quả thì impeccable."
 license: "MIT (c) 2024 Next Level Builder - full text in LICENSE inside this directory"
 compatibility: "Cline on Windows: PowerShell shell, python 3.14 and node 24 on PATH, read_files/editor/run_commands; scripts run from the skill directory; no subagents; see the Cline runtime notes inside."
 metadata:

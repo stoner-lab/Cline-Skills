@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: "Nén hội thoại hiện tại thành tài liệu bàn giao để phiên sau tiếp tục: đã làm gì, tiếp theo là gì, nên gọi skill nào, đã che secrets. Dùng khi người dùng nói: 'bàn giao công việc', 'viết handoff', 'tóm tắt để phiên sau tiếp', 'chuẩn bị context cho phiên mới'. Không dấu cũng khớp: 'ban giao cong viec', 'viet handoff', 'tom tat de phien sau tiep', 'chuan bi context cho phien moi'. Kết hợp: ghi rõ trong tài liệu những skill mà phiên sau nên gọi."
+description: "Nén hội thoại hiện tại thành tài liệu bàn giao để phiên sau tiếp tục: đã làm gì, tiếp theo là gì, nên gọi skill nào, đã che secrets. Dùng khi người dùng nói: 'bàn giao công việc', 'viết handoff', 'tóm tắt để phiên sau tiếp', 'chuẩn bị context cho phiên mới'. Không dấu cũng khớp: 'ban giao cong viec', 'viet handoff', 'tom tat de phien sau tiep', 'chuan bi context cho phien moi'. Kết hợp: ghi rõ trong tài liệu những skill mà phiên sau nên gọi. Chỉ dùng cuối phiên hoặc khi chuyển việc sang agent khác, không dùng giữa việc."
 license: "MIT (c) 2026 Matt Pocock - full text in LICENSE inside this directory"
 compatibility: "Cline on Windows: PowerShell shell, read_files/editor/run_commands/search_codebase, no subagents; see the Cline runtime notes inside."
 metadata:

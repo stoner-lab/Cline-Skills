@@ -1,6 +1,6 @@
 ---
 name: docx
-description: "Tạo, đọc và sửa tài liệu Word (.docx, .dotx): bảng, mục lục, heading, số trang, ảnh, tracked changes. Dùng khi người dùng nói: 'làm file word', 'tạo docx', 'sửa file word', 'chèn bảng vào word', 'đọc file docx', 'viết báo cáo word'. Không dấu cũng khớp: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Không dùng cho PDF, bảng tính hay code. Kết hợp: otchet khi đó là báo cáo học tập tiếng Nga, pdf khi phải xuất PDF."
+description: "Tạo, đọc và sửa tài liệu Word (.docx, .dotx): bảng, mục lục, heading, số trang, ảnh, tracked changes. Dùng khi người dùng nói: 'làm file word', 'tạo docx', 'sửa file word', 'chèn bảng vào word', 'đọc file docx', 'viết báo cáo word'. Không dấu cũng khớp: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Không dùng cho PDF, bảng tính hay code. Kết hợp: otchet khi đó là báo cáo học tập tiếng Nga, pdf khi phải xuất PDF. Nếu là báo cáo học tập tiếng Nga theo бланк thì otchet thắng (otchet tự dựng DOCX/PDF). docx dùng cho tài liệu Word thường, không theo mẫu trường."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:
