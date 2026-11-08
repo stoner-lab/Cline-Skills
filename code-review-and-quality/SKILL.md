@@ -1,6 +1,6 @@
 ---
 name: code-review-and-quality
-description: "Run a multi-axis code review before merging: correctness, design, readability, naming, error handling, performance, security, tests and simplicity. Use when reviewing your own diff, another agent's change or a human pull request, when a change is about to enter the main branch, or when the user asks to review code. Vietnamese triggers: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code'. Russian triggers: 'ревью кода', 'проверить код перед merge'. Works on a pasted diff as well as on a checked-out branch."
+description: "Soát code nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật. Dùng khi người dùng nói: 'review code', 'soát code', 'kiểm tra code trước khi merge', 'đánh giá chất lượng code', 'review pull request'. Không dấu cũng khớp: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code', 'review pull request'. Chạy được trên diff dán trực tiếp hoặc trên nhánh đã checkout. Kết hợp: sau khi review thì git-workflow-and-versioning để tách commit và mở PR."
 license: "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)"
 compatibility: "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
 metadata:

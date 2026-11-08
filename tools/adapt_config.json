@@ -4,7 +4,7 @@
     "ref": "main",
     "path": "skills/docx",
     "strategy": "adapt",
-    "description": "Create, read, edit or manipulate Word documents (.docx and .dotx): reports, memos, letters, templates, tables of contents, headings, page numbers, letterheads, images, find-and-replace, tracked changes and comments. Use whenever the user mentions Word, .docx, .dotx, or asks for a document/report/memo/letter deliverable. Vietnamese triggers: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Russian triggers: 'сделать docx', 'отчёт в Word', 'правка docx'. Not for PDF, spreadsheets or unrelated coding tasks.",
+    "description": "Tạo, đọc và sửa tài liệu Word (.docx, .dotx): bảng, mục lục, heading, số trang, ảnh, tracked changes. Dùng khi người dùng nói: 'làm file word', 'tạo docx', 'sửa file word', 'chèn bảng vào word', 'đọc file docx', 'viết báo cáo word'. Không dấu cũng khớp: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Không dùng cho PDF, bảng tính hay code. Kết hợp: otchet khi đó là báo cáo học tập tiếng Nga, pdf khi phải xuất PDF.",
     "notes": "tools/notes/docx.md",
     "license": "Proprietary. LICENSE.txt has complete terms",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -14,7 +14,7 @@
     "ref": "main",
     "path": "skills/pdf",
     "strategy": "adapt",
-    "description": "Work with PDF files: read and extract text or tables, merge, split, rotate pages, add watermarks, create new PDFs, fill forms, encrypt and decrypt, extract images, OCR scanned pages. Use whenever a .pdf file is mentioned or a PDF must be produced. Vietnamese triggers: 'xu ly file pdf', 'doc file pdf', 'tach pdf', 'gop pdf', 'dien form pdf', 'pdf thanh anh', 'tao file pdf'. Russian triggers: 'работа с PDF', 'объединить PDF', 'заполнить PDF'. Use it even when the user only attaches a file and says 'file nay'.",
+    "description": "Đọc, trích text và bảng từ PDF; gộp, tách, xoay, watermark, điền form, mã hoá, OCR, tạo PDF mới. Dùng khi người dùng nói: 'xử lý file pdf', 'đọc file pdf', 'tách pdf', 'gộp pdf', 'điền form pdf', 'pdf thành ảnh', 'tạo file pdf'. Không dấu cũng khớp: 'xu ly file pdf', 'doc file pdf', 'tach pdf', 'gop pdf', 'dien form pdf', 'pdf thanh anh', 'tao file pdf'. Dùng cả khi người dùng chỉ đính kèm một file .pdf và nói «file này». Kết hợp: otchet khi cần báo cáo, docx khi phải sửa nguồn Word trước khi xuất.",
     "notes": "tools/notes/pdf.md",
     "license": "Proprietary. LICENSE.txt has complete terms",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -24,7 +24,7 @@
     "ref": "main",
     "path": "skills/pptx",
     "strategy": "adapt",
-    "description": "Create, read, edit or analyse PowerPoint files (.pptx, .potx): slide decks, pitch decks, presentations; extract text from existing decks; edit or update slides; combine or split files; work with templates, layouts, speaker notes and comments. Use whenever the user mentions deck, slides, presentation, .pptx or .potx. Vietnamese triggers: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Russian triggers: 'сделать презентацию', 'правка pptx'. If a .pptx file must be opened, created or touched, use this skill.",
+    "description": "Tạo, đọc, sửa và phân tích PowerPoint (.pptx, .potx): slide, layout, speaker notes, gộp và tách file. Dùng khi người dùng nói: 'làm slide', 'tạo powerpoint', 'sửa file pptx', 'bài thuyết trình', 'tách slide', 'gộp slide'. Không dấu cũng khớp: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Kết hợp: xlsx khi số liệu còn phải tính, docx khi cần tài liệu kèm.",
     "notes": "tools/notes/pptx.md",
     "license": "Proprietary. LICENSE.txt has complete terms",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -34,7 +34,7 @@
     "ref": "main",
     "path": "skills/xlsx",
     "strategy": "adapt",
-    "description": "Work with spreadsheet files as the primary input or output: open, read, edit or fix .xlsx/.xlsm/.xltx/.csv/.tsv, add columns, write formulas, format, chart, clean messy tabular data, create a spreadsheet from scratch, convert between tabular formats. Use when a spreadsheet file is named or implied and the deliverable is a spreadsheet. Vietnamese triggers: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Russian triggers: 'сделать таблицу в Excel', 'правка xlsx'. Not when the deliverable is a Word doc, HTML report or a plain script.",
+    "description": "Đọc, sửa, làm sạch bảng tính (.xlsx, .xlsm, .csv): thêm cột, công thức, format, chart, chuyển đổi định dạng. Dùng khi người dùng nói: 'làm file excel', 'tạo xlsx', 'sửa bảng tính', 'đọc file excel', 'công thức excel', 'làm sạch dữ liệu bảng'. Không dấu cũng khớp: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Không dùng khi đích là Word, HTML report hay script. Kết hợp: pptx khi số liệu phải thành slide, docx khi phải thành báo cáo.",
     "notes": "tools/notes/xlsx.md",
     "license": "Proprietary. LICENSE.txt has complete terms",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -44,7 +44,7 @@
     "ref": "main",
     "path": "skills/frontend-design",
     "strategy": "adapt",
-    "description": "Visual design guidance for building or reshaping a UI so it does not look templated: aesthetic direction, typography, colour, spacing, hierarchy, distinctive choices. Use when the user wants a page, screen or component designed, restyled or critiqued for look and feel. Vietnamese triggers: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Russian triggers: 'дизайн интерфейса', 'сделать красиво'. Pairs with the `impeccable` skill for audits and rewrites.",
+    "description": "Hướng dẫn thiết kế thị giác để giao diện không trông như template. Dùng khi người dùng nói: 'thiết kế giao diện', 'làm UI đẹp', 'giao diện xấu quá', 'chỉnh phong cách thiết kế', 'làm trang đẹp hơn'. Không dấu cũng khớp: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Đi kèm impeccable khi cần audit và viết lại. Kết hợp: impeccable để audit và viết lại, design-taste-frontend để dựng trang hoàn chỉnh.",
     "notes": "tools/notes/frontend-design.md",
     "license": "Complete terms in LICENSE.txt",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -54,7 +54,7 @@
     "ref": "main",
     "path": "skills/mcp-builder",
     "strategy": "adapt",
-    "description": "Build high-quality MCP (Model Context Protocol) servers that let LLMs call external services through well-designed tools, in Python (FastMCP) or Node/TypeScript (MCP SDK). Use when the user wants to create, extend or review an MCP server, design MCP tools, or evaluate an MCP implementation. Vietnamese triggers: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Russian triggers: 'написать MCP-сервер', 'оценка MCP'. Not for plain REST API wrappers with no MCP layer.",
+    "description": "Viết MCP server bằng Python hoặc Node, thiết kế tool và review MCP. Dùng khi người dùng nói: 'viết MCP server', 'tạo MCP', 'review MCP', 'thiết kế tool cho MCP'. Không dấu cũng khớp: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Không dùng cho REST API wrapper thuần không có lớp MCP. Kết hợp: code-review-and-quality sau khi viết xong server.",
     "notes": "tools/notes/mcp-builder.md",
     "license": "Complete terms in LICENSE.txt",
     "compatibility": "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
@@ -64,7 +64,7 @@
     "ref": "main",
     "path": "skills/skill-creator",
     "strategy": "manual",
-    "description": "Create, edit, improve, and evaluate Cline skills (SKILL.md folders under .cline/skills). Use whenever the user wants to turn a workflow into a reusable skill, write a new skill, fix a skill that does not trigger or triggers too often, rewrite or tighten an existing SKILL.md, design test prompts and iterate on a skill from the results, or package and share a skill folder. Trigger it also on Vietnamese phrasing — \"tạo skill\", \"viết skill\", \"sửa skill\", \"skill không hoạt động\", \"skill không tự kích hoạt\", \"làm skill cho việc này\", \"đóng gói skill\" — and on Russian «создать навык», «улучшить skill», «скилл не срабатывает». Trigger even when the user only says \"make this repeatable\", \"save this as a skill\", or mentions SKILL.md, .cline/skills, or a slash command.",
+    "description": "Tạo, sửa, kiểm thử và đóng gói skill: viết SKILL.md, viết test prompt, sửa skill không chịu kích hoạt. Dùng khi người dùng nói: 'tạo skill', 'viết skill', 'sửa skill', 'skill không hoạt động', 'skill không tự kích hoạt', 'làm skill cho việc này', 'đóng gói skill'. Không dấu cũng khớp: 'tao skill', 'viet skill', 'sua skill', 'skill khong hoat dong', 'skill khong tu kich hoat', 'lam skill cho viec nay', 'dong goi skill'. Dùng cả khi người dùng nói «làm cái này thành skill» hoặc nhắc tới SKILL.md, .cline/skills. Kết hợp: injection-scan nếu skill mới sẽ đọc nội dung từ ngoài vào.",
     "notes": "tools/notes/skill-creator.md",
     "license": "Apache 2.0 (see LICENSE.txt)"
   },
@@ -73,7 +73,7 @@
     "ref": "main",
     "path": "skills/git-workflow-and-versioning",
     "strategy": "adapt",
-    "description": "Structure the git workflow for any code change: branch, commit atomically, write commit messages, split a messy working tree into clean commits, resolve conflicts, push, open and review pull requests, cut releases, pick a semantic version bump, tag, and write changelogs. Use whenever a change is about to be committed or any git operation is discussed. Vietnamese triggers: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Russian triggers: 'сделать коммит', 'разбить на коммиты', 'релиз'. Use it even when the diff is pasted inline and the message looks trivial.",
+    "description": "Nhánh, commit nguyên tử, commit message, pull request, semantic versioning, changelog. Dùng khi người dùng nói: 'commit', 'tách commit', 'viết commit message', 'tạo nhánh', 'merge', 'xử lý conflict', 'tạo PR', 'đánh version', 'viết changelog'. Không dấu cũng khớp: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Dùng cả khi diff được dán trực tiếp trong chat. Kết hợp: code-review-and-quality trước khi tạo PR, diagnosing-bugs khi commit kèm bản sửa lỗi.",
     "notes": "tools/notes/git-workflow-and-versioning.md",
     "license": "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)",
     "compatibility": "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
@@ -83,7 +83,7 @@
     "ref": "main",
     "path": "skills/documentation-and-adrs",
     "strategy": "adapt",
-    "description": "Record decisions and documentation: architecture decision records (ADR), the reasoning behind a design choice, README and API docs updates when a public interface changes, release notes, and the context future engineers and agents need to understand the codebase. Use when a decision must be written down or the documentation is missing or stale. Vietnamese triggers: 'viet ADR', 'ghi lai quyet dinh kien truc', 'viet tai lieu', 'cap nhat README', 'document quyet dinh'. Russian triggers: 'написать ADR', 'оформить решение', 'обновить документацию'. Not for writing marketing copy.",
+    "description": "Ghi lại quyết định và tài liệu: ADR, lý do chọn thiết kế, cập nhật README/API docs, release notes. Dùng khi người dùng nói: 'viết ADR', 'ghi lại quyết định kiến trúc', 'viết tài liệu', 'cập nhật README', 'document quyết định', 'viết release notes'. Không dấu cũng khớp: 'viet ADR', 'ghi lai quyet dinh kien truc', 'viet tai lieu', 'cap nhat README', 'document quyet dinh', 'viet release notes'. Không dùng để viết nội dung marketing.",
     "notes": "tools/notes/documentation-and-adrs.md",
     "license": "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)",
     "compatibility": "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
@@ -93,7 +93,7 @@
     "ref": "main",
     "path": "skills/code-review-and-quality",
     "strategy": "adapt",
-    "description": "Run a multi-axis code review before merging: correctness, design, readability, naming, error handling, performance, security, tests and simplicity. Use when reviewing your own diff, another agent's change or a human pull request, when a change is about to enter the main branch, or when the user asks to review code. Vietnamese triggers: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code'. Russian triggers: 'ревью кода', 'проверить код перед merge'. Works on a pasted diff as well as on a checked-out branch.",
+    "description": "Soát code nhiều chiều trước khi merge: tính đúng, thiết kế, lỗi, test, bảo mật. Dùng khi người dùng nói: 'review code', 'soát code', 'kiểm tra code trước khi merge', 'đánh giá chất lượng code', 'review pull request'. Không dấu cũng khớp: 'review code', 'soat code', 'kiem tra code truoc khi merge', 'danh gia chat luong code', 'review pull request'. Chạy được trên diff dán trực tiếp hoặc trên nhánh đã checkout. Kết hợp: sau khi review thì git-workflow-and-versioning để tách commit và mở PR.",
     "notes": "tools/notes/code-review-and-quality.md",
     "license": "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)",
     "compatibility": "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
@@ -103,7 +103,7 @@
     "ref": "main",
     "path": ".claude/skills/impeccable",
     "strategy": "manual",
-    "description": "Design, redesign, shape, critique, audit, polish, simplify, harden, animate, or otherwise improve a frontend interface: websites, landing pages, dashboards, product UI, components, forms, settings, onboarding, empty states, and native iOS or Android screens. Covers UX review, hierarchy, layout, typography, color, motion, UX copy, accessibility, responsive behavior, edge cases, and design systems (DESIGN.md, tokens); also making bland UI bolder, loud UI quieter, or building ambitious visual effects. Trigger it whenever the user mentions UI, UX, a screen, a page, layout, components, styling, CSS, Tailwind, a screenshot to fix, or says things like 'làm đẹp giao diện', 'sửa UI', 'thiết kế lại trang', 'giao diện xấu quá', 'review giao diện', 'audit UI', 'улучшить интерфейс', 'сделать красиво', 'design review' — even when the request looks like a small CSS tweak. Not for backend-only or non-UI tasks.",
+    "description": "Định hướng thiết kế frontend, audit, phê bình và viết lại giao diện, kèm thư viện playbook và design detector. Dùng khi người dùng nói: 'làm đẹp giao diện', 'sửa UI', 'thiết kế lại trang', 'giao diện xấu quá', 'review giao diện', 'audit UI', 'design review'. Không dấu cũng khớp: 'lam dep giao dien', 'sua UI', 'thiet ke lai trang', 'giao dien xau qua', 'review giao dien', 'audit UI', 'design review'. Dùng khi nhắc tới UI, UX, màn hình, layout, component, CSS, Tailwind hoặc ảnh chụp cần sửa. Không dùng cho việc chỉ backend. Kết hợp: design-taste-frontend khi phải làm lại cả trang, frontend-design khi cần hướng thị giác.",
     "notes": "tools/notes/impeccable.md",
     "license": "Apache 2.0",
     "skill_dir": "C:\\Users\\duy\\.cline\\skills\\impeccable",
@@ -141,7 +141,7 @@
     "ref": "main",
     "path": "skills/manim",
     "strategy": "manual",
-    "description": "Build math/physics/CS animations with Manim Community Edition in Python: Scenes and Mobjects, timed animations, LaTeX/MathTex equation morphs, graphs and ValueTracker updaters, 3D scenes and moving camera, then render to MP4/GIF from the CLI with a render-a-frame-first verify loop. Trigger when the user asks to make a math animation, animate an equation or formula, morph one formula into another, plot or animate a graph/function, trace a dot along a curve, animate a geometric proof, build a 3Blue1Brown-style explainer, or visualize a math/physics/CS concept as a video. Vietnamese triggers: 'lam video minh hoa toan', 'animate cong thuc', 've do thi dong', 'dung canh 3D', 'xuat MP4/GIF tu Python'. Russian triggers: 'анимация формулы', 'анимировать график', 'ролик в стиле 3Blue1Brown', 'визуализировать теорему'. Not for UI motion, Remotion/social video, or CSV business charts.",
+    "description": "Làm animation toán/lý bằng Manim CE: công thức, đồ thị, chứng minh hình học, cảnh 3D, xuất MP4/GIF. Dùng khi người dùng nói: 'làm video minh họa toán', 'animate công thức', 'vẽ đồ thị động', 'dựng cảnh 3D', 'xuất MP4 từ Python'. Không dấu cũng khớp: 'lam video minh hoa toan', 'animate cong thuc', 've do thi dong', 'dung canh 3D', 'xuat MP4 tu Python'. Không dùng cho UI motion, video mạng xã hội hay chart CSV. Kết hợp: archify khi cần sơ đồ tĩnh thay vì video.",
     "license": "MIT, Copyright (c) 2026 iart.ai (see LICENSE)",
     "compatibility": "Cline on Windows: PowerShell shell, python -m manim (Manim CE 0.22.1), ffmpeg/ffprobe and MiKTeX installed; the upstream bash helpers are ported to PowerShell in scripts/; no subagents."
   },
@@ -149,14 +149,15 @@
     "repo": "stoner-lab/Otchet",
     "ref": "main",
     "path": ".",
-    "strategy": "own"
+    "strategy": "own",
+    "description": "Viết báo cáo học tập bằng tiếng Nga cho mọi môn: đọc đề bài, tìm variant, xem mẫu, hỏi chỗ thiếu rồi tạo DOCX/PDF theo бланк. Dùng khi người dùng nói: 'báo cáo', 'làm báo cáo', 'làm bài', 'viết báo cáo', 'báo cáo môn', 'giáo trình', 'làm ПР', 'làm реферат', 'làm курсовую'. Không dấu cũng khớp: 'bao cao', 'lam bao cao', 'lam bai', 'viet bao cao', 'bao cao mon', 'giao trinh', 'lam ПР', 'lam реферат', 'lam курсовую'. Tiếng Nga: ПР, лабораторная, реферат, курсовая, отчёт по практике, НИР, МДП, методичка. Nếu người dùng chỉ nói «làm bài» hoặc «làm báo cáo» mà không gọi /otchet thì hỏi một câu xác nhận trước khi dùng skill. Chỉ gửi giáo trình mà không nói gì thì làm đúng 100% theo giáo trình, kể cả mục Рекомендации. Kết hợp: chạy injection-scan trước khi đọc tài liệu tải về; cần slide thì pptx, cần bảng thì xlsx."
   },
   "design-taste-frontend": {
     "repo": "Leonxlnx/taste-skill",
     "ref": "main",
     "path": "skills/taste-skill",
     "strategy": "adapt",
-    "description": "Build a professional company website at the level of figma.com and x.ai instead of a generic template: plain copy, one design system, one section per screen, equal edges, real photographs and real product UI, real brand icons, quiet hover micro-interactions, shader effects and scenes only on tech, gaming and software pages, plus a headless-browser checker that enforces all of it. Use for building, designing, redesigning, restyling, polishing or reviewing a landing page, company, product, shop, cafe, hotel, studio, SaaS, AI, developer-tool or game site in any stack: HTML/CSS, React, Next.js, Vue, Svelte, Astro, Tailwind. Vietnamese triggers: lam landing page, thiet ke lai trang, trang trong chung chung, web trong nhu AI lam, sua giao dien. Russian triggers: сделать нормальный лендинг, страница выглядит шаблонно, переделай сайт. Also use it when a page looks generic, templated or AI-made. Not for backend-only work or a Word, PDF or spreadsheet deliverable.",
+    "description": "Làm landing page và website công ty ở mức figma.com, x.ai, tự kiểm bằng headless browser. Dùng khi người dùng nói: 'làm landing page', 'thiết kế lại trang', 'trang trông chung chung', 'web trông như AI làm', 'sửa giao diện'. Không dấu cũng khớp: 'lam landing page', 'thiet ke lai trang', 'trang trong chung chung', 'web trong nhu AI lam', 'sua giao dien'. Dùng khi trang trông generic, nhạt, giống template. Kết hợp: impeccable để audit sau khi dựng, frontend-design để chốt hướng thị giác.",
     "license": "MIT, Copyright (c) 2026 Leonxlnx (see LICENSE)",
     "notes": "tools/notes/design-taste-frontend.md",
     "keep": [
@@ -178,7 +179,7 @@
     "ref": "main",
     "path": "archify",
     "strategy": "adapt",
-    "description": "Turn an idea, plan, requirement, Mermaid source or an existing codebase into a validated, explorable standalone HTML diagram: architecture, workflow, sequence, dataflow, lifecycle and state, ERD, class, tree, timeline, waterfall; also one-page explainers with the conclusion first. Use when the user asks to draw, visualize, map or explain a system, an API call chain, a pipeline, a schema, a process, a state machine, a history, timing or a repository structure, or wants an answer delivered as a shareable page. Vietnamese triggers: 've so do', 'lam so do kien truc', 'so do luong du lieu', 'so do tuan tu', 'so do lop', 've erd', 'so do trang thai', 'giai thich bang mot trang'. Russian triggers: 'нарисуй схему', 'схема архитектуры', 'диаграмма последовательности', 'схема базы данных', 'объясни одной страницей'. Not for dashboards, charts built from data files, or slide decks.",
+    "description": "Biến ý tưởng, kế hoạch, Mermaid hoặc codebase thành sơ đồ HTML standalone đã validate, hoặc một trang giải thích. Dùng khi người dùng nói: 'vẽ sơ đồ', 'làm sơ đồ kiến trúc', 'sơ đồ luồng dữ liệu', 'sơ đồ tuần tự', 'sơ đồ lớp', 'vẽ erd', 'sơ đồ trạng thái', 'giải thích bằng một trang'. Không dấu cũng khớp: 've so do', 'lam so do kien truc', 'so do luong du lieu', 'so do tuan tu', 'so do lop', 've erd', 'so do trang thai', 'giai thich bang mot trang'. Kết hợp: nếu ý tưởng còn mơ hồ thì tra vấn bằng grilling trước khi vẽ; xong thì giao file HTML.",
     "license": "Apache-2.0 (see LICENSE, NOTICE, THIRD_PARTY_NOTICES.md)",
     "notes": "tools/notes/archify.md",
     "compatibility": "Cline on Windows: PowerShell shell, run_commands/read_files/editor, Node 18+ in PATH (v24 present), no npm install needed because the package is self-contained and dependency-free, no subagents; browser-based preview and visual-check degrade to manual review; see the Cline runtime notes inside.",
@@ -201,6 +202,58 @@
       "brand-marks",
       "scripts",
       "examples"
+    ]
+  },
+  "grilling": {
+    "repo": "mattpocock/skills",
+    "ref": "main",
+    "path": "skills/productivity/grilling",
+    "strategy": "adapt",
+    "description": "Phỏng vấn dồn dập để stress-test một kế hoạch hoặc quyết định, theo cây quyết định, từng vòng câu hỏi, mỗi câu kèm đáp án gợi ý. Dùng khi người dùng nói: 'yêu cầu mơ hồ', 'chưa rõ phạm vi', 'không biết bắt đầu từ đâu', 'tra vấn tôi', 'hỏi dồn dập', 'stress test kế hoạch', 'phản biện kế hoạch', 'làm rõ yêu cầu'. Không dấu cũng khớp: 'tra van toi', 'hoi don dap', 'stress test ke hoach', 'phan bien ke hoach', 'lam ro yeu cau'. Dừng khi frontier rỗng: mọi nhánh của cây quyết định đã được hỏi. Cũng dùng khi yêu cầu mơ hồ hoặc thiếu thông tin, trước khi giao việc cho skill khác. Kết hợp: tra vấn xong mới chuyển sang archify, otchet hoặc skill-creator.",
+    "license": "MIT (c) 2026 Matt Pocock - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands/search_codebase, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/grilling.md"
+  },
+  "grill-me": {
+    "repo": "mattpocock/skills",
+    "ref": "main",
+    "path": "skills/productivity/grill-me",
+    "strategy": "adapt",
+    "description": "Alias một dòng: khởi động skill grilling để tra vấn bạn về một kế hoạch hay thiết kế. Dùng khi người dùng nói: 'giúp tôi với', 'làm cái này', 'tôi chưa rõ muốn gì', 'không biết bắt đầu từ đâu', 'yêu cầu mơ hồ', 'grill tôi đi', 'hỏi tôi thật chặt', 'tra vấn tôi'. Không dấu cũng khớp: 'grill toi di', 'hoi toi that chat', 'tra van toi'. Toàn bộ phương pháp nằm trong skill grilling. ĐÂY LÀ SKILL MẶC ĐỊNH KHI YÊU CẦU MƠ HỒ: nếu người dùng chỉ nói 'giúp tôi với', 'làm cái này', 'tôi chưa rõ muốn gì', 'không biết bắt đầu từ đâu', 'tuỳ bạn', hoặc đưa một kế hoạch còn thiếu thông tin thì tra vấn trước khi làm bất cứ việc gì.",
+    "license": "MIT (c) 2026 Matt Pocock - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands/search_codebase, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/grill-me.md",
+    "replacements": [
+      [
+        "Call the Skill tool with \"grilling\".",
+        "Use the `grilling` skill: call the `skills` tool with skill `grilling`, or read `C:\\Users\\<user>\\.cline\\skills\\grilling\\SKILL.md` and follow it exactly."
+      ]
+    ]
+  },
+  "diagnosing-bugs": {
+    "repo": "mattpocock/skills",
+    "ref": "main",
+    "path": "skills/engineering/diagnosing-bugs",
+    "strategy": "adapt",
+    "description": "Vòng chẩn đoán bug khó và suy giảm hiệu năng: dựng feedback loop đỏ trước, rồi thu nhỏ, đặt giả thuyết, instrument, sửa, dọn dẹp. Dùng khi người dùng nói: 'debug cái này', 'tìm nguyên nhân lỗi', 'sửa bug', 'tại sao bị lỗi', 'chậm quá', 'tại sao crash'. Không dấu cũng khớp: 'debug cai nay', 'tim nguyen nhan loi', 'sua bug', 'tai sao bi loi', 'cham qua', 'tai sao crash'. Dùng khi đã có lỗi cụ thể cần tìm nguyên nhân; muốn soát code chưa có lỗi thì dùng code-review-and-quality. Kết hợp: sửa xong thì dùng git-workflow-and-versioning để commit kèm regression test.",
+    "license": "MIT (c) 2026 Matt Pocock - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands/search_codebase, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/diagnosing-bugs.md"
+  },
+  "handoff": {
+    "repo": "mattpocock/skills",
+    "ref": "main",
+    "path": "skills/productivity/handoff",
+    "strategy": "adapt",
+    "description": "Nén hội thoại hiện tại thành tài liệu bàn giao để phiên sau tiếp tục: đã làm gì, tiếp theo là gì, nên gọi skill nào, đã che secrets. Dùng khi người dùng nói: 'bàn giao công việc', 'viết handoff', 'tóm tắt để phiên sau tiếp', 'chuẩn bị context cho phiên mới'. Không dấu cũng khớp: 'ban giao cong viec', 'viet handoff', 'tom tat de phien sau tiep', 'chuan bi context cho phien moi'. Kết hợp: ghi rõ trong tài liệu những skill mà phiên sau nên gọi.",
+    "license": "MIT (c) 2026 Matt Pocock - full text in LICENSE inside this directory",
+    "compatibility": "Cline on Windows: PowerShell shell, read_files/editor/run_commands/search_codebase, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/handoff.md",
+    "replacements": [
+      [
+        "naming which skills the next agent should call the Skill tool for.",
+        "naming which skills the next agent should call the `skills` tool for (Cline)."
+      ]
     ]
   }
 }

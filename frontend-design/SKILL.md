@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: "Visual design guidance for building or reshaping a UI so it does not look templated: aesthetic direction, typography, colour, spacing, hierarchy, distinctive choices. Use when the user wants a page, screen or component designed, restyled or critiqued for look and feel. Vietnamese triggers: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Russian triggers: 'дизайн интерфейса', 'сделать красиво'. Pairs with the `impeccable` skill for audits and rewrites."
+description: "Hướng dẫn thiết kế thị giác để giao diện không trông như template. Dùng khi người dùng nói: 'thiết kế giao diện', 'làm UI đẹp', 'giao diện xấu quá', 'chỉnh phong cách thiết kế', 'làm trang đẹp hơn'. Không dấu cũng khớp: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Đi kèm impeccable khi cần audit và viết lại. Kết hợp: impeccable để audit và viết lại, design-taste-frontend để dựng trang hoàn chỉnh."
 license: "Complete terms in LICENSE.txt"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: documentation-and-adrs
-description: "Record decisions and documentation: architecture decision records (ADR), the reasoning behind a design choice, README and API docs updates when a public interface changes, release notes, and the context future engineers and agents need to understand the codebase. Use when a decision must be written down or the documentation is missing or stale. Vietnamese triggers: 'viet ADR', 'ghi lai quyet dinh kien truc', 'viet tai lieu', 'cap nhat README', 'document quyet dinh'. Russian triggers: 'написать ADR', 'оформить решение', 'обновить документацию'. Not for writing marketing copy."
+description: "Ghi lại quyết định và tài liệu: ADR, lý do chọn thiết kế, cập nhật README/API docs, release notes. Dùng khi người dùng nói: 'viết ADR', 'ghi lại quyết định kiến trúc', 'viết tài liệu', 'cập nhật README', 'document quyết định', 'viết release notes'. Không dấu cũng khớp: 'viet ADR', 'ghi lai quyet dinh kien truc', 'viet tai lieu', 'cap nhat README', 'document quyet dinh', 'viet release notes'. Không dùng để viết nội dung marketing."
 license: "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)"
 compatibility: "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
 metadata:

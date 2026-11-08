@@ -1,6 +1,6 @@
 ---
 name: xlsx
-description: "Work with spreadsheet files as the primary input or output: open, read, edit or fix .xlsx/.xlsm/.xltx/.csv/.tsv, add columns, write formulas, format, chart, clean messy tabular data, create a spreadsheet from scratch, convert between tabular formats. Use when a spreadsheet file is named or implied and the deliverable is a spreadsheet. Vietnamese triggers: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Russian triggers: 'сделать таблицу в Excel', 'правка xlsx'. Not when the deliverable is a Word doc, HTML report or a plain script."
+description: "Đọc, sửa, làm sạch bảng tính (.xlsx, .xlsm, .csv): thêm cột, công thức, format, chart, chuyển đổi định dạng. Dùng khi người dùng nói: 'làm file excel', 'tạo xlsx', 'sửa bảng tính', 'đọc file excel', 'công thức excel', 'làm sạch dữ liệu bảng'. Không dấu cũng khớp: 'lam file excel', 'tao xlsx', 'sua bang tinh', 'doc file excel', 'cong thuc excel', 'lam sach du lieu bang'. Không dùng khi đích là Word, HTML report hay script. Kết hợp: pptx khi số liệu phải thành slide, docx khi phải thành báo cáo."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

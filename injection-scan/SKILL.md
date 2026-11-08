@@ -1,6 +1,6 @@
 ---
 name: injection-scan
-description: "Scan untrusted text and documents for prompt injection before loading them into an agent's context: instruction override, fake system prompts and ChatML tokens, role hijack, jailbreak, data exfiltration, fake tool calls, invisible/bidi/Unicode-tag characters, base64 smuggling. Fully offline, no network, no API key. Use before reading downloaded files, university documents (docx pdf pptx xlsx zip), command output or saved web pages. Vietnamese triggers: 'quet injection', 'kiem tra file doc hai', 'file nay co injection khong', 'quet truoc khi doc file la'. Russian triggers: 'проверить на prompt injection', 'просканировать файл перед чтением'. Exit codes: 0 clean, 1 review or unscanned, 2 block."
+description: "Quét prompt injection offline cho văn bản và tài liệu (docx, pdf, pptx, xlsx, zip); exit 0 sạch, 1 chưa quét, 2 chặn. Dùng khi người dùng nói: 'quét injection', 'kiểm tra file độc hại', 'file này có injection không', 'quét trước khi đọc file lạ', 'kiểm tra prompt injection'. Không dấu cũng khớp: 'quet injection', 'kiem tra file doc hai', 'file nay co injection khong', 'quet truoc khi doc file la', 'kiem tra prompt injection'. Cũng chạy khi người dùng đưa một file lạ mà không nói rõ muốn gì. Kết hợp: gọi trước khi otchet, pdf, docx hoặc xlsx đọc bất kỳ file tải về."
 license: "MIT"
 compatibility: "Cline on Windows: PowerShell 5.1 + Python 3 (python-docx, python-pptx, openpyxl, PyMuPDF optional but recommended); run_commands; no subagents, no network."
 metadata:

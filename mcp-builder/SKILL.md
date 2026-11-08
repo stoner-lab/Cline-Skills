@@ -1,6 +1,6 @@
 ---
 name: mcp-builder
-description: "Build high-quality MCP (Model Context Protocol) servers that let LLMs call external services through well-designed tools, in Python (FastMCP) or Node/TypeScript (MCP SDK). Use when the user wants to create, extend or review an MCP server, design MCP tools, or evaluate an MCP implementation. Vietnamese triggers: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Russian triggers: 'написать MCP-сервер', 'оценка MCP'. Not for plain REST API wrappers with no MCP layer."
+description: "Viết MCP server bằng Python hoặc Node, thiết kế tool và review MCP. Dùng khi người dùng nói: 'viết MCP server', 'tạo MCP', 'review MCP', 'thiết kế tool cho MCP'. Không dấu cũng khớp: 'viet MCP server', 'tao MCP', 'review MCP', 'thiet ke tool cho MCP'. Không dùng cho REST API wrapper thuần không có lớp MCP. Kết hợp: code-review-and-quality sau khi viết xong server."
 license: "Complete terms in LICENSE.txt"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

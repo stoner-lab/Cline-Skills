@@ -1,6 +1,6 @@
 ---
 name: docx
-description: "Create, read, edit or manipulate Word documents (.docx and .dotx): reports, memos, letters, templates, tables of contents, headings, page numbers, letterheads, images, find-and-replace, tracked changes and comments. Use whenever the user mentions Word, .docx, .dotx, or asks for a document/report/memo/letter deliverable. Vietnamese triggers: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Russian triggers: 'сделать docx', 'отчёт в Word', 'правка docx'. Not for PDF, spreadsheets or unrelated coding tasks."
+description: "Tạo, đọc và sửa tài liệu Word (.docx, .dotx): bảng, mục lục, heading, số trang, ảnh, tracked changes. Dùng khi người dùng nói: 'làm file word', 'tạo docx', 'sửa file word', 'chèn bảng vào word', 'đọc file docx', 'viết báo cáo word'. Không dấu cũng khớp: 'lam file word', 'tao docx', 'sua file word', 'chen bang vao word', 'doc file docx', 'viet bao cao word'. Không dùng cho PDF, bảng tính hay code. Kết hợp: otchet khi đó là báo cáo học tập tiếng Nga, pdf khi phải xuất PDF."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

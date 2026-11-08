@@ -30,6 +30,10 @@ và tiếng Anh.
 | `frontend-design` | Hướng dẫn thị giác để giao diện không trông như template | adapt từ upstream (xem `LICENSE`) |
 | `mcp-builder` | Viết MCP server bằng Python hoặc Node | adapt từ upstream (xem `LICENSE`) |
 | `skill-creator` | Tạo, test, benchmark và đóng gói skill mới | adapt từ upstream (xem `LICENSE`) |
+| `grilling` | Phỏng vấn dồn dập, stress-test một kế hoạch/quyết định theo dạng cây quyết định: từng vòng câu hỏi, mỗi câu kèm câu trả lời gợi ý | adapt từ upstream (xem `LICENSE`) |
+| `grill-me` | Alias một dòng, khởi động `grilling` | adapt từ upstream (xem `LICENSE`) |
+| `diagnosing-bugs` | Vòng chẩn đoán bug khó và suy giảm hiệu năng: dựng feedback loop đỏ, thu nhỏ, đặt giả thuyết, instrument, sửa, dọn dẹp | adapt từ upstream (xem `LICENSE`) |
+| `handoff` | Nén hội thoại hiện tại thành tài liệu bàn giao cho phiên sau, đã che secrets | adapt từ upstream (xem `LICENSE`) |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |

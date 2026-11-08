@@ -29,6 +29,10 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `frontend-design` | Visual design guidance so a UI does not look templated | adapted from upstream (see `LICENSE`) |
 | `mcp-builder` | Build MCP servers in Python or Node | adapted from upstream (see `LICENSE`) |
 | `skill-creator` | Build, test, benchmark and package new skills | adapted from upstream (see `LICENSE`) |
+| `grilling` | Relentless interview that stress-tests a plan or decision as a design tree, one round of questions at a time, each with a recommended answer | adapted from upstream (see `LICENSE`) |
+| `grill-me` | One-line alias that starts `grilling` | adapted from upstream (see `LICENSE`) |
+| `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions: build a failing feedback loop, minimise, hypothesise, instrument, fix, clean up | adapted from upstream (see `LICENSE`) |
+| `handoff` | Compact the current conversation into a handoff document for the next session, with secrets redacted | adapted from upstream (see `LICENSE`) |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |

@@ -36,4 +36,5 @@ changed by this file:
 | `manim` | iart-ai/manim-skills | MIT |
 | `impeccable` | pbakaus/impeccable | Apache-2.0 |
 | `archify` | tt-a1i/archify | Apache-2.0 (plus `LICENSE-MIT` and `NOTICE`) |
+| `grilling`, `grill-me`, `diagnosing-bugs`, `handoff` | mattpocock/skills @ `4ae2317` | MIT (c) 2026 Matt Pocock - full text in the `LICENSE` file inside each of those directories |
 

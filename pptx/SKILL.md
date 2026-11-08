@@ -1,6 +1,6 @@
 ---
 name: pptx
-description: "Create, read, edit or analyse PowerPoint files (.pptx, .potx): slide decks, pitch decks, presentations; extract text from existing decks; edit or update slides; combine or split files; work with templates, layouts, speaker notes and comments. Use whenever the user mentions deck, slides, presentation, .pptx or .potx. Vietnamese triggers: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Russian triggers: 'сделать презентацию', 'правка pptx'. If a .pptx file must be opened, created or touched, use this skill."
+description: "Tạo, đọc, sửa và phân tích PowerPoint (.pptx, .potx): slide, layout, speaker notes, gộp và tách file. Dùng khi người dùng nói: 'làm slide', 'tạo powerpoint', 'sửa file pptx', 'bài thuyết trình', 'tách slide', 'gộp slide'. Không dấu cũng khớp: 'lam slide', 'tao powerpoint', 'sua file pptx', 'bai thuyet trinh', 'tach slide', 'gop slide'. Kết hợp: xlsx khi số liệu còn phải tính, docx khi cần tài liệu kèm."
 license: "Proprietary. LICENSE.txt has complete terms"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:

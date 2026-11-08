@@ -5,98 +5,126 @@
       "ref": "main",
       "path": "skills/docx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "pdf": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pdf",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "pptx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pptx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "xlsx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/xlsx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "frontend-design": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/frontend-design",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "mcp-builder": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/mcp-builder",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
     },
     "skill-creator": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/skill-creator",
-      "sha": "ca45fc496a3436251f191354091d557da31c15b5",
-      "checked_at": "2026-11-06"
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "checked_at": "2026-11-08"
     },
     "git-workflow-and-versioning": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/git-workflow-and-versioning",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-06"
+      "checked_at": "2026-11-08"
     },
     "documentation-and-adrs": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/documentation-and-adrs",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-06"
+      "checked_at": "2026-11-08"
     },
     "code-review-and-quality": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/code-review-and-quality",
       "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-06"
+      "checked_at": "2026-11-08"
     },
     "impeccable": {
       "repo": "pbakaus/impeccable",
       "ref": "main",
       "path": ".claude/skills/impeccable",
-      "sha": "c3bb418ee38ee49a6b999b7752c1368f3123a2bd",
-      "checked_at": "2026-11-06"
+      "sha": "924bbd194d02e5e15a227e75b5901fb0d7a4ecad",
+      "checked_at": "2026-11-08"
     },
     "design-taste-frontend": {
       "repo": "Leonxlnx/taste-skill",
       "ref": "main",
       "path": "skills/taste-skill",
-      "sha": "9b4bf937a1f69348126959c15d2f99a73e65699b",
-      "checked_at": "2026-11-06"
+      "sha": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+      "checked_at": "2026-11-08"
     },
     "manim": {
       "repo": "iart-ai/manim-skills",
       "ref": "main",
       "path": "skills/manim",
       "sha": "a15833c44de5108a3ee68f178a1fca126aa7c6d8",
-      "checked_at": "2026-11-06"
+      "checked_at": "2026-11-08"
     },
     "archify": {
       "repo": "tt-a1i/archify",
       "ref": "main",
       "path": "archify",
       "sha": "a4065941f12be7967436261d9934784e381d423c",
-      "checked_at": "2026-11-07"
+      "checked_at": "2026-11-08"
+    },
+    "grilling": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "path": "skills/productivity/grilling",
+      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "checked_at": "2026-11-08"
+    },
+    "grill-me": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "path": "skills/productivity/grill-me",
+      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "checked_at": "2026-11-08"
+    },
+    "diagnosing-bugs": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "path": "skills/engineering/diagnosing-bugs",
+      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "checked_at": "2026-11-08"
+    },
+    "handoff": {
+      "repo": "mattpocock/skills",
+      "ref": "main",
+      "path": "skills/productivity/handoff",
+      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "checked_at": "2026-11-08"
     }
   }
 }

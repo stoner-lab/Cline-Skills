@@ -1,6 +1,6 @@
 ---
 name: git-workflow-and-versioning
-description: "Structure the git workflow for any code change: branch, commit atomically, write commit messages, split a messy working tree into clean commits, resolve conflicts, push, open and review pull requests, cut releases, pick a semantic version bump, tag, and write changelogs. Use whenever a change is about to be committed or any git operation is discussed. Vietnamese triggers: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Russian triggers: 'сделать коммит', 'разбить на коммиты', 'релиз'. Use it even when the diff is pasted inline and the message looks trivial."
+description: "Nhánh, commit nguyên tử, commit message, pull request, semantic versioning, changelog. Dùng khi người dùng nói: 'commit', 'tách commit', 'viết commit message', 'tạo nhánh', 'merge', 'xử lý conflict', 'tạo PR', 'đánh version', 'viết changelog'. Không dấu cũng khớp: 'commit', 'tach commit', 'viet commit message', 'tao nhanh', 'merge', 'xu ly conflict', 'tao PR', 'danh version', 'viet changelog'. Dùng cả khi diff được dán trực tiếp trong chat. Kết hợp: code-review-and-quality trước khi tạo PR, diagnosing-bugs khi commit kèm bản sửa lỗi."
 license: "MIT, Copyright (c) 2025 Addy Osmani (see LICENSE)"
 compatibility: "Cline on Windows: PowerShell, run_commands/read_files/editor, no subagents; see the Cline notes."
 metadata:

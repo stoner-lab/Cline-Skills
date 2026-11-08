@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create, edit, improve, and evaluate Cline skills (SKILL.md folders under .cline/skills). Use whenever the user wants to turn a workflow into a reusable skill, write a new skill, fix a skill that does not trigger or triggers too often, rewrite or tighten an existing SKILL.md, design test prompts and iterate on a skill from the results, or package and share a skill folder. Trigger it also on Vietnamese phrasing – "tạo skill", "viết skill", "sửa skill", "skill không hoạt động", "skill không tự kích hoạt", "làm skill cho việc này", "đóng gói skill" – and on Russian «создать навык», «улучшить skill», «скилл не срабатывает». Trigger even when the user only says "make this repeatable", "save this as a skill", or mentions SKILL.md, .cline/skills, or a slash command.
+description: "Tạo, sửa, kiểm thử và đóng gói skill: viết SKILL.md, viết test prompt, sửa skill không chịu kích hoạt. Dùng khi người dùng nói: 'tạo skill', 'viết skill', 'sửa skill', 'skill không hoạt động', 'skill không tự kích hoạt', 'làm skill cho việc này', 'đóng gói skill'. Không dấu cũng khớp: 'tao skill', 'viet skill', 'sua skill', 'skill khong hoat dong', 'skill khong tu kich hoat', 'lam skill cho viec nay', 'dong goi skill'. Dùng cả khi người dùng nói «làm cái này thành skill» hoặc nhắc tới SKILL.md, .cline/skills. Kết hợp: injection-scan nếu skill mới sẽ đọc nội dung từ ngoài vào."
 ---
 
 # Skill Creator (Cline edition)
