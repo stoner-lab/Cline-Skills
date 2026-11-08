@@ -42,6 +42,9 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "tools" / "adapt_config.json"
 STATE = ROOT / "upstream.json"
 
+# Cache of blobless clones used when the GitHub API is unavailable (no token, 403).
+_CLONES: dict[tuple[str, str], Path] = {}
+
 
 def token() -> str:
     """GitHub token, optional: public repositories work without one."""
@@ -131,8 +134,38 @@ class Api:
         try:
             data = api(url)
         except SystemExit:
-            return []
+            # No token / rate limit: fall back to a shallow blobless clone, otherwise
+            # the "files missing locally" warning silently never fires.
+            return self._listing_from_git(repo, ref, path)
         return [item["name"] for item in data] if isinstance(data, list) else []
+
+    def _listing_from_git(self, repo: str, ref: str, path: str) -> list[str]:
+        import subprocess
+        import tempfile
+
+        key = (repo, ref)
+        if key not in _CLONES:
+            root = Path(tempfile.gettempdir()) / ("cline-sync-" + repo.replace("/", "_"))
+            _CLONES[key] = root
+            if not (root / ".git").exists():
+                subprocess.run(["git", "clone", "--filter=blob:none", "--no-checkout",
+                                "--depth", "1", f"https://github.com/{repo}.git", str(root)],
+                               capture_output=True, text=True, timeout=300)
+            else:
+                subprocess.run(["git", "-C", str(root), "fetch", "--depth", "1", "origin", ref],
+                               capture_output=True, text=True, timeout=300)
+        root = _CLONES[key]
+        res = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "--name-only",
+                              f"origin/{ref}", "--", path.strip("/")],
+                             capture_output=True, text=True, timeout=300)
+        prefix = path.strip("/") + "/"
+        names = []
+        for line in (res.stdout or "").splitlines():
+            if line.startswith(prefix):
+                rest = line[len(prefix):]
+                if rest and "/" not in rest:
+                    names.append(rest)
+        return names
 
 
 def load_json(path: Path, default: dict) -> dict:
