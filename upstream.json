@@ -181,6 +181,13 @@
       "path": ".claude/skills/banner-design",
       "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
       "checked_at": "2026-11-08"
+    },
+    "ppt-master": {
+      "repo": "hugohe3/ppt-master",
+      "ref": "main",
+      "path": "skills/ppt-master",
+      "sha": "e2820d326d049f1fcbe90523983def3d52280233",
+      "checked_at": "2026-11-12"
     }
   }
 }

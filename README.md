@@ -41,6 +41,7 @@ just describe the job: the `description` carries Vietnamese, Russian and English
 | `brand` | Brand voice, visual identity, messaging frameworks, asset management and consistency checks | adapted from upstream (see `LICENSE`) |
 | `slides` | HTML presentations with Chart.js, design tokens, responsive layouts and slide copywriting formulas | adapted from upstream (see `LICENSE`) |
 | `banner-design` | Banner and hero artwork for social, ads, web and print, with several art directions | adapted from upstream (see `LICENSE`) |
+| `ppt-master` | Deck pipeline from a source document (PDF, DOCX, URL, Markdown): project, strategy, page-by-page SVG, PPTX export, with templates, icons and layouts included | adapted from upstream (see `LICENSE`) |
 | `impeccable` | Frontend design direction, audit, critique and rewrite with a playbook library and a design detector | adapted from pbakaus/impeccable |
 | `design-taste-frontend` | Company sites at the figma.com and x.ai bar, checked by its own headless-browser checker | adapted from Leonxlnx/taste-skill |
 | `manim` | Math and physics animations with Manim CE, rendered to MP4 or GIF | adapted from iart-ai/manim-skills |

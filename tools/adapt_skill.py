@@ -81,6 +81,11 @@ def build_frontmatter(name: str, cfg: dict) -> str:
     license_line = cfg.get("license", "see LICENSE")
     compat = cfg.get("compatibility", DEFAULT_COMPAT)
     upstream = f"https://github.com/{cfg['repo']}/tree/{cfg.get('ref', 'main')}/{cfg['path']}".rstrip("/")
+    extra = ""
+    # Some upstream skills ship their own integrity guard that greps fixed keys inside the
+    # frontmatter. They live under metadata: so quick_validate still sees only allowed keys.
+    for key, value in (cfg.get("frontmatter_metadata") or {}).items():
+        extra += f'  {key}: "{value}"\n'
     return ("---\n"
             f"name: {name}\n"
             f'description: "{desc}"\n'
@@ -89,6 +94,7 @@ def build_frontmatter(name: str, cfg: dict) -> str:
             "metadata:\n"
             f'  upstream: "{upstream}"\n'
             '  adaptation: "Cline runtime notes in SKILL.md"\n'
+            f"{extra}"
             "---\n")
 
 

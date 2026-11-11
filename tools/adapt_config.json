@@ -381,5 +381,21 @@
         "python "
       ]
     ]
+  },
+  "ppt-master": {
+    "repo": "hugohe3/ppt-master",
+    "ref": "main",
+    "path": "skills/ppt-master",
+    "strategy": "adapt",
+    "description": "Quy trình dựng bài trình chiếu từ tài liệu nguồn (PDF, DOCX, URL, Markdown): tạo project → chiến lược → từng trang SVG → xuất PPTX, kèm template, icon và layout dựng sẵn. Dùng khi người dùng nói: 'làm ppt từ tài liệu', 'dựng deck từ báo cáo', 'làm bài trình chiếu từ pdf', 'tạo slide từ word', 'ppt-master', 'chuyển tài liệu thành slide'. Không dấu cũng khớp: 'lam ppt tu tai lieu', 'dung deck tu bao cao', 'lam bai trinh chieu tu pdf', 'tao slide tu word', 'ppt-master', 'chuyen tai lieu thanh slide'. Ưu tiên skill này khi phải dựng deck TỪ tài liệu nguồn; chỉ sửa hoặc tạo file .pptx trực tiếp thì dùng pptx; cần deck HTML có Chart.js thì dùng slides.",
+    "license": "MIT",
+    "compatibility": "Cline on Windows: PowerShell shell, python 3.14, node 24; read_files/editor/run_commands; scripts run from the skill directory; no pandoc, no LibreOffice, no subagents; see the Cline runtime notes inside.",
+    "notes": "tools/notes/ppt-master.md",
+    "frontmatter_metadata": {
+      "copyright": "Copyright (c) 2025-2026 Hugo He",
+      "license": "MIT",
+      "official_repository": "https://github.com/hugohe3/ppt-master",
+      "sponsors": "https://github.com/sponsors/hugohe3"
+    }
   }
 }

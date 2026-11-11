@@ -42,6 +42,7 @@ và tiếng Anh.
 | `brand` | Giọng điệu thương hiệu, nhận diện, messaging framework, quản lý asset, kiểm tra tính nhất quán | adapt từ upstream (xem `LICENSE`) |
 | `slides` | Bài trình chiếu HTML với Chart.js, design token, layout responsive, công thức copywriting cho slide | adapt từ upstream (xem `LICENSE`) |
 | `banner-design` | Banner và hero cho mạng xã hội, quảng cáo, website, bản in, nhiều hướng art direction | adapt từ upstream (xem `LICENSE`) |
+| `ppt-master` | Quy trình dựng deck từ tài liệu nguồn (PDF, DOCX, URL, Markdown): project → chiến lược → từng trang SVG → xuất PPTX, kèm template, icon, layout | adapt từ upstream (xem `LICENSE`) |
 | `impeccable` | Định hướng thiết kế frontend, audit, phê bình và viết lại, kèm thư viện playbook và design detector | adapt từ pbakaus/impeccable |
 | `design-taste-frontend` | Website công ty ở mức figma.com và x.ai, được kiểm bằng checker headless browser của chính nó | adapt từ Leonxlnx/taste-skill |
 | `manim` | Video minh hoạ toán và vật lý bằng Manim CE, xuất MP4 hoặc GIF | adapt từ iart-ai/manim-skills |
