@@ -5,189 +5,189 @@
       "ref": "main",
       "path": "skills/docx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "pdf": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pdf",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "pptx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/pptx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "xlsx": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/xlsx",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "frontend-design": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/frontend-design",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "mcp-builder": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/mcp-builder",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "skill-creator": {
       "repo": "anthropics/skills",
       "ref": "main",
       "path": "skills/skill-creator",
       "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "git-workflow-and-versioning": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/git-workflow-and-versioning",
-      "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-08"
+      "sha": "39b723ceebf81474d0557c1fecd01eddab585563",
+      "checked_at": "2026-11-14"
     },
     "documentation-and-adrs": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/documentation-and-adrs",
-      "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-08"
+      "sha": "39b723ceebf81474d0557c1fecd01eddab585563",
+      "checked_at": "2026-11-14"
     },
     "code-review-and-quality": {
       "repo": "addyosmani/agent-skills",
       "ref": "main",
       "path": "skills/code-review-and-quality",
-      "sha": "301b02b12bff98e4688e6984af6556802322bbde",
-      "checked_at": "2026-11-08"
+      "sha": "39b723ceebf81474d0557c1fecd01eddab585563",
+      "checked_at": "2026-11-14"
     },
     "impeccable": {
       "repo": "pbakaus/impeccable",
       "ref": "main",
       "path": ".claude/skills/impeccable",
-      "sha": "924bbd194d02e5e15a227e75b5901fb0d7a4ecad",
-      "checked_at": "2026-11-08"
+      "sha": "1995764b4936f2bfbf4eb719cb37b384a45ceacb",
+      "checked_at": "2026-11-14"
     },
     "design-taste-frontend": {
       "repo": "Leonxlnx/taste-skill",
       "ref": "main",
       "path": "skills/taste-skill",
       "sha": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
-      "checked_at": "2026-11-08"
+      "checked_at": "2026-11-14"
     },
     "manim": {
       "repo": "iart-ai/manim-skills",
       "ref": "main",
       "path": "skills/manim",
-      "sha": "a15833c44de5108a3ee68f178a1fca126aa7c6d8",
-      "checked_at": "2026-11-08"
+      "sha": "3e989cb044f6a6fed8c07b06dddade6e3463d7ac",
+      "checked_at": "2026-11-14"
     },
     "archify": {
       "repo": "tt-a1i/archify",
       "ref": "main",
       "path": "archify",
-      "sha": "a4065941f12be7967436261d9934784e381d423c",
-      "checked_at": "2026-11-08"
+      "sha": "e37848822238e3a61b12739185cdadd49843a620",
+      "checked_at": "2026-11-14"
     },
     "grilling": {
       "repo": "mattpocock/skills",
       "ref": "main",
       "path": "skills/productivity/grilling",
-      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
-      "checked_at": "2026-11-08"
+      "sha": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+      "checked_at": "2026-11-14"
     },
     "grill-me": {
       "repo": "mattpocock/skills",
       "ref": "main",
       "path": "skills/productivity/grill-me",
-      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
-      "checked_at": "2026-11-08"
+      "sha": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+      "checked_at": "2026-11-14"
     },
     "diagnosing-bugs": {
       "repo": "mattpocock/skills",
       "ref": "main",
       "path": "skills/engineering/diagnosing-bugs",
-      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
-      "checked_at": "2026-11-08"
+      "sha": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+      "checked_at": "2026-11-14"
     },
     "handoff": {
       "repo": "mattpocock/skills",
       "ref": "main",
       "path": "skills/productivity/handoff",
-      "sha": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
-      "checked_at": "2026-11-08"
+      "sha": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+      "checked_at": "2026-11-14"
     },
     "ui-ux-pro-max": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/ui-ux-pro-max",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "caveman": {
       "repo": "JuliusBrussee/caveman",
       "ref": "main",
       "path": "skills/caveman",
-      "sha": "1e91f1306d602d4ca23618701b1185575ae1869b",
-      "checked_at": "2026-11-08"
+      "sha": "b4ee71d557d96e3cbc14f88fa6e953a1362865f5",
+      "checked_at": "2026-11-14"
     },
     "design": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/design",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "design-system": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/design-system",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "ui-styling": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/ui-styling",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "brand": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/brand",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "slides": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/slides",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "banner-design": {
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
       "ref": "main",
       "path": ".claude/skills/banner-design",
-      "sha": "4f2dbb67e64969a9a30ab00742f2d55d66ddec2b",
-      "checked_at": "2026-11-08"
+      "sha": "6ae86f61f520d6ca229d2f40e070410638c908c5",
+      "checked_at": "2026-11-14"
     },
     "ppt-master": {
       "repo": "hugohe3/ppt-master",
       "ref": "main",
       "path": "skills/ppt-master",
-      "sha": "e2820d326d049f1fcbe90523983def3d52280233",
-      "checked_at": "2026-11-12"
+      "sha": "b243a950e9f85998705551fb1b77c6459573ff39",
+      "checked_at": "2026-11-14"
     }
   }
 }

@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: "Hướng dẫn thiết kế thị giác để giao diện không trông như template. Dùng khi người dùng nói: 'thiết kế giao diện', 'làm UI đẹp', 'giao diện xấu quá', 'chỉnh phong cách thiết kế', 'làm trang đẹp hơn'. Không dấu cũng khớp: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Đi kèm impeccable khi cần audit và viết lại. Kết hợp: impeccable để audit và viết lại, design-taste-frontend để dựng trang hoàn chỉnh."
+description: "Hướng dẫn thiết kế thị giác để giao diện không trông như template. Dùng khi người dùng nói: 'thiết kế giao diện', 'làm UI đẹp', 'giao diện xấu quá', 'chỉnh phong cách thiết kế', 'làm trang đẹp hơn'. Không dấu cũng khớp: 'thiet ke giao dien', 'lam UI dep', 'giao dien xau qua', 'chinh phong cach thiet ke', 'lam trang dep hon'. Đi kèm impeccable khi cần audit và viết lại. Kết hợp: impeccable để audit và viết lại, design-taste-frontend để dựng trang hoàn chỉnh. Chỉ là lớp hướng dẫn thị giác nhẹ: dùng khi cần nguyên tắc chung. Cần dữ liệu cụ thể (palette, font, rule UX) thì ui-ux-pro-max; cần code UI thì ui-styling."
 license: "Complete terms in LICENSE.txt"
 compatibility: "Cline on Windows: PowerShell shell, python-docx/pptx/openpyxl/pypdf stack, no subagents, no LibreOffice/pandoc; see the Cline notes inside."
 metadata:
